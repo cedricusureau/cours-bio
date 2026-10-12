@@ -1,0 +1,48 @@
+<section>
+  <style>
+    pre.txt-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.33em;line-height:1.55;background:#0f172a;color:#e2e8f0;border-radius:10px;padding:10px 12px;margin:0;width:auto;max-width:100%;box-shadow:none;white-space:pre;overflow:hidden;word-wrap:normal}
+    .txt-code .h{color:#7dd3fc}
+    .txt-code .m{color:#fb7185;font-weight:700}
+    .txt-code .q{color:#fcd34d}
+    table.tbl.txt-tbl{font-size:.36em;margin-top:.5em}
+    table.tbl.txt-tbl td{padding:4px 8px;text-align:left;vertical-align:top}
+    table.tbl.txt-tbl td:first-child{font-weight:700;white-space:nowrap}
+  </style>
+
+  <span class="kicker">Et vous ?</span>
+  <h2>La biologie, c'est du texte</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">FASTA pour les séquences, FASTQ pour les lectures d'un séquenceur : des fichiers texte, un caractère par base.</p>
+
+  <div class="grid2" style="margin-top:.45em;gap:18px;align-items:start;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)">
+    <div>
+      <h3 style="font-size:.6em;margin:0 0 .3em;color:var(--brand)">FASTA</h3>
+      <pre class="txt-code"><span class="h">&gt;HBB bêta-globine — NM_000518.5</span>
+ATGGTGCATCTGACTCCTG<span class="m">T</span>GGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAGGTGAAC
+GTGGATGAAGTTGGTGGTGAGGCCCTGGGCAGGCTGCTGGTGGTCTACCCTTGGACCCAG
+AGGTTCTTTGAGTCCTTTGGGGATCTGTCCACTCCTGATGCTGTTATGGGCAACCCTAAG
+…</pre>
+      <table class="tbl txt-tbl">
+        <tr><td>&gt; …</td><td>En-tête : identifiant, description libre</td></tr>
+        <tr><td>lignes suivantes</td><td>La séquence, A, C, G, T, en lignes de 60 caractères</td></tr>
+      </table>
+      <p class="tiny muted" style="margin:.3em 0 0;font-size:.36em">Séquence HBB du patient, fichier <code>patient.fasta</code> du notebook 1.</p>
+    </div>
+
+    <div>
+      <h3 style="font-size:.6em;margin:0 0 .3em;color:var(--brand)">FASTQ</h3>
+      <pre class="txt-code"><span class="h">@lecture_000142 1:N:0</span>
+CATCTGACTCCTG<span class="m">T</span>GGAGAAGTCTGCCGTT
++
+<span class="q">FFFFFFFFFFF:FFFFFFFFFF,FFFFFFF</span></pre>
+      <table class="tbl txt-tbl">
+        <tr><td>1. @ …</td><td>Identifiant de la lecture</td></tr>
+        <tr><td>2.</td><td>Séquence lue, 30 bases ici, 150 sur un séquenceur Illumina courant</td></tr>
+        <tr><td>3. +</td><td>Séparateur</td></tr>
+        <tr><td>4.</td><td>Un caractère de qualité par base : score Phred <span style="white-space:nowrap">Q = −10 log₁₀ p</span>, encodé en code ASCII − 33. <b>F</b> : Q37, 1 erreur sur 5 000. <b>,</b> : Q11, 1 erreur sur 13.</td></tr>
+      </table>
+      <p class="tiny muted" style="margin:.3em 0 0;font-size:.36em">Exemple : 30 bases de HBB autour de la mutation.</p>
+    </div>
+  </div>
+
+</section>

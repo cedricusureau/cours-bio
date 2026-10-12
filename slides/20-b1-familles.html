@@ -1,0 +1,104 @@
+<section>
+  <style>
+    .asm{fill:none;stroke-width:3}
+    .asm-c{stroke:var(--brand)}
+    .asm-n{stroke:var(--brand2)}
+    .asm-o{stroke:var(--accent)}
+    .asm-b{stroke:var(--line);stroke-width:4}
+    .asm-slot{fill:#fff;stroke:var(--accent);stroke-width:2.5;stroke-dasharray:4,3}
+    .asm-lbl{font-size:13px;font-weight:700;text-anchor:middle}
+    .asm-card{padding:8px 10px;display:flex;flex-direction:column;justify-content:space-between;gap:0}
+    .asm-card svg{height:118px;width:100%;display:block}
+  </style>
+
+  <span class="kicker">Récapitulatif</span>
+  <h2>Quatre familles, les mêmes briques</h2>
+  <div class="barline"></div>
+  <p class="small muted">Aucun atome nouveau depuis le début du bloc : ce qui change d'une famille à l'autre, c'est l'agencement.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:.3em;align-items:stretch">
+
+    <!-- GLUCIDE -->
+    <div class="card center asm-card">
+      <svg viewBox="0 0 190 125" class="fig">
+        <line class="asm-b" x1="55" y1="38" x2="80" y2="38"/>
+        <line class="asm-b" x1="110" y1="38" x2="135" y2="38"/>
+        <circle class="asm asm-c" cx="40" cy="38" r="15"/><text class="asm-lbl" x="40" y="43" fill="var(--brand)">C</text>
+        <circle class="asm asm-c" cx="95" cy="38" r="15"/><text class="asm-lbl" x="95" y="43" fill="var(--brand)">C</text>
+        <circle class="asm asm-c" cx="150" cy="38" r="15"/><text class="asm-lbl" x="150" y="43" fill="var(--brand)">C</text>
+        <line class="asm-b" x1="40" y1="53" x2="40" y2="78"/>
+        <line class="asm-b" x1="95" y1="53" x2="95" y2="78"/>
+        <line class="asm-b" x1="150" y1="53" x2="150" y2="78"/>
+        <text class="asm-lbl" x="40" y="99" fill="var(--accent)">OH</text>
+        <text class="asm-lbl" x="95" y="99" fill="var(--accent)">OH</text>
+        <text class="asm-lbl" x="150" y="99" fill="var(--accent)">OH</text>
+      </svg>
+      <div>
+        <p class="small center"><strong>Glucide</strong></p>
+        <p class="tiny">Des carbones, un <em>–OH</em> sur presque chaque carbone.</p>
+      </div>
+      <p class="center"><span class="tag">polaire</span></p>
+    </div>
+
+    <!-- LIPIDE -->
+    <div class="card center asm-card">
+      <svg viewBox="0 0 190 125" class="fig">
+        <rect x="4" y="30" width="50" height="25" rx="7" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+        <text class="asm-lbl" x="29" y="47" fill="var(--accent)">COOH</text>
+        <line class="asm-b" x1="54" y1="43" x2="68" y2="52"/>
+        <line class="asm-b" x1="88" y1="58" x2="101" y2="46"/>
+        <line class="asm-b" x1="119" y1="46" x2="132" y2="58"/>
+        <line class="asm-b" x1="152" y1="58" x2="170" y2="46"/>
+        <circle class="asm asm-c" cx="76" cy="58" r="13"/><text class="asm-lbl" x="76" y="63" fill="var(--brand)">C</text>
+        <circle class="asm asm-c" cx="110" cy="40" r="13"/><text class="asm-lbl" x="110" y="45" fill="var(--brand)">C</text>
+        <circle class="asm asm-c" cx="144" cy="58" r="13"/><text class="asm-lbl" x="144" y="63" fill="var(--brand)">C</text>
+        <text x="178" y="42" font-size="15" fill="var(--muted)" text-anchor="middle">…</text>
+        <text x="95" y="100" font-size="12" fill="var(--muted)" text-anchor="middle">les autres liaisons portent des H</text>
+      </svg>
+      <div>
+        <p class="small center"><strong>Lipide</strong></p>
+        <p class="tiny">Une chaîne C–H, un groupe <em>–COOH</em> à une extrémité.</p>
+      </div>
+      <p class="center"><span class="tag">apolaire</span></p>
+    </div>
+
+    <!-- PROTÉINE -->
+    <div class="card center asm-card">
+      <svg viewBox="0 0 190 125" class="fig">
+        <line class="asm-b" x1="80" y1="45" x2="52" y2="45"/>
+        <line class="asm-b" x1="110" y1="45" x2="136" y2="45"/>
+        <line class="asm-b" x1="95" y1="61" x2="95" y2="80"/>
+        <circle class="asm asm-c" cx="95" cy="45" r="16"/><text class="asm-lbl" x="95" y="50" fill="var(--brand)">C</text>
+        <text class="asm-lbl" x="30" y="50" fill="var(--brand2)">H₂N</text>
+        <text class="asm-lbl" x="162" y="50" fill="var(--accent)">COOH</text>
+        <circle class="asm-slot" cx="95" cy="97" r="16"/>
+        <text class="asm-lbl" x="95" y="102" fill="var(--accent)">R</text>
+      </svg>
+      <div>
+        <p class="small center"><strong>Acide aminé</strong></p>
+        <p class="tiny">Un carbone, un groupe amine, un groupe acide, et <em>R</em> : la seule case libre.</p>
+      </div>
+      <p class="center"><span class="tag">les deux</span></p>
+    </div>
+
+    <!-- ACIDE NUCLÉIQUE -->
+    <div class="card center asm-card">
+      <svg viewBox="0 0 190 125" class="fig">
+        <line class="asm-b" x1="45" y1="52" x2="62" y2="52"/>
+        <line class="asm-b" x1="112" y1="52" x2="128" y2="52"/>
+        <circle class="asm asm-o" cx="30" cy="52" r="15"/><text class="asm-lbl" x="30" y="57" fill="var(--accent)">P</text>
+        <polygon class="asm asm-c" points="88,30 112,46 103,72 73,72 64,46"/>
+        <text x="88" y="56" font-size="11" font-weight="700" fill="var(--brand)" text-anchor="middle">sucre</text>
+        <rect x="128" y="38" width="52" height="28" rx="7" fill="none" stroke="var(--brand2)" stroke-width="2.5"/>
+        <text x="154" y="57" font-size="12" font-weight="700" fill="var(--brand2)" text-anchor="middle">base</text>
+        <text x="95" y="103" font-size="12" fill="var(--muted)" text-anchor="middle">4 bases possibles</text>
+      </svg>
+      <div>
+        <p class="small center"><strong>Nucléotide</strong></p>
+        <p class="tiny">Un phosphate, un sucre à cinq carbones, une base azotée.</p>
+      </div>
+      <p class="center"><span class="tag">les deux</span></p>
+    </div>
+  </div>
+
+</section>

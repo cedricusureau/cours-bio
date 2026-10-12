@@ -1,0 +1,33 @@
+<section>
+  <span class="kicker">Le problème</span>
+  <h2>4 lettres, 20 acides aminés</h2>
+  <div class="barline"></div>
+  <p class="small muted">Combien de lettres par mot ? Un mot de <em>n</em> lettres prises parmi 4 peut prendre
+  4<sup><em>n</em></sup> valeurs ; il en faut au moins 21 : les 20 acides aminés et un signal d'arrêt.</p>
+
+  <div class="grid3" style="margin-top:.6em">
+    <div class="card center fragment" data-fragment-index="0">
+      <p class="small" style="margin:0">1 lettre</p>
+      <div class="stat" style="padding:6px 4px"><div class="n">4¹ = 4</div><div class="l"><span class="no">moins de 21</span></div></div>
+      <p class="tiny" style="margin:0">A, C, G, U</p>
+    </div>
+    <div class="card center fragment" data-fragment-index="1">
+      <p class="small" style="margin:0">2 lettres</p>
+      <div class="stat" style="padding:6px 4px"><div class="n">4² = 16</div><div class="l"><span class="no">moins de 21</span></div></div>
+      <p class="tiny" style="margin:0">AA, AC, AG, AU, CA…</p>
+    </div>
+    <div class="card center fragment" data-fragment-index="2">
+      <p class="small" style="margin:0">3 lettres</p>
+      <div class="stat" style="padding:6px 4px"><div class="n">4³ = 64</div><div class="l"><span class="yes">au moins 21</span></div></div>
+      <p class="tiny" style="margin:0">AAA, AAC, AAG… UUU</p>
+    </div>
+  </div>
+
+  <p class="small center fragment" data-fragment-index="3" style="margin-top:.7em">64 mots possibles pour 21 valeurs :
+  43 de plus que le strict nécessaire. Plusieurs codons auront donc la même valeur.</p>
+
+  <p class="center fragment fade-up" data-fragment-index="3" style="margin-top:.3em">
+    <span class="pill ghost">Trois bases, la plus petite longueur fixe qui suffit : le codon</span>
+  </p>
+
+</section>

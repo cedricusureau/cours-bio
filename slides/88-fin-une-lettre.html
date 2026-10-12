@@ -1,0 +1,30 @@
+<section>
+  <style>
+    .ltr-grid{display:grid;grid-template-columns:auto 1fr;column-gap:28px;row-gap:6px;align-items:baseline;margin:1.1em auto 0;width:max-content}
+    .ltr-lbl{font-size:.42em;font-weight:700;color:var(--muted);text-align:right}
+    .ltr-seq{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em;font-weight:700;letter-spacing:.04em;color:var(--ink);white-space:pre}
+    .ltr-aa{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.5em;color:var(--muted);white-space:pre;letter-spacing:.04em}
+    .ltr-mut{color:var(--accent)}
+    .ltr-sep{grid-column:1 / -1;height:14px}
+  </style>
+
+  <span class="kicker">La boucle</span>
+  <h2>Une lettre. Tout le reste en découle.</h2>
+  <div class="barline"></div>
+
+  <div class="ltr-grid">
+    <div class="ltr-lbl">HBB normal</div>
+    <div class="ltr-seq">ATG GTG CAT CTG ACT CCT G<span style="color:var(--brand)">A</span>G GAG AAG</div>
+    <div></div>
+    <div class="ltr-aa">Met Val His Leu Thr Pro <span style="color:var(--brand);font-weight:700">Glu</span> Glu Lys</div>
+    <div class="ltr-sep"></div>
+    <div class="ltr-lbl">Patient</div>
+    <div class="ltr-seq">ATG GTG CAT CTG ACT CCT G<span class="ltr-mut">T</span>G GAG AAG</div>
+    <div></div>
+    <div class="ltr-aa">Met Val His Leu Thr Pro <span class="ltr-mut" style="font-weight:700">Val</span> Glu Lys</div>
+  </div>
+
+  <p class="center" style="margin-top:1.2em;font-size:.6em;color:var(--ink)"><b>1</b> base différente sur <b>3,1 × 10⁹</b> par copie du génome.</p>
+  <p class="tiny muted center" style="margin:.3em 0 0">Début de la séquence codante de HBB (NM_000518.5). La méthionine initiale est retirée après traduction : le Glu muté est le 6ᵉ acide aminé de la β‑globine mature.</p>
+
+</section>

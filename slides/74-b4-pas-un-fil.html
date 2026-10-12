@@ -1,0 +1,99 @@
+<section>
+  <style>
+    .b4ch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:.35em;align-items:stretch}
+    .b4ch-card{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:8px 12px;display:flex;flex-direction:column}
+    .b4ch-card h3{font-size:.62em;margin:0;color:var(--brand)}
+    .b4ch-card .sub{font-size:.44em;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+    .b4ch-card svg{width:100%;height:138px;display:block;margin:.3em 0}
+    .b4ch-card p{font-size:.47em;margin:0;line-height:1.35;color:var(--ink)}
+    .b4ch-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700}
+  </style>
+
+  <span class="kicker">La forme</span>
+  <h2>De la chaîne à la forme</h2>
+  <div class="barline"></div>
+  <p class="small muted">Quatre niveaux de structure, sur l'exemple de l'hémoglobine.</p>
+
+  <div class="b4ch-grid">
+    <div class="b4ch-card">
+      <span class="sub">Primaire</span>
+      <h3>La séquence</h3>
+      <svg viewBox="0 0 200 120">
+        <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="15" font-weight="700" text-anchor="middle">
+          <circle cx="20" cy="60" r="14" fill="#fde68a" stroke="var(--ink)" stroke-width="1.5"/><text x="20" y="65" fill="var(--ink)">V</text>
+          <circle cx="52" cy="60" r="14" fill="#eef2ff" stroke="var(--ink)" stroke-width="1.5"/><text x="52" y="65" fill="var(--brand)">H</text>
+          <circle cx="84" cy="60" r="14" fill="#fde68a" stroke="var(--ink)" stroke-width="1.5"/><text x="84" y="65" fill="var(--ink)">L</text>
+          <circle cx="116" cy="60" r="14" fill="#eaf6fd" stroke="var(--ink)" stroke-width="1.5"/><text x="116" y="65" fill="var(--ink)">T</text>
+          <circle cx="148" cy="60" r="14" fill="#fde68a" stroke="var(--ink)" stroke-width="1.5"/><text x="148" y="65" fill="var(--ink)">P</text>
+          <text x="182" y="66" fill="var(--muted)">…</text>
+        </g>
+        <line x1="34" y1="60" x2="38" y2="60" stroke="var(--ink)" stroke-width="2"/><line x1="66" y1="60" x2="70" y2="60" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="98" y1="60" x2="102" y2="60" stroke="var(--ink)" stroke-width="2"/><line x1="130" y1="60" x2="134" y2="60" stroke="var(--ink)" stroke-width="2"/>
+      </svg>
+      <p>L'ordre des acides aminés, fixé par le gène : <span class="b4ch-mono">VHLTP…</span>, 146 pour la chaîne β.</p>
+    </div>
+
+    <div class="b4ch-card">
+      <span class="sub">Secondaire</span>
+      <h3>Hélices et feuillets</h3>
+      <svg viewBox="0 0 200 120">
+        <path d="M30,100 C10,90 10,78 30,74 C50,70 50,58 30,54 C10,50 10,38 30,34 C50,30 50,18 30,14"
+              fill="none" stroke="var(--brand)" stroke-width="6" stroke-linecap="round"/>
+        <path d="M75,100 C55,90 55,78 75,74 C95,70 95,58 75,54 C55,50 55,38 75,34 C95,30 95,18 75,14"
+              fill="none" stroke="var(--brand)" stroke-width="6" stroke-linecap="round" opacity=".55"/>
+        <g fill="#eaf6fd" stroke="var(--brand2)" stroke-width="2">
+          <path d="M115,30 h60 l12,10 l-12,10 h-60 z"/>
+          <path d="M187,62 h-60 l-12,10 l12,10 h60 z"/>
+          <path d="M115,94 h60 l12,10 l-12,10 h-60 z" transform="translate(0,-4)"/>
+        </g>
+        <g stroke="var(--accent)" stroke-width="2" stroke-dasharray="3,3">
+          <line x1="140" y1="50" x2="140" y2="62"/><line x1="160" y1="50" x2="160" y2="62"/>
+          <line x1="140" y1="82" x2="140" y2="90"/><line x1="160" y1="82" x2="160" y2="90"/>
+        </g>
+      </svg>
+      <p>Des segments s'enroulent en <strong>hélices α</strong> (3,6 acides aminés par tour) ou s'alignent en
+      <strong>feuillets β</strong>, tenus par des liaisons hydrogène. La chaîne β : 8 hélices, aucun feuillet.</p>
+    </div>
+
+    <div class="b4ch-card">
+      <span class="sub">Tertiaire</span>
+      <h3>Le repliement</h3>
+      <svg viewBox="0 0 200 120">
+        <path d="M100,12 C150,8 185,40 178,70 C172,100 130,114 96,110 C58,106 20,92 22,62 C24,32 58,15 100,12 z"
+              fill="#eaf6fd" stroke="var(--brand)" stroke-width="2.5"/>
+        <ellipse cx="100" cy="62" rx="42" ry="24" fill="#fde68a" stroke="#d97706" stroke-width="2" stroke-dasharray="4,3"/>
+        <text x="100" y="67" font-size="13" font-weight="700" fill="#d97706" text-anchor="middle">cœur apolaire</text>
+        <g font-size="14" font-weight="800" fill="var(--accent)" text-anchor="middle">
+          <text x="44" y="30">−</text><text x="168" y="44">+</text><text x="40" y="100">+</text><text x="158" y="104">−</text>
+        </g>
+      </svg>
+      <p>La chaîne se replie en une forme compacte : chaînes latérales apolaires au cœur, chargées et polaires en
+      surface. Une poche accueille l'hème.</p>
+    </div>
+
+    <div class="b4ch-card">
+      <span class="sub">Quaternaire</span>
+      <h3>L'assemblage</h3>
+      <svg viewBox="0 0 200 120">
+        <g stroke-width="2.5">
+          <ellipse cx="70" cy="38" rx="36" ry="26" fill="#eaf6fd" stroke="var(--brand2)"/>
+          <ellipse cx="130" cy="82" rx="36" ry="26" fill="#eaf6fd" stroke="var(--brand2)"/>
+          <ellipse cx="130" cy="38" rx="36" ry="26" fill="#eef2ff" stroke="var(--brand)"/>
+          <ellipse cx="70" cy="82" rx="36" ry="26" fill="#eef2ff" stroke="var(--brand)"/>
+        </g>
+        <g font-size="16" font-weight="800" text-anchor="middle">
+          <text x="62" y="43" fill="var(--brand2)">α</text><text x="138" y="87" fill="var(--brand2)">α</text>
+          <text x="138" y="43" fill="var(--brand)">β</text><text x="62" y="87" fill="var(--brand)">β</text>
+        </g>
+        <g fill="var(--accent)"><circle cx="88" cy="30" r="5"/><circle cx="112" cy="90" r="5"/><circle cx="112" cy="30" r="5"/><circle cx="88" cy="90" r="5"/></g>
+      </svg>
+      <p>Plusieurs chaînes s'associent : 2 α et 2 β, chacune avec son hème (point rouge), forment
+      l'hémoglobine, 64,5 kDa.</p>
+    </div>
+  </div>
+
+  <p class="center" style="margin-top:.5em">
+    <span class="pill ghost" style="font-size:.66em">Aucune instruction supplémentaire : la séquence suffit à fixer la forme (Anfinsen, 1961)</span>
+  </p>
+
+</section>

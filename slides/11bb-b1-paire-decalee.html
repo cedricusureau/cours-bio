@@ -1,0 +1,86 @@
+<section>
+  <style>
+    .shiftlbl{opacity:0}
+    .fragment.visible .shiftlbl{animation:shiftPop .4s ease forwards}
+    @keyframes shiftPop{from{opacity:0}to{opacity:1}}
+    .shiftmid{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:3,3}
+    .shiftbond{stroke:var(--line);stroke-width:5}
+  </style>
+
+  <span class="kicker">Les briques</span>
+  <h2>Paire décalée, charges partielles</h2>
+  <div class="barline"></div>
+  <p class="small muted">La paire d'électrons reste partagée : sa densité se déplace vers l'atome le plus
+  électronégatif. Chaque atome garde une fraction de charge, notée δ.</p>
+
+  <div class="grid3" style="margin-top:.3em;align-items:stretch">
+
+    <!-- C–H -->
+    <div class="card" style="padding:8px 12px">
+      <svg viewBox="0 0 210 130" class="fig" style="height:165px;width:100%">
+        <line class="shiftmid" x1="105" y1="22" x2="105" y2="98"/>
+        <line class="shiftbond" x1="45" y1="60" x2="165" y2="60"/>
+        <circle cx="45" cy="60" r="20" fill="var(--brand)"/>
+        <text x="45" y="66" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">C</text>
+        <circle cx="165" cy="60" r="14" fill="var(--brand2)"/>
+        <text x="165" y="65" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">H</text>
+        <circle cx="98" cy="60" r="4.5" fill="var(--brand)" stroke="#fff" stroke-width="1"/>
+        <circle cx="107" cy="60" r="4.5" fill="var(--brand2)" stroke="#fff" stroke-width="1"/>
+        <g class="fragment" data-fragment-index="0">
+          <text class="shiftlbl" x="45" y="116" font-size="14" font-weight="700" fill="var(--muted)" text-anchor="middle">≈ 0</text>
+          <text class="shiftlbl" x="165" y="116" font-size="14" font-weight="700" fill="var(--muted)" text-anchor="middle">≈ 0</text>
+        </g>
+      </svg>
+      <p class="tiny center"><strong>C–H</strong> · ΔEN = 2,5 − 2,2 = 0,3<br>paire proche du milieu</p>
+    </div>
+
+    <!-- N–H -->
+    <div class="card" style="padding:8px 12px">
+      <svg viewBox="0 0 210 130" class="fig" style="height:165px;width:100%">
+        <line class="shiftmid" x1="105" y1="22" x2="105" y2="98"/>
+        <line class="shiftbond" x1="45" y1="60" x2="165" y2="60"/>
+        <circle cx="45" cy="60" r="20" fill="var(--brand)"/>
+        <text x="45" y="66" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">N</text>
+        <circle cx="165" cy="60" r="14" fill="var(--brand2)"/>
+        <text x="165" y="65" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">H</text>
+        <circle cx="87" cy="60" r="4.5" fill="var(--brand)" stroke="#fff" stroke-width="1"/>
+        <circle cx="96" cy="60" r="4.5" fill="var(--brand2)" stroke="#fff" stroke-width="1"/>
+        <g class="fragment" data-fragment-index="0">
+          <text class="shiftlbl" x="45" y="116" font-size="15" font-weight="700" fill="var(--accent)" text-anchor="middle">δ−</text>
+          <text class="shiftlbl" x="165" y="116" font-size="15" font-weight="700" fill="var(--brand)" text-anchor="middle">δ+</text>
+        </g>
+      </svg>
+      <p class="tiny center"><strong>N–H</strong> · ΔEN = 3,0 − 2,2 = 0,8<br>paire décalée vers N</p>
+    </div>
+
+    <!-- O–H -->
+    <div class="card" style="padding:8px 12px">
+      <svg viewBox="0 0 210 130" class="fig" style="height:165px;width:100%">
+        <line class="shiftmid" x1="105" y1="22" x2="105" y2="98"/>
+        <line class="shiftbond" x1="45" y1="60" x2="165" y2="60"/>
+        <circle cx="45" cy="60" r="20" fill="var(--accent)"/>
+        <text x="45" y="66" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">O</text>
+        <circle cx="165" cy="60" r="14" fill="var(--brand2)"/>
+        <text x="165" y="65" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">H</text>
+        <circle cx="76" cy="60" r="4.5" fill="var(--accent)" stroke="#fff" stroke-width="1"/>
+        <circle cx="85" cy="60" r="4.5" fill="var(--brand2)" stroke="#fff" stroke-width="1"/>
+        <g class="fragment" data-fragment-index="0">
+          <text class="shiftlbl" x="45" y="116" font-size="15" font-weight="700" fill="var(--accent)" text-anchor="middle">δ−</text>
+          <text class="shiftlbl" x="165" y="116" font-size="15" font-weight="700" fill="var(--brand)" text-anchor="middle">δ+</text>
+        </g>
+      </svg>
+      <p class="tiny center"><strong>O–H</strong> · ΔEN = 3,4 − 2,2 = 1,2<br>paire nettement décalée vers O</p>
+    </div>
+  </div>
+
+  <p class="small" style="margin-top:.5em">Pointillé : milieu de la liaison. Positions de la paire schématiques,
+  dans l'ordre des ΔEN. Une charge partielle vaut une fraction de la charge de l'électron ; dans une liaison
+  ionique, l'électron est transféré en entier.</p>
+
+  <p class="center beat" style="margin-top:.3em; min-height:1.4em">
+    <span class="fragment fade-up" data-fragment-index="1">
+      <span class="pill ghost">Plus ΔEN est grand, plus la paire est décalée et plus les δ sont grandes — C–H (ΔEN &lt; 0,4) est quasi apolaire</span>
+    </span>
+  </p>
+
+</section>

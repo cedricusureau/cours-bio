@@ -1,0 +1,91 @@
+<section>
+  <span class="kicker">Respiration cellulaire</span>
+  <h2>Oxyder le glucose, dans la mitochondrie</h2>
+  <div class="barline"></div>
+  <p class="small muted" style="margin:.2em 0 .2em">Oxyder, c'est retirer des électrons. Le glucose est oxydé par étapes : ses 6 C sortent en 6 CO₂,
+  ses électrons sont chargés sur le NAD⁺ (NAD⁺ + 2 e⁻ + H⁺ → NADH).</p>
+
+  <svg viewBox="0 0 1200 390" style="width:100%;max-height:345px;display:block;margin:0 auto" font-family="inherit">
+    <defs>
+      <marker id="gln-arr-k" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--ink)"/>
+      </marker>
+      <marker id="gln-arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--brand)"/>
+      </marker>
+    </defs>
+
+    <!-- ===== cytoplasme : glycolyse ===== -->
+    <text x="10" y="22" font-size="16" font-weight="700" fill="var(--muted)" letter-spacing="1">CYTOPLASME</text>
+    <rect x="30" y="45" width="170" height="56" rx="12" fill="var(--soft)" stroke="var(--line)" stroke-width="2"/>
+    <text x="115" y="70" font-size="20" font-weight="800" fill="var(--ink)" text-anchor="middle">glucose</text>
+    <text x="115" y="90" font-size="15" fill="var(--muted)" text-anchor="middle">6 C</text>
+    <line x1="115" y1="104" x2="115" y2="234" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#gln-arr-k)"/>
+    <text x="128" y="150" font-size="18" font-weight="700" fill="var(--ink)">glycolyse</text>
+    <text x="128" y="172" font-size="17" font-weight="700" fill="var(--good)">+ 2 ATP</text>
+    <text x="128" y="192" font-size="17" font-weight="700" fill="var(--brand)">+ 2 NADH</text>
+    <rect x="30" y="240" width="170" height="56" rx="12" fill="var(--soft)" stroke="var(--line)" stroke-width="2"/>
+    <text x="115" y="265" font-size="20" font-weight="800" fill="var(--ink)" text-anchor="middle">2 pyruvate</text>
+    <text x="115" y="285" font-size="15" fill="var(--muted)" text-anchor="middle">2 × 3 C</text>
+
+    <!-- ===== mitochondrie ===== -->
+    <!-- membrane externe ; entre les deux : espace intermembranaire -->
+    <rect x="330" y="30" width="850" height="350" rx="110" fill="var(--accent)" fill-opacity=".07" stroke="var(--ink)" stroke-opacity=".5" stroke-width="3"/>
+    <text x="755" y="22" font-size="15" fill="var(--muted)" text-anchor="middle">membrane externe</text>
+    <text x="620" y="44" font-size="13" fill="var(--muted)" text-anchor="middle">espace intermembranaire</text>
+    <!-- membrane interne, repliée en crêtes (3 replis en haut, 3 en bas) -->
+    <path d="M450 52 L780 52 L780 135 A10 10 0 0 0 800 135 L800 52 L880 52 L880 135 A10 10 0 0 0 900 135 L900 52
+             L980 52 L980 135 A10 10 0 0 0 1000 135 L1000 52 L1070 52 A88 88 0 0 1 1158 140 L1158 270
+             A88 88 0 0 1 1070 358 L1050 358 L1050 275 A10 10 0 0 0 1030 275 L1030 358 L950 358 L950 275
+             A10 10 0 0 0 930 275 L930 358 L850 358 L850 275 A10 10 0 0 0 830 275 L830 358 L450 358
+             A88 88 0 0 1 362 270 L362 140 A88 88 0 0 1 450 52 Z"
+          fill="#fff" stroke="var(--ink)" stroke-opacity=".5" stroke-width="3"/>
+    <line x1="203" y1="268" x2="396" y2="268" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#gln-arr-k)"/>
+    <text x="212" y="244" font-size="15" fill="var(--muted)">entre dans la</text>
+    <text x="212" y="259" font-size="15" fill="var(--muted)">mitochondrie</text>
+    <text x="470" y="345" font-size="16" font-weight="700" fill="var(--muted)" letter-spacing="1">MATRICE</text>
+
+    <!-- pyruvate → acétyl-CoA -->
+    <rect x="400" y="240" width="160" height="56" rx="12" fill="var(--soft)" stroke="var(--line)" stroke-width="2"/>
+    <text x="480" y="265" font-size="19" font-weight="800" fill="var(--ink)" text-anchor="middle">2 acétyl-CoA</text>
+    <text x="480" y="285" font-size="15" fill="var(--muted)" text-anchor="middle">2 × 2 C</text>
+    <text x="480" y="318" font-size="17" font-weight="700" text-anchor="middle"><tspan fill="var(--ink)">+ 2 CO₂</tspan><tspan fill="var(--brand)">  + 2 NADH</tspan></text>
+
+    <!-- cycle de Krebs -->
+    <line x1="560" y1="252" x2="618" y2="226" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#gln-arr-k)"/>
+    <circle cx="680" cy="200" r="62" fill="none" stroke="var(--brand)" stroke-width="4" stroke-dasharray="330 60"/>
+    <path d="M722 155 L735 162 L722 170" fill="none" stroke="var(--brand)" stroke-width="4" stroke-linejoin="round"/>
+    <text x="680" y="196" font-size="18" font-weight="800" fill="var(--ink)" text-anchor="middle">cycle de</text>
+    <text x="680" y="215" font-size="18" font-weight="800" fill="var(--ink)" text-anchor="middle">Krebs × 2</text>
+    <g font-size="17" font-weight="700">
+      <text x="420" y="104" fill="var(--ink)">+ 4 CO₂</text>
+      <text x="420" y="124" fill="var(--brand)">+ 6 NADH</text>
+      <text x="420" y="144" fill="var(--brand)">+ 2 FADH₂</text>
+      <text x="420" y="164" fill="var(--good)">+ 2 ATP</text>
+    </g>
+    <line x1="515" y1="130" x2="612" y2="175" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+    <!-- NADH → chaîne respiratoire -->
+    <line x1="746" y1="205" x2="872" y2="205" stroke="var(--brand)" stroke-width="3" marker-end="url(#gln-arr-b)"/>
+    <text x="808" y="196" font-size="17" font-weight="800" fill="var(--brand)" text-anchor="middle">NADH</text>
+    <g font-size="16">
+      <text x="884" y="190" font-weight="700" fill="var(--ink)">chaîne respiratoire</text>
+      <text x="884" y="208" font-weight="700" fill="var(--ink)">et ATP synthase :</text>
+      <text x="884" y="226" fill="var(--muted)">dans la membrane interne,</text>
+      <text x="884" y="244" fill="var(--muted)">repliée en crêtes</text>
+    </g>
+  </svg>
+
+  <div class="grid2" style="gap:14px;margin-top:.35em">
+    <div class="card" style="padding:10px 16px">
+      <p class="tiny" style="margin:0"><strong>Bilan par glucose</strong> : 6 CO₂, 4 ATP directs, 10 NADH + 2 FADH₂.
+      Chacun porte 2 e⁻ : 24 électrons retirés au glucose. 24 = 6 O₂ × 4 e⁻ : les 6 O₂ de
+      glucose + 6 O₂ → 6 CO₂ + 6 H₂O sont ceux qui recevront ces électrons.</p>
+    </div>
+    <div class="card" style="padding:10px 16px">
+      <p class="tiny" style="margin:0"><strong>La mitochondrie</strong> : organite à deux membranes, quelques centaines à quelques
+      milliers par cellule. Son propre ADN : 16 569 paires de bases, 37 gènes. Absente du globule rouge, qui s'arrête à la glycolyse.</p>
+    </div>
+  </div>
+
+</section>

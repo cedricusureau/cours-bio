@@ -1,0 +1,86 @@
+<section>
+  <style>
+    .bcl-t{font-size:22px;font-weight:800}
+    .bcl-lbl{font-size:18px;fill:var(--muted)}
+    .bcl-lbl-b{font-size:18px;font-weight:700;fill:var(--ink)}
+    .bcl-n{font-size:20px;font-weight:800}
+  </style>
+
+  <span class="kicker">Les systèmes</span>
+  <h2>La boucle de l'oxygène</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">Au repos, le sang fait le tour complet en ≈ 1 min : poumons, cœur gauche, muscles, cœur droit, poumons.</p>
+
+  <div class="figframe" style="margin-top:.3em;padding:6px 8px">
+    <svg viewBox="0 0 1180 470" class="fig" style="width:100%;max-height:445px">
+      <!-- organes -->
+      <rect x="330" y="10" width="520" height="80" rx="16" fill="var(--brand2)" opacity=".1"/>
+      <rect x="330" y="10" width="520" height="80" rx="16" fill="none" stroke="var(--brand2)" stroke-width="2.5"/>
+      <rect x="330" y="380" width="520" height="80" rx="16" fill="var(--good)" opacity=".08"/>
+      <rect x="330" y="380" width="520" height="80" rx="16" fill="none" stroke="var(--good)" stroke-width="2.5"/>
+
+      <!-- vaisseaux : moitié riche en O₂ (poumons → cœur gauche → muscles), moitié pauvre (muscles → cœur droit → poumons) -->
+      <path d="M 590 50 H 755 V 240 H 940 V 420 H 590" fill="none" stroke="var(--accent)" stroke-width="16" stroke-linejoin="round" opacity=".28"/>
+      <path d="M 590 420 H 240 V 240 H 425 V 50 H 590" fill="none" stroke="var(--brand)" stroke-width="16" stroke-linejoin="round" opacity=".28"/>
+      <!-- globules rouges en circulation -->
+      <g fill="var(--accent)">
+        <circle r="9"><animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M 590 50 H 755 V 240 H 940 V 420 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-1s" repeatCount="indefinite" path="M 590 50 H 755 V 240 H 940 V 420 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-2s" repeatCount="indefinite" path="M 590 50 H 755 V 240 H 940 V 420 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-3s" repeatCount="indefinite" path="M 590 50 H 755 V 240 H 940 V 420 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-4s" repeatCount="indefinite" path="M 590 50 H 755 V 240 H 940 V 420 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-5s" repeatCount="indefinite" path="M 590 50 H 755 V 240 H 940 V 420 H 590"/></circle>
+      </g>
+      <g fill="var(--brand)">
+        <circle r="9"><animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M 590 420 H 240 V 240 H 425 V 50 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-1s" repeatCount="indefinite" path="M 590 420 H 240 V 240 H 425 V 50 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-2s" repeatCount="indefinite" path="M 590 420 H 240 V 240 H 425 V 50 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-3s" repeatCount="indefinite" path="M 590 420 H 240 V 240 H 425 V 50 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-4s" repeatCount="indefinite" path="M 590 420 H 240 V 240 H 425 V 50 H 590"/></circle>
+        <circle r="9"><animateMotion dur="6s" begin="-5s" repeatCount="indefinite" path="M 590 420 H 240 V 240 H 425 V 50 H 590"/></circle>
+      </g>
+
+      <!-- cœur : deux pompes -->
+      <rect x="340" y="200" width="170" height="80" rx="18" fill="#fff" stroke="var(--brand)" stroke-width="4"/>
+      <rect x="670" y="200" width="170" height="80" rx="18" fill="#fff" stroke="var(--accent)" stroke-width="7"/>
+      <text class="bcl-t" x="425" y="236" text-anchor="middle" fill="var(--brand)">cœur droit</text>
+      <text class="bcl-lbl" x="425" y="262" text-anchor="middle">≈ 25 mmHg</text>
+      <text class="bcl-t" x="755" y="236" text-anchor="middle" fill="var(--accent)">cœur gauche</text>
+      <text class="bcl-lbl" x="755" y="262" text-anchor="middle">≈ 120 mmHg</text>
+
+
+      <!-- étapes -->
+      <text class="bcl-t" x="346" y="36" fill="var(--brand2)">Poumons</text>
+      <text class="bcl-lbl" x="846" y="36" text-anchor="end">O₂ → hémoglobine</text>
+      <text class="bcl-lbl" x="846" y="82" text-anchor="end">CO₂ → air expiré</text>
+      <text class="bcl-t" x="346" y="406" fill="var(--good)">Muscles</text>
+      <text class="bcl-lbl" x="846" y="406" text-anchor="end">O₂ → myoglobine → mitochondries → ATP</text>
+      <text class="bcl-lbl" x="846" y="452" text-anchor="end">CO₂ → sang</text>
+
+      <text class="bcl-n" x="30" y="44" fill="var(--accent)">①</text>
+      <text class="bcl-lbl-b" x="58" y="44">hémoglobine saturée</text>
+      <text class="bcl-lbl" x="58" y="66">à ≈ 97 % en ≈ 0,25 s</text>
+
+      <text class="bcl-n" x="770" y="140" fill="var(--accent)">②</text>
+      <text class="bcl-lbl-b" x="796" y="140">veines pulmonaires</text>
+
+      <text class="bcl-n" x="958" y="300" fill="var(--accent)">③</text>
+      <text class="bcl-lbl-b" x="984" y="300">aorte,</text>
+      <text class="bcl-lbl-b" x="984" y="322">artères,</text>
+      <text class="bcl-lbl-b" x="984" y="344">artérioles</text>
+
+      <text class="bcl-n" x="600" y="352" fill="var(--good)">④</text>
+      <text class="bcl-lbl-b" x="626" y="352">capillaires : 1 à 3 s</text>
+
+      <text class="bcl-n" x="30" y="300" fill="var(--brand)">⑤</text>
+      <text class="bcl-lbl-b" x="56" y="300">veines caves :</text>
+      <text class="bcl-lbl" x="56" y="322">hémoglobine</text>
+      <text class="bcl-lbl" x="56" y="344">saturée à ≈ 75 %</text>
+      <text class="bcl-lbl" x="56" y="366">au repos</text>
+
+      <text class="bcl-n" x="440" y="140" fill="var(--brand)">⑥</text>
+      <text class="bcl-lbl-b" x="466" y="140">artère pulmonaire</text>
+    </svg>
+  </div>
+
+</section>

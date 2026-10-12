@@ -1,0 +1,100 @@
+<section>
+  <style>
+    .b2nt-ring{fill:#fff;stroke:var(--brand);stroke-width:3;stroke-linejoin:round}
+    .b2nt-bond{stroke:var(--line);stroke-width:4;stroke-linecap:round}
+    .b2nt-link{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+    .b2nt-num{font-size:13px;font-weight:700;fill:var(--ink)}
+    .b2nt-p{fill:#fff;stroke:var(--accent);stroke-width:3}
+    .b2nt-base{fill:#fff;stroke:var(--brand2);stroke-width:3}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="b2nt-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Structure</span>
+  <h2>Le brin a un sens : de 5' vers 3'</h2>
+  <div class="barline"></div>
+  <p class="small muted">Phosphate, sucre, base : c'est la numérotation des carbones du sucre qui donne un sens au brin.</p>
+
+  <div class="grid2" style="grid-template-columns:1fr 1.05fr;margin-top:.2em;align-items:start">
+    <div class="figframe" style="padding:4px 8px">
+      <svg viewBox="0 0 420 380" class="fig" style="max-height:340px">
+        <!-- nucléotide 1 -->
+        <line class="b2nt-bond" x1="193.9" y1="108.3" x2="178" y2="76"/>
+        <line class="b2nt-bond" x1="178" y1="76" x2="178" y2="56"/>
+        <circle class="b2nt-p" cx="178" cy="40" r="16"/>
+        <text x="178" y="45.5" font-size="15" font-weight="700" fill="var(--accent)" text-anchor="middle">P</text>
+        <text x="200" y="31" font-size="15" font-weight="700" fill="var(--accent)" text-anchor="middle">−</text>
+        <line class="b2nt-bond" x1="266.1" y1="108.3" x2="290" y2="108.3"/>
+        <rect class="b2nt-base" x="290" y="90" width="70" height="36" rx="8"/>
+        <text x="325" y="115" font-size="19" font-weight="700" fill="var(--brand2)" text-anchor="middle">A</text>
+        <polygon class="b2nt-ring" points="230,82 266.1,108.3 252.3,150.7 207.7,150.7 193.9,108.3"/>
+        <circle cx="230" cy="82" r="10" fill="#fff" stroke="var(--accent)" stroke-width="2"/>
+        <text x="230" y="86.5" font-size="12" font-weight="700" fill="var(--accent)" text-anchor="middle">O</text>
+        <line class="b2nt-bond" x1="252.3" y1="150.7" x2="252.3" y2="168"/>
+        <text x="252.3" y="183" font-size="13" font-weight="700" fill="var(--muted)" text-anchor="middle">H</text>
+        <g class="fragment fade-out" data-fragment-index="0">
+          <line class="b2nt-bond" x1="207.7" y1="150.7" x2="198" y2="170"/>
+          <text x="192" y="185" font-size="13" font-weight="700" fill="var(--accent)" text-anchor="middle">OH</text>
+        </g>
+        <text class="b2nt-num" x="272" y="100">1'</text>
+        <text class="b2nt-num" x="260" y="153">2'</text>
+        <text class="b2nt-num" x="196" y="160" text-anchor="end">3'</text>
+        <text class="b2nt-num" x="188" y="120" text-anchor="end">4'</text>
+        <text class="b2nt-num" x="170" y="80" text-anchor="end">5'</text>
+
+        <!-- nucléotide 2, accroché par une liaison phosphodiester 3'→5' -->
+        <g class="fragment" data-fragment-index="0">
+          <path class="b2nt-link" d="M207.7,150.7 L196,176 L182,194"/>
+          <circle class="b2nt-p" cx="178" cy="210" r="16"/>
+          <text x="178" y="215.5" font-size="15" font-weight="700" fill="var(--accent)" text-anchor="middle">P</text>
+          <text x="200" y="201" font-size="15" font-weight="700" fill="var(--accent)" text-anchor="middle">−</text>
+          <path class="b2nt-link" d="M178,226 L178,246 L193.9,278.3"/>
+          <text x="156" y="172" font-size="12" fill="var(--accent)" text-anchor="end">liaison</text>
+          <text x="156" y="187" font-size="12" fill="var(--accent)" text-anchor="end">phosphodiester</text>
+          <text x="156" y="202" font-size="12" font-weight="700" fill="var(--accent)" text-anchor="end">3'→5'</text>
+          <line class="b2nt-bond" x1="266.1" y1="278.3" x2="290" y2="278.3"/>
+          <rect class="b2nt-base" x="290" y="260" width="70" height="36" rx="8"/>
+          <text x="325" y="285" font-size="19" font-weight="700" fill="var(--brand2)" text-anchor="middle">T</text>
+          <polygon class="b2nt-ring" points="230,252 266.1,278.3 252.3,320.7 207.7,320.7 193.9,278.3"/>
+          <circle cx="230" cy="252" r="10" fill="#fff" stroke="var(--accent)" stroke-width="2"/>
+          <text x="230" y="256.5" font-size="12" font-weight="700" fill="var(--accent)" text-anchor="middle">O</text>
+          <line class="b2nt-bond" x1="252.3" y1="320.7" x2="252.3" y2="338"/>
+          <text x="252.3" y="353" font-size="13" font-weight="700" fill="var(--muted)" text-anchor="middle">H</text>
+          <line class="b2nt-bond" x1="207.7" y1="320.7" x2="198" y2="340"/>
+          <text x="192" y="355" font-size="13" font-weight="700" fill="var(--accent)" text-anchor="middle">OH</text>
+        </g>
+
+        <!-- les deux extrémités -->
+        <g class="fragment" data-fragment-index="1">
+          <line x1="22" y1="30" x2="22" y2="350" stroke="var(--muted)" stroke-width="2.5" marker-end="url(#b2nt-arr)"/>
+          <text x="150" y="37" font-size="15" font-weight="700" fill="var(--ink)" text-anchor="end">extrémité 5'</text>
+          <text x="150" y="54" font-size="12" fill="var(--muted)" text-anchor="end">phosphate libre</text>
+          <text x="172" y="351" font-size="15" font-weight="700" fill="var(--ink)" text-anchor="end">extrémité 3'</text>
+          <text x="172" y="368" font-size="12" fill="var(--muted)" text-anchor="end">OH libre</text>
+        </g>
+      </svg>
+    </div>
+
+    <div>
+      <p class="small" style="margin-top:.2em">Le sucre de l'ADN, le <strong>désoxyribose</strong>, a cinq
+      carbones numérotés <strong>1' à 5'</strong> : la base sur <strong>C1'</strong>, le phosphate sur
+      <strong>C5'</strong>, un H en <strong>2'</strong> (un OH dans l'ARN, dont le sucre est le ribose).</p>
+      <p class="small fragment" data-fragment-index="0" style="margin-top:.5em">Le phosphate d'un
+      nucléotide se lie au <strong>OH en 3'</strong> du précédent : liaison <strong>phosphodiester
+      3'→5'</strong>, sur toute la longueur du brin.</p>
+      <p class="small fragment" data-fragment-index="1" style="margin-top:.5em">Les deux extrémités ne sont
+      pas équivalentes : <strong>5'</strong>, un phosphate libre ; <strong>3'</strong>, un OH libre. Un
+      fichier FASTA commence par l'extrémité 5'.</p>
+    </div>
+  </div>
+
+  <p class="center fragment fade-up" data-fragment-index="2" style="margin-top:.35em">
+    <span class="pill ghost">Convention : une séquence s'écrit toujours de 5' vers 3'</span>
+  </p>
+
+</section>

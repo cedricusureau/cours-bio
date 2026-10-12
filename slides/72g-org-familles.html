@@ -1,0 +1,118 @@
+<section>
+  <style>
+    .fam-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:.35em}
+    .fam-grid .card{display:grid;grid-template-columns:170px 1fr;gap:14px;align-items:center;padding:10px 14px}
+    .fam-grid h3{margin:0 0 .15em;font-size:.6em;color:var(--ink);font-weight:800}
+    .fam-grid p{margin:0}
+    .fam-cell{fill:var(--soft);stroke-width:2}
+  </style>
+
+  <span class="kicker">Les tissus</span>
+  <h2>Quatre familles de tissus</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">Un tissu : des cellules spécialisées et la matrice extracellulaire qu'elles sécrètent.</p>
+
+  <div class="fam-grid">
+    <!-- ÉPITHÉLIAL -->
+    <div class="card">
+      <svg viewBox="0 0 200 100" style="width:170px;height:85px">
+        <g stroke="var(--brand)" stroke-width="2">
+          <line x1="15" y1="22" x2="15" y2="15"/><line x1="25" y1="22" x2="25" y2="15"/><line x1="45" y1="22" x2="45" y2="15"/><line x1="55" y1="22" x2="55" y2="15"/>
+          <line x1="75" y1="22" x2="75" y2="15"/><line x1="85" y1="22" x2="85" y2="15"/><line x1="105" y1="22" x2="105" y2="15"/><line x1="115" y1="22" x2="115" y2="15"/>
+          <line x1="135" y1="22" x2="135" y2="15"/><line x1="145" y1="22" x2="145" y2="15"/><line x1="165" y1="22" x2="165" y2="15"/><line x1="175" y1="22" x2="175" y2="15"/>
+        </g>
+        <g class="fam-cell" stroke="var(--brand)">
+          <rect x="10" y="22" width="30" height="56"/><rect x="40" y="22" width="30" height="56"/><rect x="70" y="22" width="30" height="56"/>
+          <rect x="100" y="22" width="30" height="56"/><rect x="130" y="22" width="30" height="56"/><rect x="160" y="22" width="30" height="56"/>
+        </g>
+        <g fill="var(--brand)">
+          <ellipse cx="25" cy="64" rx="7" ry="9"/><ellipse cx="55" cy="64" rx="7" ry="9"/><ellipse cx="85" cy="64" rx="7" ry="9"/>
+          <ellipse cx="115" cy="64" rx="7" ry="9"/><ellipse cx="145" cy="64" rx="7" ry="9"/><ellipse cx="175" cy="64" rx="7" ry="9"/>
+        </g>
+        <line x1="6" y1="81" x2="194" y2="81" stroke="var(--ink)" stroke-width="4"/>
+      </svg>
+      <div>
+        <h3>Épithélial</h3>
+        <p class="tiny">Cellules jointives sur une lame basale. Recouvre les surfaces, borde les cavités.</p>
+        <p class="tiny"><b>Ex.</b> épiderme, intestin, endothélium, alvéoles.</p>
+      </div>
+    </div>
+
+    <!-- CONJONCTIF -->
+    <div class="card">
+      <svg viewBox="0 0 200 100" style="width:170px;height:85px">
+        <rect x="6" y="10" width="188" height="80" rx="8" fill="#fff" stroke="var(--line)" stroke-width="2"/>
+        <g fill="none" stroke="var(--muted)" stroke-width="1.6" opacity=".7">
+          <path d="M 10 30 C 40 20, 60 40, 90 30 S 140 20, 190 32"/>
+          <path d="M 10 62 C 50 52, 70 72, 110 60 S 160 50, 190 66"/>
+          <path d="M 10 80 C 40 74, 80 88, 120 78 S 170 72, 190 82"/>
+        </g>
+        <g fill="var(--soft)" stroke="var(--brand2)" stroke-width="2">
+          <ellipse cx="40" cy="46" rx="17" ry="7" transform="rotate(-12 40 46)"/>
+          <ellipse cx="120" cy="40" rx="17" ry="7" transform="rotate(10 120 40)"/>
+          <ellipse cx="160" cy="72" rx="17" ry="7" transform="rotate(-6 160 72)"/>
+          <ellipse cx="72" cy="74" rx="17" ry="7" transform="rotate(4 72 74)"/>
+        </g>
+        <g fill="var(--brand2)">
+          <circle cx="40" cy="46" r="3.5"/><circle cx="120" cy="40" r="3.5"/><circle cx="160" cy="72" r="3.5"/><circle cx="72" cy="74" r="3.5"/>
+        </g>
+      </svg>
+      <div>
+        <h3>Conjonctif</h3>
+        <p class="tiny">Cellules dispersées dans une matrice abondante : fibreuse, minéralisée ou liquide.</p>
+        <p class="tiny"><b>Ex.</b> derme, tendon, os, <strong>sang</strong> (matrice liquide : le plasma).</p>
+      </div>
+    </div>
+
+    <!-- MUSCULAIRE -->
+    <div class="card">
+      <svg viewBox="0 0 200 100" style="width:170px;height:85px">
+        <defs>
+          <pattern id="fam-stries" width="8" height="10" patternUnits="userSpaceOnUse">
+            <rect width="8" height="10" fill="var(--soft)"/><rect width="3" height="10" fill="var(--accent)" opacity=".35"/>
+          </pattern>
+        </defs>
+        <g stroke="var(--accent)" stroke-width="2" fill="url(#fam-stries)">
+          <rect x="8" y="14" width="184" height="20" rx="10"/>
+          <rect x="8" y="40" width="184" height="20" rx="10"/>
+          <rect x="8" y="66" width="184" height="20" rx="10"/>
+        </g>
+        <g fill="var(--accent)">
+          <ellipse cx="60" cy="24" rx="9" ry="4"/><ellipse cx="150" cy="24" rx="9" ry="4"/>
+          <ellipse cx="100" cy="50" rx="9" ry="4"/><ellipse cx="40" cy="76" rx="9" ry="4"/><ellipse cx="130" cy="76" rx="9" ry="4"/>
+        </g>
+      </svg>
+      <div>
+        <h3>Musculaire</h3>
+        <p class="tiny">Cellules contractiles, remplies de filaments d'actine et de myosine.</p>
+        <p class="tiny"><b>Ex.</b> muscles squelettiques, myocarde, muscle lisse.</p>
+      </div>
+    </div>
+
+    <!-- NERVEUX -->
+    <div class="card">
+      <svg viewBox="0 0 200 100" style="width:170px;height:85px">
+        <g fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round">
+          <path d="M 40 50 L 14 30 M 26 39 L 18 44 M 40 50 L 12 62 M 24 57 L 22 72 M 40 50 L 30 20 M 34 32 L 42 18 M 40 50 L 38 84"/>
+          <line x1="52" y1="50" x2="170" y2="50"/>
+          <path d="M 170 50 L 190 36 M 170 50 L 192 50 M 170 50 L 190 64"/>
+        </g>
+        <g fill="var(--soft)" stroke="var(--muted)" stroke-width="2">
+          <rect x="66" y="44" width="24" height="12" rx="6"/><rect x="96" y="44" width="24" height="12" rx="6"/><rect x="126" y="44" width="24" height="12" rx="6"/>
+        </g>
+        <circle cx="42" cy="50" r="13" fill="var(--soft)" stroke="var(--muted)" stroke-width="2.5"/>
+        <circle cx="42" cy="50" r="5" fill="var(--muted)"/>
+      </svg>
+      <div>
+        <h3>Nerveux</h3>
+        <p class="tiny">Neurones, qui conduisent des signaux électriques, et cellules gliales.</p>
+        <p class="tiny"><b>Ex.</b> encéphale, moelle épinière, nerfs.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:.4em;padding:8px 16px">
+    <p class="tiny" style="margin:0;color:var(--ink)">Même génome dans toutes ces cellules : elles diffèrent par les gènes <strong>exprimés</strong>. HBB est exprimé à très haut niveau dans les précurseurs des globules rouges, à l'état de traces ou pas du tout ailleurs.</p>
+  </div>
+
+</section>

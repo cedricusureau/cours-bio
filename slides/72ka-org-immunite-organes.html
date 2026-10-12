@@ -1,0 +1,111 @@
+<section>
+  <style>
+    .imo-lbl{font-size:17px;fill:var(--muted)}
+    .imo-lbl-b{font-size:18px;font-weight:700}
+    .imo-body{stroke:#e8eef6;stroke-linecap:round}
+    .imo-card{padding:8px 14px}
+    .imo-card h3{font-size:.6em;margin:0 0 .2em}
+  </style>
+
+  <span class="kicker">Les systèmes</span>
+  <h2>Les organes du système immunitaire</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">Les globules blancs naissent dans la moelle osseuse, circulent dans le sang et la lymphe, et rencontrent les microbes dans des organes dédiés.</p>
+
+  <div class="grid2" style="margin-top:.3em;gap:16px;align-items:stretch;grid-template-columns:1fr 1fr">
+    <div class="figframe" style="padding:6px">
+      <svg viewBox="0 0 560 440" class="fig" style="width:100%;max-height:400px">
+        <!-- silhouette -->
+        <g class="imo-body" fill="#e8eef6">
+          <circle cx="280" cy="40" r="27" stroke="none"/>
+          <rect x="268" y="60" width="24" height="22" stroke="none"/>
+          <path d="M 230 82 Q 280 74 330 82 L 336 192 Q 334 232 326 252 L 234 252 Q 226 232 224 192 Z" stroke="none"/>
+          <line x1="232" y1="92" x2="202" y2="236" stroke-width="22"/>
+          <line x1="328" y1="92" x2="358" y2="236" stroke-width="22"/>
+          <line x1="258" y1="246" x2="252" y2="422" stroke-width="34"/>
+          <line x1="302" y1="246" x2="308" y2="422" stroke-width="34"/>
+        </g>
+        <!-- vaisseaux lymphatiques -->
+        <g fill="none" stroke="var(--good)" stroke-width="1.8" stroke-dasharray="4 3" opacity=".8">
+          <path d="M 262 70 L 272 88 L 274 200 L 262 238"/>
+          <path d="M 298 70 L 288 88"/>
+          <path d="M 234 100 L 272 110"/>
+          <path d="M 326 100 L 288 96"/>
+          <path d="M 298 238 L 274 200"/>
+          <path d="M 262 238 L 256 330"/><path d="M 298 238 L 304 330"/>
+        </g>
+        <!-- moelle osseuse : bassin et fémurs -->
+        <g fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round">
+          <path d="M 244 226 Q 280 250 316 226"/>
+          <line x1="260" y1="262" x2="256" y2="350"/>
+          <line x1="300" y1="262" x2="304" y2="350"/>
+        </g>
+        <!-- thymus -->
+        <ellipse cx="280" cy="104" rx="13" ry="17" fill="var(--accent)"/>
+        <!-- amygdales -->
+        <circle cx="272" cy="56" r="4.5" fill="var(--brand)"/><circle cx="288" cy="56" r="4.5" fill="var(--brand)"/>
+        <!-- rate (à gauche du patient, donc à droite du schéma) -->
+        <ellipse cx="318" cy="150" rx="10" ry="19" fill="var(--brand)" transform="rotate(20 318 150)"/>
+        <!-- intestin grêle et plaques de Peyer -->
+        <path d="M 256 176 Q 300 172 300 186 Q 300 198 262 198 Q 250 210 300 212" fill="none" stroke="var(--muted)" stroke-width="4" stroke-linecap="round"/>
+        <g fill="var(--brand)"><circle cx="282" cy="175" r="3.5"/><circle cx="284" cy="198" r="3.5"/><circle cx="276" cy="211" r="3.5"/></g>
+        <!-- ganglions -->
+        <g fill="var(--good)">
+          <circle cx="262" cy="70" r="5"/><circle cx="298" cy="70" r="5"/>
+          <circle cx="234" cy="100" r="5"/><circle cx="326" cy="100" r="5"/>
+          <circle cx="262" cy="238" r="5"/><circle cx="298" cy="238" r="5"/>
+          <circle cx="274" cy="150" r="4"/>
+        </g>
+
+        <!-- étiquettes gauche -->
+        <g stroke="var(--muted)" stroke-width="1.2">
+          <line x1="150" y1="52" x2="266" y2="56"/>
+          <line x1="150" y1="112" x2="266" y2="106"/>
+          <line x1="150" y1="302" x2="252" y2="302"/>
+        </g>
+        <text class="imo-lbl-b" x="10" y="48" fill="var(--brand)">amygdales</text>
+        <text class="imo-lbl-b" x="10" y="108" fill="var(--accent)">thymus</text>
+        <text class="imo-lbl" x="10" y="130">maturation des T</text>
+        <text class="imo-lbl-b" x="10" y="298" fill="var(--accent)">moelle osseuse</text>
+        <text class="imo-lbl" x="10" y="320">toutes les cellules</text>
+        <text class="imo-lbl" x="10" y="340">du sang</text>
+        <!-- étiquettes droite -->
+        <g stroke="var(--muted)" stroke-width="1.2">
+          <line x1="332" y1="100" x2="410" y2="82"/>
+          <line x1="330" y1="150" x2="410" y2="154"/>
+          <line x1="304" y1="204" x2="410" y2="222"/>
+        </g>
+        <text class="imo-lbl-b" x="416" y="78" fill="var(--good)">ganglions</text>
+        <text class="imo-lbl" x="416" y="100">≈ 600</text>
+        <text class="imo-lbl-b" x="416" y="150" fill="var(--brand)">rate</text>
+        <text class="imo-lbl" x="416" y="172">filtre le sang</text>
+        <text class="imo-lbl-b" x="416" y="218" fill="var(--brand)">plaques</text>
+        <text class="imo-lbl-b" x="416" y="240" fill="var(--brand)">de Peyer</text>
+        <text class="imo-lbl" x="416" y="262">intestin</text>
+        <!-- légende lymphe -->
+        <line x1="380" y1="404" x2="410" y2="404" stroke="var(--good)" stroke-width="1.8" stroke-dasharray="4 3"/>
+        <text class="imo-lbl" x="416" y="410">lymphe</text>
+      </svg>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="card imo-card">
+        <h3 style="color:var(--accent)">Organes primaires : production</h3>
+        <p class="tiny" style="margin:0;color:var(--ink)"><b>Moelle osseuse</b> : cellules souches hématopoïétiques, à l'origine de tous les globules blancs (et des globules rouges). <b>Thymus</b> : sélection des lymphocytes T ; seuls quelques pour cent en sortent.</p>
+      </div>
+      <div class="card imo-card">
+        <h3 style="color:var(--brand)">Organes secondaires : rencontre</h3>
+        <p class="tiny" style="margin:0;color:var(--ink)">Les lymphocytes y attendent les microbes apportés par la lymphe (<b>ganglions</b>), par le sang (<b>rate</b>) ou prélevés aux muqueuses (<b>amygdales</b>, <b>plaques de Peyer</b>).</p>
+      </div>
+      <div class="card imo-card">
+        <h3 style="color:var(--good)">La lymphe</h3>
+        <p class="tiny" style="margin:0;color:var(--ink)">Liquide sorti des capillaires dans les tissus, ≈ 3 L par jour, ramené vers les veines en traversant les ganglions.</p>
+      </div>
+      <div class="card imo-card">
+        <h3 style="color:var(--brand2)">Barrières</h3>
+        <p class="tiny" style="margin:0;color:var(--ink)">Épithéliums de la peau (≈ 1,8 m²) et des muqueuses : intestin ≈ 30 m², alvéoles 70 à 140 m².</p>
+      </div>
+    </div>
+  </div>
+
+</section>

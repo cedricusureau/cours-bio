@@ -1,0 +1,79 @@
+<section>
+  <style>
+    .b2rp-par{stroke:var(--ink);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .b2rp-new{stroke:var(--brand);stroke-width:5;fill:none;stroke-linecap:round}
+    .b2rp-pri{stroke:var(--brand2);stroke-width:7;stroke-linecap:round}
+    .b2rp-rung{stroke:var(--line);stroke-width:3}
+    .b2rp-end{font-size:15px;font-weight:700;fill:var(--muted);text-anchor:middle}
+    .b2rp-lbl{font-size:15px;font-weight:700;text-anchor:middle}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="b2rp-head" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--brand)"/></marker>
+      <marker id="b2rp-fork" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/></marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Copier</span>
+  <h2>La réplication : chaque brin sert de modèle</h2>
+  <div class="barline"></div>
+  <p class="small muted">La double hélice s'ouvre ; face à chaque brin parental, un brin neuf est assemblé, A face à T, G face à C.</p>
+
+  <div class="figframe" style="margin-top:.15em;padding:4px 10px">
+    <svg viewBox="0 0 1000 260" class="fig" style="width:100%;max-height:195px">
+      <!-- double hélice parentale non encore copiée, à droite -->
+      <g>
+        <line class="b2rp-rung" x1="640" y1="122" x2="640" y2="148"/><line class="b2rp-rung" x1="680" y1="122" x2="680" y2="148"/>
+        <line class="b2rp-rung" x1="720" y1="122" x2="720" y2="148"/><line class="b2rp-rung" x1="760" y1="122" x2="760" y2="148"/>
+        <line class="b2rp-rung" x1="800" y1="122" x2="800" y2="148"/><line class="b2rp-rung" x1="840" y1="122" x2="840" y2="148"/>
+        <line class="b2rp-rung" x1="880" y1="122" x2="880" y2="148"/><line class="b2rp-rung" x1="920" y1="122" x2="920" y2="148"/>
+      </g>
+      <!-- brin parental du haut : 5' à gauche, 3' à droite -->
+      <path class="b2rp-par" d="M60,40 L560,40 L610,120 L960,120"/>
+      <!-- brin parental du bas : 3' à gauche, 5' à droite -->
+      <path class="b2rp-par" d="M60,220 L560,220 L610,150 L960,150"/>
+      <text class="b2rp-end" x="38" y="45">5'</text>
+      <text class="b2rp-end" x="982" y="125">3'</text>
+      <text class="b2rp-end" x="38" y="225">3'</text>
+      <text class="b2rp-end" x="982" y="155">5'</text>
+      <!-- la fourche avance vers la droite -->
+      <line x1="608" y1="135" x2="660" y2="135" stroke="var(--accent)" stroke-width="3" marker-end="url(#b2rp-fork)"/>
+      <text x="668" y="110" font-size="14" font-weight="700" fill="var(--accent)">fourche</text>
+
+      <!-- (0) brin continu : sur la matrice du bas, s'allonge vers la fourche (5'→3' de gauche à droite) -->
+      <g class="fragment" data-fragment-index="0">
+        <line class="b2rp-new" x1="70" y1="196" x2="560" y2="196" marker-end="url(#b2rp-head)"/>
+        <text x="66" y="192" font-size="12" font-weight="700" fill="var(--brand)" text-anchor="end">5'</text>
+        <text x="585" y="201" font-size="12" font-weight="700" fill="var(--brand)">3'</text>
+        <text class="b2rp-lbl" x="70" y="184" fill="var(--brand)" style="text-anchor:start">brin continu : il s'allonge vers la fourche</text>
+      </g>
+
+      <!-- (1) fragments d'Okazaki : sur la matrice du haut, s'allongent en s'éloignant de la fourche (5'→3' de droite à gauche) -->
+      <g class="fragment" data-fragment-index="1">
+        <line class="b2rp-new" x1="530" y1="64" x2="415" y2="64" marker-end="url(#b2rp-head)"/>
+        <line class="b2rp-pri" x1="545" y1="64" x2="530" y2="64"/>
+        <line class="b2rp-new" x1="395" y1="64" x2="240" y2="64"/>
+        <line class="b2rp-pri" x1="410" y1="64" x2="395" y2="64"/>
+        <line class="b2rp-new" x1="220" y1="64" x2="70" y2="64"/>
+        <line class="b2rp-pri" x1="235" y1="64" x2="220" y2="64"/>
+        <text x="560" y="69" font-size="12" font-weight="700" fill="var(--brand)">5'</text>
+        <text class="b2rp-lbl" x="70" y="92" fill="var(--brand)" style="text-anchor:start">fragments d'Okazaki : chacun s'éloigne de la fourche</text>
+        <text x="552" y="92" font-size="12" font-weight="700" fill="var(--brand2)">amorce ARN</text>
+      </g>
+    </svg>
+  </div>
+
+  <p class="small fragment" data-fragment-index="1" style="margin-top:.3em">Une ADN polymérase n'allonge un brin que
+  par son extrémité <strong>3'</strong> : copie continue du côté où la fourche avance, <strong>fragments
+  d'Okazaki</strong> (100 à 200 nt) de l'autre, chacun démarré sur une amorce d'ARN puis raccordé.</p>
+  <p class="small fragment" data-fragment-index="2" style="margin-top:.25em">Chaque double hélice fille : <strong>un brin
+  parental et un brin neuf</strong> (réplication semi-conservative).</p>
+
+  <div class="grid3 fragment" data-fragment-index="3" style="grid-template-columns:repeat(4,1fr);gap:10px;margin-top:0">
+    <div class="stat" style="padding:2px"><div class="n" style="font-size:1.05em">1–2 kb/min</div><div class="l">par fourche</div></div>
+    <div class="stat" style="padding:2px"><div class="n" style="font-size:1.05em">43 jours</div><div class="l">chromosome 1, une origine, à 2 kb/min</div></div>
+    <div class="stat" style="padding:2px"><div class="n" style="font-size:1.05em">≈ 8 h</div><div class="l">phase S, copie de l'ADN</div></div>
+    <div class="stat" style="padding:2px"><div class="n" style="font-size:1.05em">30 000–50 000</div><div class="l">origines par division</div></div>
+  </div>
+
+</section>

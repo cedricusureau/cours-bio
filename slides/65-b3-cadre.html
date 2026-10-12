@@ -1,0 +1,39 @@
+<section>
+  <style>
+    .b3cd-row{display:grid;grid-template-columns:5.2em repeat(21, 1fr);column-gap:3px;align-items:center;margin-top:8px}
+    .b3cd-lab{grid-column:1;font-size:.5em;font-weight:700;color:var(--muted);text-align:right;padding-right:10px}
+    .b3cd-nt{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.6em;font-weight:700;text-align:center;color:var(--ink)}
+    .b3cd-dim{color:#cbd5e1}
+    .b3cd-cod{display:flex;flex-direction:column;align-items:center;border:2px solid var(--brand);border-radius:8px;
+               background:#eef2ff;padding:2px 0 3px;line-height:1.15}
+    .b3cd-cod .c{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.55em;font-weight:700;letter-spacing:.18em;color:var(--ink)}
+    .b3cd-cod .a{font-size:.45em;font-weight:700;color:var(--brand)}
+    .b3cd-stop{background:var(--ink);border-color:var(--ink)}
+    .b3cd-stop .c,.b3cd-stop .a{color:#fff}
+  </style>
+
+  <span class="kicker">Le cadre</span>
+  <h2>Le cadre de lecture</h2>
+  <div class="barline"></div>
+  <p class="small muted">La même suite de lettres se découpe en codons de trois façons. Début de l'ARNm de HBB.</p>
+
+  <div class="figframe" style="margin-top:.2em;padding:8px 14px 12px">
+      <div class="b3cd-row"><div class="b3cd-lab">ARNm</div><div class="b3cd-nt" style="grid-column:2">A</div><div class="b3cd-nt" style="grid-column:3">U</div><div class="b3cd-nt" style="grid-column:4">G</div><div class="b3cd-nt" style="grid-column:5">G</div><div class="b3cd-nt" style="grid-column:6">U</div><div class="b3cd-nt" style="grid-column:7">G</div><div class="b3cd-nt" style="grid-column:8">C</div><div class="b3cd-nt" style="grid-column:9">A</div><div class="b3cd-nt" style="grid-column:10">U</div><div class="b3cd-nt" style="grid-column:11">C</div><div class="b3cd-nt" style="grid-column:12">U</div><div class="b3cd-nt" style="grid-column:13">G</div><div class="b3cd-nt" style="grid-column:14">A</div><div class="b3cd-nt" style="grid-column:15">C</div><div class="b3cd-nt" style="grid-column:16">U</div><div class="b3cd-nt" style="grid-column:17">C</div><div class="b3cd-nt" style="grid-column:18">C</div><div class="b3cd-nt" style="grid-column:19">U</div><div class="b3cd-nt" style="grid-column:20">G</div><div class="b3cd-nt" style="grid-column:21">A</div><div class="b3cd-nt b3cd-dim" style="grid-column:22">…</div></div>
+      <div class="b3cd-row fragment" data-fragment-index="0"><div class="b3cd-lab">cadre 1</div><div class="b3cd-cod" style="grid-column:2 / span 3"><span class="c">AUG</span><span class="a">M · Met</span></div><div class="b3cd-cod" style="grid-column:5 / span 3"><span class="c">GUG</span><span class="a">V · Val</span></div><div class="b3cd-cod" style="grid-column:8 / span 3"><span class="c">CAU</span><span class="a">H · His</span></div><div class="b3cd-cod" style="grid-column:11 / span 3"><span class="c">CUG</span><span class="a">L · Leu</span></div><div class="b3cd-cod" style="grid-column:14 / span 3"><span class="c">ACU</span><span class="a">T · Thr</span></div><div class="b3cd-cod" style="grid-column:17 / span 3"><span class="c">CCU</span><span class="a">P · Pro</span></div><div class="b3cd-nt b3cd-dim" style="grid-column:20">G</div><div class="b3cd-nt b3cd-dim" style="grid-column:21">A</div><div class="b3cd-nt b3cd-dim" style="grid-column:22">…</div></div>
+      <div class="b3cd-row fragment" data-fragment-index="1"><div class="b3cd-lab">cadre 2</div><div class="b3cd-nt b3cd-dim" style="grid-column:2">A</div><div class="b3cd-cod" style="grid-column:3 / span 3"><span class="c">UGG</span><span class="a">W · Trp</span></div><div class="b3cd-cod" style="grid-column:6 / span 3"><span class="c">UGC</span><span class="a">C · Cys</span></div><div class="b3cd-cod" style="grid-column:9 / span 3"><span class="c">AUC</span><span class="a">I · Ile</span></div><div class="b3cd-cod b3cd-stop" style="grid-column:12 / span 3"><span class="c">UGA</span><span class="a">stop</span></div><div class="b3cd-nt b3cd-dim" style="grid-column:15">C</div><div class="b3cd-nt b3cd-dim" style="grid-column:16">U</div><div class="b3cd-nt b3cd-dim" style="grid-column:17">C</div><div class="b3cd-nt b3cd-dim" style="grid-column:18">C</div><div class="b3cd-nt b3cd-dim" style="grid-column:19">U</div><div class="b3cd-nt b3cd-dim" style="grid-column:20">G</div><div class="b3cd-nt b3cd-dim" style="grid-column:21">A</div><div class="b3cd-nt b3cd-dim" style="grid-column:22">…</div></div>
+      <div class="b3cd-row fragment" data-fragment-index="2"><div class="b3cd-lab">cadre 3</div><div class="b3cd-nt b3cd-dim" style="grid-column:2">A</div><div class="b3cd-nt b3cd-dim" style="grid-column:3">U</div><div class="b3cd-cod" style="grid-column:4 / span 3"><span class="c">GGU</span><span class="a">G · Gly</span></div><div class="b3cd-cod" style="grid-column:7 / span 3"><span class="c">GCA</span><span class="a">A · Ala</span></div><div class="b3cd-cod" style="grid-column:10 / span 3"><span class="c">UCU</span><span class="a">S · Ser</span></div><div class="b3cd-cod" style="grid-column:13 / span 3"><span class="c">GAC</span><span class="a">D · Asp</span></div><div class="b3cd-cod" style="grid-column:16 / span 3"><span class="c">UCC</span><span class="a">S · Ser</span></div><div class="b3cd-cod b3cd-stop" style="grid-column:19 / span 3"><span class="c">UGA</span><span class="a">stop</span></div><div class="b3cd-nt b3cd-dim" style="grid-column:22">…</div></div>
+  </div>
+
+  <div class="grid2 fragment" data-fragment-index="3" style="margin-top:.4em;align-items:start;gap:22px">
+    <p class="small" style="margin:0;font-size:.56em">Aucun séparateur entre codons : le <strong>codon start</strong>
+    fixe le cadre, puis la lecture avance de 3 en 3. 3 cadres par brin, 6 pour une double hélice.</p>
+    <p class="small" style="margin:0;font-size:.56em">Séquence aléatoire : un stop tous les 64/3 ≈ <strong>21 codons</strong>
+    en moyenne. HBB, cadre de l'AUG : <strong>147 codons</strong> sans stop, une <strong>ORF</strong> (d'un AUG au
+    premier stop du même cadre).</p>
+  </div>
+
+  <p class="center fragment fade-up" data-fragment-index="4" style="margin-top:.35em">
+    <span class="pill ghost" style="font-size:.66em"><span class="tag">Traduction</span>&nbsp; Changer de cadre, c'est lire un flux d'octets à partir du mauvais octet</span>
+  </p>
+
+</section>

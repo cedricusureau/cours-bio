@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Molécules polaires et apolaires dans l'eau</title>
+<style>
+  :root{
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --brand:#2563eb; --brand2:#0ea5e9;
+    --accent:#f43f5e; --water:#eaf6fd; --soft:#f8fafc;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#fff;color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+  .card{position:absolute;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 2px 10px rgba(15,23,42,.08)}
+  .bar{top:14px;right:14px;padding:12px;display:grid;gap:10px;justify-items:start}
+  .bar .row{display:flex;gap:10px;align-items:center}
+  button{font:inherit;font-size:15px;font-weight:600;border-radius:9px;cursor:pointer;
+    padding:7px 14px;border:2px solid var(--brand);background:#fff;color:var(--brand)}
+  button.primary{background:var(--brand);color:#fff;min-width:118px}
+  button:focus-visible{outline:3px solid var(--brand2);outline-offset:2px}
+  .seg{display:inline-flex;border:2px solid var(--brand);border-radius:9px;overflow:hidden}
+  .seg button{border:0;border-radius:0;padding:7px 12px}
+  .seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+  label.kt{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);font-weight:600}
+  input[type=range]{accent-color:var(--brand);width:130px}
+  .kt output{font-variant-numeric:tabular-nums;color:var(--ink);min-width:2.2em}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block;background:var(--water)}
+  .legend{bottom:14px;right:14px;padding:9px 14px;display:grid;gap:4px;font-size:14px;color:var(--muted)}
+  .legend .dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  .legend .l2{display:inline-block;width:18px;height:0;border-top:2px dashed var(--brand2);vertical-align:4px;margin-right:5px}
+  #info{color:var(--ink);font-weight:600}
+  :fullscreen .legend, :fullscreen .seg, :fullscreen .kt, :fullscreen #reset, :fullscreen .opt{display:none}
+  :fullscreen .bar{padding:8px;opacity:.3;transition:opacity .2s}
+  :fullscreen .bar:hover{opacity:1}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div class="card bar">
+  <div class="row">
+    <button id="play" class="primary">▶ Lancer</button>
+    <button id="reset">↺ Nouveau tirage</button>
+    <button id="fs">⛶ Agrandir</button>
+  </div>
+  <div class="seg" role="group" aria-label="Molécules ajoutées à l'eau">
+    <button id="m-ch4" aria-pressed="true">+ CH₄</button>
+    <button id="m-hexane" aria-pressed="false">+ hexane</button>
+    <button id="m-nh3" aria-pressed="false">+ NH₃</button>
+    <button id="m-mix" aria-pressed="false">+ hexane et NH₃</button>
+  </div>
+  <label class="kt">Agitation thermique (kT/ε)
+    <input id="kt" type="range" min="0.1" max="0.5" step="0.01" value="0.25">
+    <output id="ktv">0,25</output>
+  </label>
+  <label class="kt opt"><input id="delta" type="checkbox"> Afficher les charges partielles</label>
+</div>
+<div class="card legend">
+  <span id="info"></span>
+  <span><span class="dot" style="background:var(--accent)"></span>O &nbsp;<span class="dot" style="background:#2148e0"></span>N &nbsp;<span class="dot" style="background:#3a3a3a"></span>C &nbsp;<span class="dot" style="background:#fff;border:2px solid #94a3b8"></span>H</span>
+  <span><span class="l2"></span>liaison hydrogène</span>
+</div>
+
+<script id="core">
+// ============================================================
+//  Moteur : dynamique brownienne 2D de molécules rigides, eau explicite.
+//  Chaque molécule : un ou plusieurs cœurs (répulsion de contact) et,
+//  pour les molécules polaires, des sites de liaison hydrogène orientés.
+//    H2O    : 2 donneurs (H) + 2 accepteurs (doublets non liants de O)
+//    NH3    : 3 donneurs + 1 accepteur
+//    CH4    : un cœur, aucun site
+//    hexane : six cœurs en zigzag, aucun site
+//  Seule attraction : donneur d'une molécule ↔ accepteur d'une autre
+//  (liaison hydrogène). AUCUNE attraction entre molécules apolaires.
+// ============================================================
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+const HALF = (104.5/2)*Math.PI/180;
+const DS = 0.5;                 // distance centre → site de liaison hydrogène
+const HEX = [0,1,2,3,4,5].map(k => [(k-2.5)*0.42, (k%2 ? 0.12 : -0.12), 0.85]);
+// cores : [x, y, diamètre] ; sites : [angle, 0 = donneur | 1 = accepteur] ; aire : place occupée
+const TYPES = {
+  h2o:    { cores: [[0,0,0.9]],  sites: [[HALF,0],[-HALF,0],[Math.PI-HALF,1],[Math.PI+HALF,1]], area: 0.95 },
+  nh3:    { cores: [[0,0,0.95]], sites: [[HALF,0],[-HALF,0],[Math.PI+HALF,0],[Math.PI-HALF,1]], area: 1.05 },
+  ch4:    { cores: [[0,0,1.1]],  sites: [], area: 1.3 },
+  hexane: { cores: HEX,          sites: [], area: 3.2 },
+};
+const KIND = ['h2o','nh3','ch4','hexane'];
+
+const P = { eps: 4, rc: 0.4, dt: 0.005, maxStep: 0.1, kT: 1 };
+
+function makeSim(opts){
+  const S = Object.assign({}, P, opts);
+  const { W, H } = S;
+  const rng = mulberry32(S.seed);
+  let spare = null;
+  const gauss = () => { if(spare!==null){const v=spare;spare=null;return v}
+    let u=0; while(u===0) u=rng(); const v=rng(), r=Math.sqrt(-2*Math.log(u));
+    spare = r*Math.sin(2*Math.PI*v); return r*Math.cos(2*Math.PI*v); };
+
+  const kinds = [];
+  for(const [t, n] of S.comp) for(let k=0;k<n;k++) kinds.push(KIND.indexOf(t));
+  const N = kinds.length;
+  const x = new Float64Array(N), y = new Float64Array(N), th = new Float64Array(N), kd = new Uint8Array(kinds);
+  // frottements : translation ∝ nombre de cœurs, rotation ∝ moment d'inertie géométrique
+  const gT = new Float64Array(N), gR = new Float64Array(N);
+  for(let i=0;i<N;i++){
+    const c = TYPES[KIND[kd[i]]].cores;
+    gT[i] = 1;
+    gR[i] = 1 + 0.5*c.reduce((a, [cx, cy]) => a + cx*cx + cy*cy, 0);
+  }
+  // placement : grille régulière, ordre mélangé ; les molécules longues d'abord, sur une case sur deux
+  const nx = Math.ceil(Math.sqrt(N*W/H)), ny = Math.ceil(N/nx);
+  const cells = Array.from({length: nx*ny}, (_, i) => i);
+  for(let i=cells.length-1;i>0;i--){const j=(rng()*(i+1))|0;[cells[i],cells[j]]=[cells[j],cells[i]]}
+  for(let i=0;i<N;i++){
+    const c = cells[i]; x[i] = (c % nx + 0.5)*W/nx; y[i] = (((c/nx)|0) + 0.5)*H/ny; th[i] = rng()*2*Math.PI;
+  }
+
+  // cœurs
+  const cMol = [], cx0 = [], cy0 = [], cSig = [];
+  const c0 = new Int32Array(N), nc = new Int32Array(N);
+  for(let i=0;i<N;i++){ c0[i] = cMol.length;
+    for(const [a,b,s] of TYPES[KIND[kd[i]]].cores){ cMol.push(i); cx0.push(a); cy0.push(b); cSig.push(s); }
+    nc[i] = cMol.length - c0[i]; }
+  const NC = cMol.length;
+  const px = new Float64Array(NC), py = new Float64Array(NC);
+  // sites
+  const sMol = [], sAng = [], sKind = [];
+  const s0 = new Int32Array(N), ns = new Int32Array(N);
+  for(let i=0;i<N;i++){ s0[i] = sMol.length;
+    for(const [a,k] of TYPES[KIND[kd[i]]].sites){ sMol.push(i); sAng.push(a); sKind.push(k); }
+    ns[i] = sMol.length - s0[i]; }
+  const NSi = sMol.length;
+  const sx = new Float64Array(NSi), sy = new Float64Array(NSi);
+
+  const fx = new Float64Array(N), fy = new Float64Array(N), tq = new Float64Array(N);
+  const cut = 1.5, ncx = Math.max(3, Math.floor(W/cut)), ncy = Math.max(3, Math.floor(H/cut));
+  const csx = W/ncx, csy = H/ncy;
+  const head = new Int32Array(ncx*ncy), next = new Int32Array(NC);
+  const NBX = [0,1,-1,0,1], NBY = [0,0,1,1,1];
+  const W2 = W/2, H2 = H/2;
+  const mi = (d, L, L2) => d > L2 ? d - L : d < -L2 ? d + L : d;
+
+  let hbCount = 0;
+  const hbList = [];
+
+  // force (ux, uy) appliquée au point (ax, ay) relatif au centre de la molécule i
+  function apply(i, ux, uy, ax, ay){ fx[i] += ux; fy[i] += uy; tq[i] += ax*uy - ay*ux; }
+
+  function core(a, b){
+    const i = cMol[a], j = cMol[b];
+    const dx = mi(px[a]-px[b], W, W2), dy = mi(py[a]-py[b], H, H2);
+    const r2 = dx*dx + dy*dy;
+    const s = 0.5*(cSig[a]+cSig[b]), s2 = s*s;
+    if(r2 >= 1.259921*s2) return;
+    const q = s2/r2, q6 = q*q*q; let f = 24*(2*q6*q6 - q6)/r2;
+    if(f > 400) f = 400;
+    const c = Math.cos(th[i]), sn = Math.sin(th[i]), c2 = Math.cos(th[j]), s2n = Math.sin(th[j]);
+    apply(i,  f*dx,  f*dy, c*cx0[a]-sn*cy0[a], sn*cx0[a]+c*cy0[a]);
+    apply(j, -f*dx, -f*dy, c2*cx0[b]-s2n*cy0[b], s2n*cx0[b]+c2*cy0[b]);
+  }
+  // liaison hydrogène : donneur ↔ accepteur, puits −ε cos²(π r / 2rc) entre les deux sites
+  function hbond(a, b){
+    const i = sMol[a], j = sMol[b];
+    const dx = mi(sx[a]-sx[b], W, W2), dy = mi(sy[a]-sy[b], H, H2);
+    const r2 = dx*dx + dy*dy;
+    if(r2 >= S.rc*S.rc) return;
+    const r = Math.sqrt(r2) || 1e-9;
+    const g = S.eps*Math.PI/(2*S.rc)*Math.sin(Math.PI*r/S.rc);
+    const ux = -g*dx/r, uy = -g*dy/r;
+    apply(i,  ux,  uy, DS*Math.cos(th[i]+sAng[a]), DS*Math.sin(th[i]+sAng[a]));
+    apply(j, -ux, -uy, DS*Math.cos(th[j]+sAng[b]), DS*Math.sin(th[j]+sAng[b]));
+    if(r < 0.5*S.rc){ hbCount++; hbList.push(a, b); }
+  }
+
+  function step(record){
+    fx.fill(0); fy.fill(0); tq.fill(0); head.fill(-1);
+    hbCount = 0; if(record) hbList.length = 0;
+    for(let i=0;i<N;i++){
+      const c = Math.cos(th[i]), s = Math.sin(th[i]);
+      for(let a=c0[i]; a<c0[i]+nc[i]; a++){
+        let X = x[i] + c*cx0[a] - s*cy0[a], Y = y[i] + s*cx0[a] + c*cy0[a];
+        X -= W*Math.floor(X/W); Y -= H*Math.floor(Y/H); px[a] = X; py[a] = Y;
+      }
+      for(let a=s0[i]; a<s0[i]+ns[i]; a++){ sx[a] = x[i] + DS*Math.cos(th[i]+sAng[a]); sy[a] = y[i] + DS*Math.sin(th[i]+sAng[a]); }
+    }
+    for(let a=0;a<NC;a++){
+      const c = Math.min(ncy-1,(py[a]/csy)|0)*ncx + Math.min(ncx-1,(px[a]/csx)|0);
+      next[a] = head[c]; head[c] = a;
+    }
+    for(let cy=0;cy<ncy;cy++) for(let cx=0;cx<ncx;cx++){
+      const c = cy*ncx+cx;
+      for(let q=0;q<5;q++){
+        const cc = ((cy+NBY[q]+ncy)%ncy)*ncx + (cx+NBX[q]+ncx)%ncx, same = cc===c;
+        for(let a=head[c];a>=0;a=next[a]) for(let b=same?next[a]:head[cc];b>=0;b=next[b]){
+          const i = cMol[a], j = cMol[b];
+          if(i === j) continue;
+          core(a, b);
+          // molécules polaires : un seul cœur, donc cette paire de molécules n'est vue qu'une fois
+          if(ns[i] && ns[j])
+            for(let u=s0[i];u<s0[i]+ns[i];u++) for(let v=s0[j];v<s0[j]+ns[j];v++)
+              if(sKind[u] !== sKind[v]) hbond(u, v);
+        }
+      }
+    }
+    for(let i=0;i<N;i++){
+      const aT = Math.sqrt(2*S.kT*S.dt/gT[i]), aR = Math.sqrt(2*S.kT*S.dt/gR[i]);
+      let dx = fx[i]*S.dt/gT[i] + aT*gauss(), dy = fy[i]*S.dt/gT[i] + aT*gauss();
+      const m = Math.hypot(dx,dy); if(m > S.maxStep){ dx *= S.maxStep/m; dy *= S.maxStep/m; }
+      let dth = tq[i]*S.dt/gR[i] + aR*gauss();
+      if(dth > 0.2) dth = 0.2; else if(dth < -0.2) dth = -0.2;
+      x[i] = (x[i]+dx+W)%W; y[i] = (y[i]+dy+H)%H; th[i] += dth;
+    }
+  }
+
+  // contacts apolaire–apolaire : paires de cœurs apolaires de molécules différentes à moins de 1,3
+  function apolarContacts(){
+    let n = 0;
+    for(let a=0;a<NC;a++){ if(ns[cMol[a]]) continue;
+      for(let b=a+1;b<NC;b++){ if(ns[cMol[b]] || cMol[a]===cMol[b]) continue;
+        const dx = mi(px[a]-px[b], W, W2), dy = mi(py[a]-py[b], H, H2);
+        if(dx*dx+dy*dy < 1.3*1.3) n++; } }
+    return n;
+  }
+  return { S, N, x, y, th, kd, sMol, sAng, sKind, step, hb: () => hbCount, hbList, apolarContacts };
+}
+</script>
+
+<script>
+// ============================================================
+//  Affichage et contrôles
+// ============================================================
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const $ = id => document.getElementById(id);
+const COMP = {
+  ch4:    [['h2o', 140], ['ch4', 36]],
+  hexane: [['h2o', 140], ['hexane', 14]],
+  nh3:    [['h2o', 140], ['nh3', 36]],
+  mix:    [['h2o', 120], ['hexane', 12], ['nh3', 24]],
+};
+const MODES = Object.keys(COMP);
+// ε fixé à 4 ; le curseur règle kT/ε (0,25 ↔ kT = 1)
+const EPS = 4;
+let mode = 'ch4', ktr = 0.25, running = false, sim = null, seed = 3, steps = 0, showDelta = false;
+let stepsPerFrame = 30;
+
+function build(){
+  const comp = COMP[mode];
+  const A = comp.reduce((a, [t, n]) => a + n*TYPES[t].area, 0);
+  const W = Math.sqrt(A*16/9), H = A/W;
+  sim = makeSim({ W, H, seed, eps: EPS, kT: ktr*EPS, comp });
+  sim.step(true); steps = 0; draw();
+}
+
+function resize(){
+  const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+  if(!r.width || !r.height) return;
+  cv.width = Math.round(r.width*d); cv.height = Math.round(r.height*d);
+  draw();
+}
+
+// ---- géométrie d'affichage, dans le repère de la molécule ----
+// H à 0,36 du centre, dans la direction des sites donneurs (et des liaisons C–H)
+const LH = 0.36, RH = 0.14;
+const SMALL = {
+  h2o: { col: '#f43f5e', r: 0.34, h: [HALF, -HALF] },
+  nh3: { col: '#2148e0', r: 0.34, h: [HALF, -HALF, Math.PI+HALF] },
+  ch4: { col: '#3a3a3a', r: 0.34, h: [HALF, -HALF, Math.PI+HALF, Math.PI-HALF] },
+};
+// hexane : carbones du moteur ; deux H par carbone, côté extérieur du zigzag, trois aux extrémités
+const HEXC = TYPES.hexane.cores.map(([a, b]) => [a, b]);
+const HEXH = [];
+HEXC.forEach(([a, b], k) => {
+  const side = b > 0 ? 1 : -1;
+  for(const da of [-0.55, 0.55]) HEXH.push([a, b, side*Math.PI/2 + da, k]);
+  if(k === 0) HEXH.push([a, b, Math.PI, k]);
+  if(k === HEXC.length-1) HEXH.push([a, b, 0, k]);
+});
+const LCH = 0.32;
+
+function draw(){
+  if(!sim) return;
+  const { S, N, x, y, th, kd } = sim, W = S.W, H = S.H;
+  const w = cv.width, h = cv.height, sc = Math.max(w/W, h/H);
+  const ox = (w - W*sc)/2, oy = (h - H*sc)/2;
+  const x0 = -ox/sc - 2, x1 = (w-ox)/sc + 2, y0 = -oy/sc - 2, y1 = (h-oy)/sc + 2;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle = '#eaf6fd'; ctx.fillRect(0,0,w,h);
+  ctx.setTransform(sc,0,0,sc,ox,oy);
+  const images = (px, py, fn) => {
+    for(let X = px + W*Math.ceil((x0 - px)/W); X <= x1; X += W)
+      for(let Y = py + H*Math.ceil((y0 - py)/H); Y <= y1; Y += H) fn(X, Y);
+  };
+
+  // liaisons hydrogène : du H donneur vers l'atome accepteur
+  ctx.strokeStyle = '#0ea5e9'; ctx.lineWidth = 0.05; ctx.setLineDash([0.1, 0.08]); ctx.lineCap = 'butt';
+  ctx.beginPath();
+  const L = sim.hbList;
+  for(let k=0; k<L.length; k+=2){
+    let d = L[k], a = L[k+1];
+    if(sim.sKind[d] !== 0){ const t = d; d = a; a = t; }
+    const i = sim.sMol[d], j = sim.sMol[a];
+    const hx = x[i] + LH*Math.cos(th[i]+sim.sAng[d]), hy = y[i] + LH*Math.sin(th[i]+sim.sAng[d]);
+    let dx = x[j] - hx, dy = y[j] - hy;
+    dx -= W*Math.round(dx/W); dy -= H*Math.round(dy/H);
+    const L2 = Math.hypot(dx, dy), f = Math.max(0, (L2 - SMALL[KIND[kd[j]]].r)/L2), g = RH/L2;
+    images(hx, hy, (X, Y) => { ctx.moveTo(X + dx*g, Y + dy*g); ctx.lineTo(X + dx*f, Y + dy*f); });
+  }
+  ctx.stroke(); ctx.setLineDash([]); ctx.lineCap = 'round';
+
+  const hAtom = (X, Y, polar) => {
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = polar ? '#2563eb' : '#94a3b8'; ctx.lineWidth = 0.045;
+    ctx.beginPath(); ctx.arc(X, Y, RH, 0, 2*Math.PI); ctx.fill(); ctx.stroke();
+  };
+  const label = (t, X, Y, col, size) => {
+    ctx.fillStyle = col; ctx.font = `bold ${size}px -apple-system,sans-serif`; ctx.fillText(t, X, Y);
+  };
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+
+  for(let i=0;i<N;i++){
+    const t = KIND[kd[i]], c = Math.cos(th[i]), s = Math.sin(th[i]);
+    const loc = (a, b) => [c*a - s*b, s*a + c*b];
+    if(t === 'hexane'){
+      images(x[i], y[i], (X, Y) => {
+        const C = HEXC.map(([a, b]) => { const [u, v] = loc(a, b); return [X+u, Y+v]; });
+        ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 0.06; ctx.beginPath();
+        for(const [a, b, ang, k] of HEXH){
+          const [u, v] = loc(a + LCH*Math.cos(ang), b + LCH*Math.sin(ang));
+          ctx.moveTo(C[k][0], C[k][1]); ctx.lineTo(X+u, Y+v);
+        }
+        ctx.stroke();
+        for(const [a, b, ang] of HEXH){ const [u, v] = loc(a + LCH*Math.cos(ang), b + LCH*Math.sin(ang)); hAtom(X+u, Y+v, false); }
+        ctx.strokeStyle = '#3a3a3a'; ctx.lineWidth = 0.12; ctx.beginPath();
+        C.forEach(([u, v], k) => k ? ctx.lineTo(u, v) : ctx.moveTo(u, v)); ctx.stroke();
+        ctx.fillStyle = '#3a3a3a';
+        for(const [u, v] of C){ ctx.beginPath(); ctx.arc(u, v, 0.2, 0, 2*Math.PI); ctx.fill(); }
+        if(showDelta) label('≈0', C[2][0], C[2][1] - 0.001, '#fff', 0.13);
+      });
+      continue;
+    }
+    const m = SMALL[t];
+    images(x[i], y[i], (X, Y) => {
+      ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 0.07; ctx.beginPath();
+      for(const a of m.h){ ctx.moveTo(X, Y); ctx.lineTo(X + LH*Math.cos(th[i]+a), Y + LH*Math.sin(th[i]+a)); }
+      ctx.stroke();
+      for(const a of m.h) hAtom(X + LH*Math.cos(th[i]+a), Y + LH*Math.sin(th[i]+a), t !== 'ch4');
+      ctx.fillStyle = m.col; ctx.beginPath(); ctx.arc(X, Y, m.r, 0, 2*Math.PI); ctx.fill();
+      if(showDelta){
+        label(t === 'ch4' ? '≈0' : 'δ−', X, Y, '#fff', 0.22);
+        if(t !== 'ch4') for(const a of m.h) label('δ+', X + (LH+0.25)*Math.cos(th[i]+a), Y + (LH+0.25)*Math.sin(th[i]+a), '#1d4ed8', 0.17);
+      }
+    });
+  }
+  const nW = COMP[mode].find(c => c[0] === 'h2o')[1];
+  $('info').textContent = `${nW} H₂O · ${sim.hb()} liaisons hydrogène`;
+}
+
+function loop(){
+  if(!running) return;
+  const t0 = performance.now();
+  for(let k=0;k<stepsPerFrame;k++) sim.step(k === stepsPerFrame-1);
+  const per = (performance.now() - t0) / stepsPerFrame;
+  stepsPerFrame = Math.max(6, Math.min(80, Math.round(20 / Math.max(per, 1e-3))));
+  steps += stepsPerFrame;
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function setRunning(v){
+  running = v;
+  $('play').textContent = v ? '❚❚ Pause' : (steps ? '▶ Reprendre' : '▶ Lancer');
+  if(v) requestAnimationFrame(loop);
+}
+
+$('play').onclick = () => setRunning(!running);
+$('fs').onclick = () => {
+  if(document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() => {});
+};
+document.addEventListener('fullscreenchange', () => {
+  $('fs').textContent = document.fullscreenElement ? '✕ Quitter' : '⛶ Agrandir';
+});
+$('reset').onclick = () => { seed = (Math.random()*1e9)|0; build(); setRunning(false); };
+function setMode(m){
+  mode = m;
+  for(const k of MODES) $('m-'+k).setAttribute('aria-pressed', k===m);
+  build(); setRunning(false);
+}
+for(const k of MODES) $('m-'+k).onclick = () => setMode(k);
+{
+  const wanted = new URLSearchParams(location.search).get('mode');
+  if(MODES.includes(wanted)) setMode(wanted);
+}
+$('kt').oninput = e => {
+  ktr = +e.target.value; $('ktv').textContent = ktr.toFixed(2).replace('.', ',');
+  if(sim) sim.S.kT = ktr*EPS;
+};
+$('delta').onchange = e => { showDelta = e.target.checked; draw(); };
+
+const NAV = { ArrowRight:'right', ArrowLeft:'left', PageDown:'next', PageUp:'prev', ' ':'next' };
+window.addEventListener('keydown', e => {
+  const m = NAV[e.key];
+  if(m && window.parent !== window && !document.fullscreenElement){
+    e.preventDefault();
+    window.parent.postMessage(JSON.stringify({ method: m, args: [] }), '*');
+  }
+});
+window.addEventListener('message', e => { if(e.data === 'slide:stop') setRunning(false); });
+
+// accès pour les tests hors écran
+window.__sim = () => sim; window.__draw = draw;
+
+new ResizeObserver(resize).observe(cv);
+build();
+</script>
+</body>
+</html>

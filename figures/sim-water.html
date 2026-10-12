@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assemblage de molécules d'eau par liaisons hydrogène</title>
+<style>
+  :root{
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --brand:#2563eb; --brand2:#0ea5e9;
+    --accent:#f43f5e; --water:#eaf6fd; --soft:#f8fafc;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#fff;color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+  body{display:flex;flex-direction:column}
+  .bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:0 2px 10px}
+  button{font:inherit;font-size:15px;font-weight:600;border-radius:9px;cursor:pointer;
+    padding:7px 14px;border:2px solid var(--brand);background:#fff;color:var(--brand)}
+  button.primary{background:var(--brand);color:#fff;min-width:118px}
+  button:disabled{opacity:.45;cursor:default}
+  button:focus-visible{outline:3px solid var(--brand2);outline-offset:2px}
+  .wrap{position:relative;flex:1;min-height:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--water)}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .legend{display:flex;gap:18px;align-items:center;font-size:13px;color:var(--muted);padding:8px 2px 0;flex-wrap:wrap}
+  .legend .dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  .legend .o{background:var(--accent)} .legend .h{background:#fff;border:2px solid var(--brand)}
+  .legend .n{background:#2148e0} .legend .c{background:#3a3a3a}
+  .legend .l1{display:inline-block;width:18px;height:0;border-top:2px solid #94a3b8;vertical-align:5px;margin-right:5px}
+  .legend .l2{display:inline-block;width:18px;height:0;border-top:2px dashed var(--brand2);vertical-align:5px;margin-right:5px}
+  .legend .x{display:inline-block;width:18px;height:0;border-top:3px solid #dc2626;vertical-align:4px;margin-right:5px}
+  .legend .sp{flex:1}
+  .only-all{display:none}
+  body.all .only-all{display:inline}
+  #info{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<div class="bar">
+  <button id="add-h2o" class="primary">+ Ajouter une molécule</button>
+  <button id="add-nh3" class="primary only-all">+ NH₃</button>
+  <button id="add-ch4" class="primary only-all" style="background:#3a3a3a;border-color:#3a3a3a">+ CH₄</button>
+  <button id="reset">↺ Recommencer</button>
+</div>
+<div class="wrap"><canvas id="cv"></canvas></div>
+<div class="legend">
+  <span><span class="dot o"></span>O</span>
+  <span class="only-all"><span class="dot n"></span>N</span>
+  <span class="only-all"><span class="dot c"></span>C</span>
+  <span><span class="dot h"></span>H</span>
+  <span><span class="l1"></span>liaison covalente</span>
+  <span><span class="l2"></span>liaison hydrogène</span>
+  <span class="only-all"><span class="x"></span>site de l'eau tourné vers CH₄, sans partenaire</span>
+  <span class="sp"></span>
+  <span id="info"></span>
+</div>
+
+<script>
+// ============================================================
+//  Placement géométrique pur, sans dynamique : chaque clic ajoute
+//  une molécule et la rattache, par une liaison hydrogène X–H···Y
+//  rectiligne, à un site libre d'une molécule déjà posée.
+//  Chaque molécule polaire a 4 sites (schéma simplifié d'une
+//  coordination tétraédrique projetée en 2D) :
+//    H2O : 2 donneurs (les H) + 2 accepteurs (doublets non liants de O)
+//    NH3 : 3 donneurs (les H) + 1 accepteur  (doublet non liant de N)
+//    CH4 : aucun site — C–H (2,5 contre 2,2) ne porte pas de charge partielle
+//          utile ; CH4 prend une place dans le réseau sans y former de liaison,
+//          et les sites de l'eau tournés vers elle restent sans partenaire.
+//  Rien ne bouge une fois posé.
+// ============================================================
+const HALF = (104.5/2) * Math.PI/180;   // demi-angle H–X–H
+const LB = 0.8;                          // longueur affichée d'une liaison covalente X–H
+const BONDGAP = 1.5;                     // longueur affichée de la liaison hydrogène H···Y
+const R = { O: 0.5, N: 0.5, C: 0.5, H: 0.22 };
+const COL = { O: '#f43f5e', N: '#2148e0', C: '#3a3a3a' };
+const pol = a => [LB*Math.cos(a), LB*Math.sin(a)];
+
+// atomes : [élément, x, y, charge affichée] ; sites : {a: atome, ang: direction, k: 'd' donneur | 'a' accepteur}
+const MOLS = {
+  h2o: {
+    atoms: [['O',0,0,'δ−'], ['H',...pol(HALF),'δ+'], ['H',...pol(-HALF),'δ+']],
+    sites: [{a:1,ang:HALF,k:'d'}, {a:2,ang:-HALF,k:'d'}, {a:0,ang:Math.PI-HALF,k:'a'}, {a:0,ang:Math.PI+HALF,k:'a'}],
+  },
+  nh3: {
+    atoms: [['N',0,0,'δ−'], ['H',...pol(HALF),'δ+'], ['H',...pol(-HALF),'δ+'], ['H',...pol(Math.PI+HALF),'δ+']],
+    sites: [{a:1,ang:HALF,k:'d'}, {a:2,ang:-HALF,k:'d'}, {a:3,ang:Math.PI+HALF,k:'d'}, {a:0,ang:Math.PI-HALF,k:'a'}],
+  },
+  ch4: {
+    atoms: [['C',0,0,null], ['H',...pol(HALF),null], ['H',...pol(-HALF),null],
+            ['H',...pol(Math.PI+HALF),null], ['H',...pol(Math.PI-HALF),null]],
+    sites: [],
+  },
+};
+
+let mols = [];   // {type, x, y, th, used:[bool par site]}
+let bonds = [];  // {x1,y1,x2,y2}
+let hbonds = 0;
+
+function atomWorld(m, k){
+  const c = Math.cos(m.th), s = Math.sin(m.th), [, lx, ly] = MOLS[m.type].atoms[k];
+  return { x: m.x + c*lx - s*ly, y: m.y + s*lx + c*ly };
+}
+function siteDir(m, j){ return m.th + MOLS[m.type].sites[j].ang; }
+function siteAtom(m, j){ return atomWorld(m, MOLS[m.type].sites[j].a); }
+function allAtoms(m){ return MOLS[m.type].atoms.map((_, k) => ({ ...atomWorld(m, k), el: MOLS[m.type].atoms[k][0] })); }
+function shuffled(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]];} return a; }
+
+// site libre : ni engagé dans une liaison, ni tourné vers une molécule de CH4
+function openSites(){
+  const out = [];
+  mols.forEach((m, i) => MOLS[m.type].sites.forEach((_, j) => { if(!m.used[j] && !facesCH4(m, j)) out.push([i, j]); }));
+  return out;
+}
+// le point où se placerait le partenaire de ce site est-il occupé par une CH4 ?
+function facesCH4(m, j){
+  const p = siteAtom(m, j), d = siteDir(m, j);
+  const q = { x: p.x + BONDGAP*Math.cos(d), y: p.y + BONDGAP*Math.sin(d) };
+  for(const o of mols){
+    if(o.type === 'ch4' && Math.hypot(o.x-q.x, o.y-q.y) < 1.3) return true;
+  }
+  return false;
+}
+
+const MIN_DIST = 0.78;
+function collides(atoms){
+  for(const m of mols) for(const p of allAtoms(m)){
+    for(const a of atoms){
+      const lim = (a.el === 'H' && p.el === 'H') ? 0.55 : MIN_DIST;
+      if(Math.hypot(a.x-p.x, a.y-p.y) < lim) return true;
+    }
+  }
+  return false;
+}
+
+function newMol(type, x, y, th){ return { type, x, y, th, used: MOLS[type].sites.map(() => false) }; }
+
+function addMolecule(type){
+  if(mols.length === 0){
+    mols.push(newMol(type, 0, 0, 0)); draw(); return true;
+  }
+  const def = MOLS[type];
+  for(const [oi, oj] of shuffled(openSites())){
+    const om = mols[oi], okind = MOLS[om.type].sites[oj].k;
+    const ang = siteDir(om, oj), dir = [Math.cos(ang), Math.sin(ang)];
+    const origin = siteAtom(om, oj);
+    if(type === 'ch4'){
+      // CH4 prend la place qu'occuperait le partenaire, sans liaison
+      const dist = okind === 'd' ? BONDGAP + 0.1 : BONDGAP + LB;
+      const cx = origin.x + dist*dir[0], cy = origin.y + dist*dir[1];
+      for(const th of shuffled([0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8])){
+        const cand = newMol('ch4', cx, cy, th);
+        if(collides(allAtoms(cand))) continue;
+        mols.push(cand); draw(); return true;
+      }
+      continue;
+    }
+    // molécule polaire : un de ses sites de type complémentaire pointe vers le site d'origine
+    for(const nj of shuffled(def.sites.map((_, j) => j))){
+      const ns = def.sites[nj];
+      if(ns.k === okind) continue;           // donneur ↔ accepteur uniquement
+      const th = ang + Math.PI - ns.ang;
+      const P = { x: origin.x + BONDGAP*dir[0], y: origin.y + BONDGAP*dir[1] };
+      const [, lx, ly] = def.atoms[ns.a];
+      const c = Math.cos(th), s = Math.sin(th);
+      const cand = newMol(type, P.x - (c*lx - s*ly), P.y - (s*lx + c*ly), th);
+      if(collides(allAtoms(cand))) continue;
+      mols.push(cand);
+      om.used[oj] = true; cand.used[nj] = true; hbonds++;
+      bonds.push({ x1: origin.x, y1: origin.y, x2: P.x, y2: P.y });
+      draw(); return true;
+    }
+  }
+  return false; // plus aucun site accessible sans collision
+}
+
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const $ = id => document.getElementById(id);
+
+function bbox(){
+  if(mols.length===0) return [-3,-3,3,3];
+  let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+  for(const m of mols) for(const p of allAtoms(m)){
+    x0=Math.min(x0,p.x); y0=Math.min(y0,p.y); x1=Math.max(x1,p.x); y1=Math.max(y1,p.y);
+  }
+  const pad = 1.3;
+  return [x0-pad, y0-pad, x1+pad, y1+pad];
+}
+
+function draw(){
+  const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+  if(r.width && r.height){
+    cv.width = Math.round(r.width*d); cv.height = Math.round(r.height*d);
+  }
+  const w = cv.width, h = cv.height;
+  const [bx0,by0,bx1,by1] = bbox();
+  const bw = Math.max(bx1-bx0, 6), bh = Math.max(by1-by0, 6);
+  const cx = (bx0+bx1)/2, cy = (by0+by1)/2;
+  const sc = Math.min(w/bw, h/bh);
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle = '#eaf6fd'; ctx.fillRect(0,0,w,h);
+  ctx.setTransform(sc,0,0,sc, w/2 - cx*sc, h/2 - cy*sc);
+
+  // liaisons hydrogène
+  ctx.strokeStyle = '#0ea5e9'; ctx.lineWidth = 0.07; ctx.setLineDash([0.14,0.11]); ctx.lineCap='round';
+  for(const b of bonds){ ctx.beginPath(); ctx.moveTo(b.x1,b.y1); ctx.lineTo(b.x2,b.y2); ctx.stroke(); }
+  ctx.setLineDash([]);
+
+  // sites tournés vers une CH4 : trait rouge court dans la direction du site
+  let lost = 0;
+  ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 0.09;
+  mols.forEach(m => MOLS[m.type].sites.forEach((_, j) => {
+    if(m.used[j] || !facesCH4(m, j)) return;
+    lost++;
+    const p = siteAtom(m, j), a = siteDir(m, j), r0 = MOLS[m.type].atoms[MOLS[m.type].sites[j].a][0] === 'H' ? 0.3 : 0.6;
+    ctx.beginPath();
+    ctx.moveTo(p.x + r0*Math.cos(a), p.y + r0*Math.sin(a));
+    ctx.lineTo(p.x + (r0+0.45)*Math.cos(a), p.y + (r0+0.45)*Math.sin(a));
+    ctx.stroke();
+  }));
+
+  // molécules
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const F_IN = 'bold 0.34px -apple-system,sans-serif', F_H = 'bold 0.38px -apple-system,sans-serif';
+  for(const m of mols){
+    const def = MOLS[m.type], at = allAtoms(m), X = at[0];
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 0.1;
+    ctx.beginPath();
+    for(let k=1;k<at.length;k++){ ctx.moveTo(X.x,X.y); ctx.lineTo(at[k].x,at[k].y); }
+    ctx.stroke();
+    for(let k=1;k<at.length;k++){
+      ctx.fillStyle = '#fff'; ctx.strokeStyle = m.type === 'ch4' ? '#94a3b8' : '#2563eb'; ctx.lineWidth = 0.07;
+      ctx.beginPath(); ctx.arc(at[k].x,at[k].y,R.H,0,2*Math.PI); ctx.fill(); ctx.stroke();
+    }
+    ctx.fillStyle = COL[X.el];
+    ctx.beginPath(); ctx.arc(X.x,X.y,R[X.el],0,2*Math.PI); ctx.fill();
+
+    // charges partielles, sur toutes les molécules
+    ctx.font = F_IN; ctx.fillStyle = '#fff';
+    if(m.type === 'ch4'){ ctx.fillText('δ≈0', X.x, X.y); continue; }
+    ctx.fillText('δ−', X.x, X.y);
+    // δ+ à côté de chaque H, perpendiculaire à la liaison X–H (hors de l'axe de la liaison hydrogène)
+    ctx.font = F_H; ctx.fillStyle = '#1d4ed8';
+    for(let k=1;k<at.length;k++){
+      const [, lx, ly] = def.atoms[k];
+      const a = m.th + Math.atan2(ly, lx) + (ly >= 0 ? 1 : -1)*Math.PI/2;
+      ctx.fillText('δ+', at[k].x + 0.46*Math.cos(a), at[k].y + 0.46*Math.sin(a));
+    }
+  }
+
+  const open = openSites().length;
+  for(const t of ['h2o','nh3']) $('add-'+t).disabled = mols.length>0 && open===0;
+  $('add-ch4').disabled = mols.length>0 && open===0;
+  const n = mols.length;
+  let txt = `${n} molécule${n>1?'s':''} · ${hbonds} liaison${hbonds>1?'s':''} hydrogène`;
+  if(ALL) txt += ` · ${lost} site${lost>1?'s':''} de l'eau sans partenaire`;
+  $('info').textContent = txt;
+}
+
+// ?molecules=all : boutons H2O / NH3 / CH4 ; par défaut, l'eau seule
+const ALL = new URLSearchParams(location.search).get('molecules') === 'all';
+if(ALL){ document.body.classList.add('all'); $('add-h2o').textContent = '+ H₂O'; }
+
+const fail = () => { $('info').textContent += ' — plus de site accessible sans collision'; };
+$('add-h2o').onclick = () => { if(!addMolecule('h2o')) fail(); };
+$('add-nh3').onclick = () => { if(!addMolecule('nh3')) fail(); };
+$('add-ch4').onclick = () => { if(!addMolecule('ch4')) fail(); };
+$('reset').onclick = () => { mols=[]; bonds=[]; hbonds=0; addMolecule('h2o'); };
+
+const NAV = { ArrowRight:'right', ArrowLeft:'left', PageDown:'next', PageUp:'prev', ' ':'next' };
+window.addEventListener('keydown', e => {
+  const m = NAV[e.key];
+  if(m && window.parent !== window){
+    e.preventDefault();
+    window.parent.postMessage(JSON.stringify({ method: m, args: [] }), '*');
+  }
+});
+
+new ResizeObserver(draw).observe(cv);
+addMolecule('h2o');
+</script>
+</body>
+</html>

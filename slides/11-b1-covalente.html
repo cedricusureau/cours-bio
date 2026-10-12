@@ -1,0 +1,151 @@
+<section>
+  <style>
+    .pairdot{opacity:0;transform-origin:center;transform-box:fill-box}
+    .pairdot.a{fill:var(--brand)}
+    .pairdot.b{fill:var(--brand2)}
+    .fragment.visible .pairdot{animation:pairPop .4s ease forwards}
+    @keyframes pairPop{from{opacity:0;transform:scale(.25)}to{opacity:1;transform:scale(1)}}
+    .ownring{fill:none;stroke:var(--muted);stroke-width:2.2}
+    .coring{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:2,3;opacity:.55}
+    .owndot.a{fill:var(--brand)}
+    .owndot.b{fill:var(--brand2)}
+    .sharebox{fill:#fff;stroke:var(--ink);stroke-width:1.6;stroke-dasharray:2,2}
+  </style>
+
+  <span class="kicker">Les briques</span>
+  <h2>La liaison covalente : les couches se chevauchent</h2>
+  <div class="barline"></div>
+  <p class="small">Là où les couches externes se recouvrent, une paire d'électrons — un de chaque atome — est partagée.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:.5em">
+
+    <!-- C-H simple -->
+    <div class="figframe" style="padding:4px 8px">
+      <svg viewBox="50 50 160 100" class="fig" style="max-height:220px">
+        <circle class="ownring" cx="101" cy="100" r="38"/>
+        <circle class="coring" cx="101" cy="100" r="18"/>
+        <circle class="owndot a" cx="101" cy="82" r="3"/>
+        <circle class="owndot a" cx="101" cy="118" r="3"/>
+        <circle cx="101" cy="100" r="14" fill="var(--brand)"/>
+        <text x="101" y="105" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">C</text>
+        <circle class="owndot a" cx="83.5" cy="133.7" r="3.4"/>
+        <circle class="owndot a" cx="63" cy="100" r="3.4"/>
+        <circle class="owndot a" cx="83.5" cy="66.3" r="3.4"/>
+
+        <circle class="ownring" cx="147" cy="100" r="18"/>
+        <circle cx="147" cy="100" r="11" fill="var(--brand2)"/>
+        <text x="147" y="104" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+
+        <rect class="sharebox" x="127" y="91" width="14" height="18" rx="4"/>
+        <g class="fragment" data-fragment-index="0">
+          <circle class="pairdot a" cx="130.5" cy="100" r="3.6"/>
+          <circle class="pairdot b" cx="137.5" cy="100" r="3.6"/>
+        </g>
+      </svg>
+      <p class="tiny center">C–H — simple : 1 paire partagée</p>
+    </div>
+
+    <!-- C-O simple -->
+    <div class="figframe" style="padding:4px 8px">
+      <svg viewBox="50 50 160 100" class="fig" style="max-height:220px">
+        <circle class="ownring" cx="101" cy="100" r="38"/>
+        <circle class="coring" cx="101" cy="100" r="18"/>
+        <circle class="owndot a" cx="101" cy="82" r="3"/>
+        <circle class="owndot a" cx="101" cy="118" r="3"/>
+        <circle cx="101" cy="100" r="14" fill="var(--brand)"/>
+        <text x="101" y="105" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">C</text>
+        <circle class="owndot a" cx="83.5" cy="133.7" r="3.4"/>
+        <circle class="owndot a" cx="63" cy="100" r="3.4"/>
+        <circle class="owndot a" cx="83.5" cy="66.3" r="3.4"/>
+
+        <circle class="ownring" cx="159" cy="100" r="38"/>
+        <circle class="coring" cx="159" cy="100" r="18"/>
+        <circle class="owndot b" cx="159" cy="82" r="3"/>
+        <circle class="owndot b" cx="159" cy="118" r="3"/>
+        <circle cx="159" cy="100" r="14" fill="var(--brand2)"/>
+        <text x="159" y="105" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">O</text>
+        <circle class="owndot b" cx="163.4" cy="62.3" r="3.4"/>
+        <circle class="owndot b" cx="187.4" cy="74.7" r="3.4"/>
+        <circle class="owndot b" cx="197" cy="100" r="3.4"/>
+        <circle class="owndot b" cx="187.4" cy="125.3" r="3.4"/>
+        <circle class="owndot b" cx="163.4" cy="137.7" r="3.4"/>
+
+        <rect class="sharebox" x="119" y="91" width="22" height="18" rx="4"/>
+        <g class="fragment" data-fragment-index="1">
+          <circle class="pairdot a" cx="125" cy="100" r="3.6"/>
+          <circle class="pairdot b" cx="135" cy="100" r="3.6"/>
+        </g>
+      </svg>
+      <p class="tiny center">C–O — simple : 1 paire partagée</p>
+    </div>
+
+    <!-- N-H simple -->
+    <div class="figframe" style="padding:4px 8px">
+      <svg viewBox="50 50 160 100" class="fig" style="max-height:220px">
+        <circle class="ownring" cx="101" cy="100" r="38"/>
+        <circle class="coring" cx="101" cy="100" r="18"/>
+        <circle class="owndot a" cx="101" cy="82" r="3"/>
+        <circle class="owndot a" cx="101" cy="118" r="3"/>
+        <circle cx="101" cy="100" r="14" fill="var(--brand)"/>
+        <text x="101" y="105" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">N</text>
+        <circle class="owndot a" cx="91.2" cy="136.7" r="3.4"/>
+        <circle class="owndot a" cx="66.6" cy="116.1" r="3.4"/>
+        <circle class="owndot a" cx="66.6" cy="83.9" r="3.4"/>
+        <circle class="owndot a" cx="91.2" cy="63.3" r="3.4"/>
+
+        <circle class="ownring" cx="147" cy="100" r="18"/>
+        <circle cx="147" cy="100" r="11" fill="var(--brand2)"/>
+        <text x="147" y="104" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+
+        <rect class="sharebox" x="127" y="91" width="14" height="18" rx="4"/>
+        <g class="fragment" data-fragment-index="2">
+          <circle class="pairdot a" cx="130.5" cy="100" r="3.6"/>
+          <circle class="pairdot b" cx="137.5" cy="100" r="3.6"/>
+        </g>
+      </svg>
+      <p class="tiny center">N–H — simple : 1 paire partagée</p>
+    </div>
+
+    <!-- C=C double -->
+    <div class="figframe" style="padding:4px 8px">
+      <svg viewBox="50 50 160 100" class="fig" style="max-height:220px">
+        <circle class="ownring" cx="101" cy="100" r="38"/>
+        <circle class="coring" cx="101" cy="100" r="18"/>
+        <circle class="owndot a" cx="101" cy="82" r="3"/>
+        <circle class="owndot a" cx="101" cy="118" r="3"/>
+        <circle cx="101" cy="100" r="14" fill="var(--brand)"/>
+        <text x="101" y="105" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">C</text>
+        <circle class="owndot a" cx="72.6" cy="125.3" r="3.4"/>
+        <circle class="owndot a" cx="72.6" cy="74.7" r="3.4"/>
+
+        <circle class="ownring" cx="159" cy="100" r="38"/>
+        <circle class="coring" cx="159" cy="100" r="18"/>
+        <circle class="owndot b" cx="159" cy="82" r="3"/>
+        <circle class="owndot b" cx="159" cy="118" r="3"/>
+        <circle cx="159" cy="100" r="14" fill="var(--brand2)"/>
+        <text x="159" y="105" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">C</text>
+        <circle class="owndot b" cx="187.4" cy="74.7" r="3.4"/>
+        <circle class="owndot b" cx="187.4" cy="125.3" r="3.4"/>
+
+        <rect class="sharebox" x="117" y="83" width="26" height="34" rx="5"/>
+        <g class="fragment" data-fragment-index="3">
+          <circle class="pairdot a" cx="125" cy="92" r="3.6"/>
+          <circle class="pairdot b" cx="135" cy="92" r="3.6"/>
+        </g>
+        <g class="fragment" data-fragment-index="4">
+          <circle class="pairdot a" cx="125" cy="108" r="3.6"/>
+          <circle class="pairdot b" cx="135" cy="108" r="3.6"/>
+        </g>
+      </svg>
+      <p class="tiny center">C=C — double : 2 paires partagées</p>
+    </div>
+
+  </div>
+
+  <p class="center beat" style="margin-top:.2em; min-height:1.6em">
+    <span class="fragment fade-up" data-fragment-index="5">
+      <span class="pill ghost">Simple ou double, même principe : là où les couches se recouvrent, les électrons se partagent</span>
+    </span>
+  </p>
+
+</section>

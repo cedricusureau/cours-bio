@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réplication de l'ADN</title>
+<style>
+  :root{
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --brand:#2563eb; --brand2:#0ea5e9;
+    --accent:#f43f5e; --water:#eaf6fd; --soft:#f8fafc;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#fff;color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+  .card{position:absolute;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 2px 10px rgba(15,23,42,.08)}
+  .bar{top:14px;right:14px;padding:12px;display:grid;gap:10px;justify-items:start}
+  .bar .row{display:flex;gap:10px;align-items:center}
+  button{font:inherit;font-size:15px;font-weight:600;border-radius:9px;cursor:pointer;
+    padding:7px 14px;border:2px solid var(--brand);background:#fff;color:var(--brand)}
+  button.primary{background:var(--brand);color:#fff;min-width:118px}
+  button:focus-visible{outline:3px solid var(--brand2);outline-offset:2px}
+  .seg{display:inline-flex;border:2px solid var(--brand);border-radius:9px;overflow:hidden}
+  .seg button{border:0;border-radius:0;padding:7px 12px}
+  .seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+  label.kt{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);font-weight:600}
+  input[type=range]{accent-color:var(--brand);width:100px}
+  .kt output{font-variant-numeric:tabular-nums;color:var(--ink);min-width:2.8em}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block;background:var(--water)}
+  .legend{bottom:14px;right:14px;padding:9px 14px;display:grid;gap:4px;font-size:14px;color:var(--muted);max-width:470px}
+  .legend .sw{display:flex;gap:14px;flex-wrap:wrap}
+  .legend .tile{display:inline-block;width:11px;height:15px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+  .legend .wedge{display:inline-block;width:0;height:0;border-left:13px solid var(--muted);
+    border-top:7px solid transparent;border-bottom:7px solid transparent;vertical-align:-2px;margin-right:5px}
+  .legend .note{font-size:13px}
+  #info,#temps{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+  #bilan{font-variant-numeric:tabular-nums}
+  /* mode agrandi : la simulation seule, un encart discret pour Pause / Quitter */
+  :fullscreen .legend, :fullscreen .seg, :fullscreen .kt, :fullscreen #reset{display:none}
+  :fullscreen .bar{padding:8px;opacity:.3;transition:opacity .2s}
+  :fullscreen .bar:hover{opacity:1}
+  /* ?check=1 : résultat de l'auto-contrôle */
+  .check{left:50%;top:50%;transform:translate(-50%,-50%);padding:14px 18px;max-width:1180px;margin:0;
+    font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;color:var(--ink);z-index:5}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div class="card bar">
+  <div class="row">
+    <button id="play" class="primary">▶ Lancer</button>
+    <button id="reset">↺ Recommencer</button>
+    <button id="fs">⛶ Agrandir</button>
+  </div>
+  <div class="row">
+    <div class="seg" role="group" aria-label="Nombre d'origines de réplication">
+      <button id="o-1" aria-pressed="true">1 origine</button>
+      <button id="o-3" aria-pressed="false">3 origines</button>
+    </div>
+    <label class="kt">Vitesse
+      <input id="speed" type="range" min="0" max="4" step="1" value="2">
+      <output id="speedv">×1</output>
+    </label>
+  </div>
+</div>
+<div class="card legend">
+  <span id="info"></span>
+  <span id="temps"></span>
+  <span id="bilan" hidden></span>
+  <span class="sw">
+    <span><span class="tile" style="background:var(--ink)"></span>brin parental</span>
+    <span><span class="tile" style="background:var(--brand)"></span>brin neuf</span>
+    <span><span class="tile" style="background:var(--brand2)"></span>amorce ARN</span>
+    <span><span class="wedge"></span>hélicase</span>
+  </span>
+  <span class="note">1 pas : chaque fourche ouvre 1 paire de bases.</span>
+  <span class="note">Fragments d'Okazaki : 8–12 nt ici, ≈ 100–200 nt dans une cellule humaine.</span>
+  <span class="note">Vitesses et longueurs non à l'échelle.</span>
+</div>
+
+<script id="core">
+// ============================================================
+//  Moteur : copie d'un segment d'ADN double brin, pas à pas.
+//  Un pas : chaque fourche ouvre 1 paire de bases, puis chaque brin neuf
+//  en cours de synthèse reçoit au plus 1 nucléotide, à son extrémité 3'.
+//  Positions 0..N-1 : segment affiché. Positions -M..-1 et N..N-1+M : l'ADN
+//  qui continue de part et d'autre, simulé mais non affiché, pour que les
+//  bords du segment soient copiés par le même mécanisme que le milieu.
+// ============================================================
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+// Brin du haut : début de la séquence codante de HBB (NM_000518.5, 51..122), écrit 5'→3' de gauche à droite.
+const GENE  = 'ATGGTGCATCTGACTCCTGAGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAGGTGAACGTGGATGAAGTT';
+// Séquences qui l'encadrent sur le chromosome 11 (GRCh38, même brin) : 30 nt en amont de l'ATG,
+// 30 nt en aval (fin de l'exon 1 puis début de l'intron 1).
+const AMONT = 'TGTGTTCACTAGCAACCTCAAACAGACACC';
+const AVAL  = 'GGTGGTGAGGCCCTGGGCAGGTTGGTATCA';
+const PAIR  = { A:'T', T:'A', G:'C', C:'G' };
+
+const REP = {
+  N: GENE.length,       // paires de bases affichées (72)
+  M: 24,                // paires simulées de chaque côté, hors du segment affiché
+  D: 3,                 // paires dessinées en fondu de chaque côté (squelette seul)
+  K: 3,                 // une base de la matrice n'est copiée qu'à 3 paires au moins derrière la fourche
+  PRIMER: 3,            // nucléotides d'ARN par amorce
+  LMIN: 8, LMAX: 12,    // longueur des fragments d'Okazaki (tirée pour chaque fragment)
+  LIG: 1,               // pas entre l'apparition d'une coupure et sa ligature
+  ORIGINS: { 1: [36], 3: [12, 36, 60] },   // une origine est située entre les paires o-1 et o
+  SEED: { 1: 11, 3: 7 },
+};
+// Sens de synthèse 5'→3' d'un brin neuf, en positions : antiparallèle à sa matrice.
+//   matrice 0 = brin du haut (5'→3' vers la droite) → brin neuf 5'→3' vers la gauche (-1)
+//   matrice 1 = brin du bas  (3'→5' vers la droite) → brin neuf 5'→3' vers la droite (+1)
+const DIR = [-1, +1];
+
+function makeRep(nOrig){
+  const { N, M, K, PRIMER } = REP;
+  const lo = -M, hi = N - 1 + M, size = hi - lo + 1;
+  const I = p => p - lo;
+  const top = AMONT.slice(-M) + GENE + AVAL.slice(0, M);
+  const tpl = [top, Array.from(top, b => PAIR[b]).join('')];
+  const origins = REP.ORIGINS[nOrig];
+  const open = new Uint8Array(size);          // 1 = paire de bases ouverte
+  const dist = new Int32Array(size);          // distance à la paire fermée la plus proche
+  const nt = [new Array(size).fill(null), new Array(size).fill(null)];   // nucléotides neufs, par matrice
+  const forks = [], frags = [], log = [], ligs = [], okz = new Set();
+  const rng = mulberry32(REP.SEED[nOrig]);
+  const nextLen = () => REP.LMIN + Math.floor(rng()*(REP.LMAX - REP.LMIN + 1));
+  const S = { N, lo, hi, I, tpl, origins, open, nt, forks, frags, log, ligs, okz,
+              tick: 0, done: false, doneTick: 0, failed: false };
+
+  function computeDist(){
+    let last = lo - 1;                         // au-delà de la zone simulée : ADN encore fermé
+    for(let p = lo; p <= hi; p++){ if(!open[I(p)]){ last = p; dist[I(p)] = 0; } else dist[I(p)] = p - last; }
+    let next = hi + 1;
+    for(let p = hi; p >= lo; p--){ if(!open[I(p)]) next = p; else dist[I(p)] = Math.min(dist[I(p)], next - p); }
+  }
+  const copyable = p => open[I(p)] === 1 && dist[I(p)] >= K;
+
+  // kind : 'continu' (amorcé à l'origine, s'allonge dans le sens de sa fourche)
+  //        'fragment' (amorcé près de la fourche, s'allonge dans le sens opposé)
+  function newFrag(s, p5, fork, kind, span){
+    const F = { id: frags.length, s, dir: DIR[s], p5, p3: null, len: 0, nRna: 0, state: 'amorce',
+                fork: fork.id, kind, tip: frags.length, tipKind: kind, born: S.tick };
+    frags.push(F);
+    log.push({ k:'nouveau', f:F.id, s, p5, kind, span, forkDir: fork.dir, origin: fork.origin, tick: S.tick });
+    return F;
+  }
+
+  function add(F, p, rna, rep){
+    const c = PAIR[tpl[F.s][I(p)]], b = rna && c === 'T' ? 'U' : c;
+    log.push({ k:'ajout', f:F.id, s:F.s, pos:p, rna, b, tick:S.tick });
+    nt[F.s][I(p)] = { b, rna, f:F, t:S.tick, rep:!!rep };
+    if(F.p3 === null) F.p5 = p;
+    F.p3 = p; F.len++; if(rna) F.nRna++;
+    if(F.tipKind === 'fragment' && p >= 0 && p < N) okz.add(F.tip);
+  }
+
+  function remove5(G){
+    const p = G.p5, r = nt[G.s][I(p)];
+    log.push({ k:'retrait', f:G.id, s:G.s, pos:p, rna:r.rna, tick:S.tick });
+    nt[G.s][I(p)] = null;
+    G.p5 += G.dir; G.len--; if(r.rna) G.nRna--;
+  }
+
+  // 1 nucléotide au plus, à l'extrémité 3' du brin F
+  function extend(F){
+    const p = F.p3 === null ? F.p5 : F.p3 + F.dir;
+    if(p < lo || p > hi){ F.state = 'bout'; return; }
+    const r = nt[F.s][I(p)];
+    if(r === null){
+      if(!copyable(p)) return;                 // matrice pas encore ouverte : attendre la fourche
+      const rna = F.state === 'amorce';
+      add(F, p, rna, false);
+      if(rna && F.nRna === PRIMER) F.state = 'allonge';
+      return;
+    }
+    if(F.state === 'amorce') return;
+    const G = r.f;                             // le brin suivant, rencontré par son extrémité 5'
+    if(G.p5 !== p) log.push({ k:'anomalie', f:F.id, g:G.id, pos:p, tick:S.tick });
+    if(r.rna){
+      if(G.len - G.nRna < 1) return;           // amorce de G pas encore prolongée par de l'ADN
+      remove5(G);                              // le nucléotide d'ARN est retiré...
+      add(F, p, false, true);                  // ... et remplacé par de l'ADN, au bout 3' de F
+      return;
+    }
+    F.state = 'coupure'; F.next = G; F.nickAt = S.tick;   // ADN contre ADN : il reste une coupure
+  }
+
+  // ligature : F (extrémité 3') et G (extrémité 5') voisins ne font plus qu'un brin
+  function ligate(F){
+    const G = F.next;
+    ligs.push({ s:F.s, a:F.p3, b:G.p5, tick:S.tick });
+    log.push({ k:'ligature', f:F.id, g:G.id, s:F.s, a:F.p3, b:G.p5, tick:S.tick });
+    for(let p = G.p5; ; p += G.dir){ nt[G.s][I(p)].f = F; if(p === G.p3) break; }
+    F.p3 = G.p3; F.len += G.len; F.nRna += G.nRna;
+    F.state = G.state; F.next = G.next; F.nickAt = G.nickAt;
+    F.tip = G.tip; F.tipKind = G.tipKind;
+    G.state = 'lié'; G.into = F.id;
+  }
+
+  // copie terminée : toute la partie dessinée porte de l'ADN, en un seul brin neuf par matrice
+  function isDone(){
+    const a = -REP.D, b = N - 1 + REP.D;
+    for(let s = 0; s < 2; s++){
+      const r0 = nt[s][I(a)];
+      if(!r0) return false;
+      for(let p = a; p <= b; p++){ const r = nt[s][I(p)]; if(!r || r.rna || r.f !== r0.f) return false; }
+    }
+    return true;
+  }
+
+  S.step = function(){
+    if(S.done) return;
+    S.tick++;
+    // 1. les fourches
+    if(S.tick === 1){
+      for(const o of origins){
+        open[I(o-1)] = open[I(o)] = 1;
+        const L = { id: forks.length,     dir: -1, pos: o-1, active: true, origin: o, openedAt: 1 };
+        const R = { id: forks.length + 1, dir: +1, pos: o,   active: true, origin: o, openedAt: 1 };
+        forks.push(L, R);
+        // brins continus : une amorce posée à l'origine, de chaque côté
+        newFrag(0, o-1, L, 'continu', 0);      // matrice du haut, vers la gauche, avec la fourche gauche
+        newFrag(1, o,   R, 'continu', 0);      // matrice du bas, vers la droite, avec la fourche droite
+        // le premier fragment de chaque brin discontinu s'arrêtera sur l'amorce du brin continu d'en face
+        L.lagRef = o;     L.lagLen = nextLen();
+        R.lagRef = o - 1; R.lagLen = nextLen();
+      }
+    } else {
+      for(const f of forks){
+        if(!f.active) continue;
+        const p = f.pos + f.dir;
+        if(p < lo || p > hi || open[I(p)]){ f.active = false; continue; }
+        open[I(p)] = 1; f.pos = p; f.openedAt = S.tick;
+      }
+      // deux fourches face à face sans paire fermée entre elles : les bulles fusionnent
+      for(const f of forks){
+        if(!f.active) continue;
+        const p = f.pos + f.dir;
+        if(p >= lo && p <= hi && open[I(p)]){ f.active = false; f.metAt = S.tick; }
+      }
+    }
+    computeDist();
+    // 2. amorçage du brin discontinu, près de chaque fourche, dès que la matrice libre atteint un fragment
+    for(const f of forks){
+      if(!f.active) continue;
+      const p = f.pos - f.dir*K, s = f.dir > 0 ? 0 : 1, span = (p - f.lagRef)*f.dir;
+      if(span >= f.lagLen && copyable(p) && !nt[s][I(p)]){
+        newFrag(s, p, f, 'fragment', span);
+        f.lagRef = p; f.lagLen = nextLen();
+      }
+    }
+    // 3. synthèse : 1 nucléotide par brin, à son extrémité 3'
+    for(const F of frags) if(F.state === 'amorce' || F.state === 'allonge') extend(F);
+    // 4. ligatures des coupures apparues au pas précédent
+    let again = true;
+    while(again){
+      again = false;
+      for(const F of frags) if(F.state === 'coupure' && S.tick - F.nickAt >= REP.LIG){ ligate(F); again = true; }
+    }
+    if(isDone()){ S.done = true; S.doneTick = S.tick; }
+    else if(S.tick > 600){ S.done = true; S.failed = true; }
+  };
+
+  S.stats = function(){
+    let n = 0, dna = 0;
+    for(let s = 0; s < 2; s++) for(let p = 0; p < N; p++){ const r = nt[s][I(p)]; if(r){ n++; if(!r.rna) dna++; } }
+    return { n, dna, total: 2*N, okz: okz.size };
+  };
+  return S;
+}
+
+// ============================================================
+//  Auto-contrôle. Relit le journal des événements et l'état final avec ses
+//  propres règles (complémentarité, sens 5'→3' déduit de l'orientation écrite
+//  des matrices), sans réutiliser celles du moteur.
+// ============================================================
+function verifyRep(S, partial){
+  const errs = [], err = m => { if(errs.length < 50) errs.push(m); };
+  const TPL53 = [+1, -1];   // sens 5'→3' des matrices : brin du haut vers la droite, brin du bas vers la gauche
+  const COMP = { A:'T', T:'A', G:'C', C:'G' };
+  const tplAt = (s, p) => S.tpl[s][p - S.lo];
+  const p5 = new Map(), p3 = new Map(), occ = [new Map(), new Map()], perFork = new Map();
+  let adds = 0, starts = 0, ext3 = 0, repl = 0, ligs = 0, lead = 0, lag = 0, pendingRepl = null;
+  const spans = [];
+  for(const e of S.log){
+    if(pendingRepl && !(e.k === 'ajout' && e.pos === pendingRepl.pos && e.s === pendingRepl.s && !e.rna))
+      err(`pas ${pendingRepl.tick} : ARN retiré en ${pendingRepl.pos} sans être remplacé par de l'ADN`);
+    if(e.k !== 'retrait') pendingRepl = null;
+    if(e.k === 'nouveau'){
+      const grow = -TPL53[e.s], key = `${e.origin}:${e.forkDir}`;
+      if(!perFork.has(key)) perFork.set(key, { lead: 0, lag: 0 });
+      if(e.kind === 'continu'){
+        lead++; perFork.get(key).lead++;
+        if(grow !== e.forkDir) err(`brin continu ${e.f} : ne s'allonge pas dans le sens de sa fourche`);
+        if(e.p5 !== e.origin && e.p5 !== e.origin - 1) err(`brin continu ${e.f} : amorce hors de l'origine`);
+      } else {
+        lag++; perFork.get(key).lag++; spans.push(e.span);
+        if(grow !== -e.forkDir) err(`fragment ${e.f} : s'allonge dans le sens de sa fourche`);
+      }
+    } else if(e.k === 'ajout'){
+      adds++;
+      const t = tplAt(e.s, e.pos), c = COMP[t], want = e.rna && c === 'T' ? 'U' : c;
+      if(e.b !== want) err(`pas ${e.tick} : ${e.b} face à ${t} (position ${e.pos})`);
+      if(occ[e.s].get(e.pos)) err(`pas ${e.tick} : position ${e.pos} déjà occupée`);
+      occ[e.s].set(e.pos, true);
+      if(!p3.has(e.f)){
+        if(!e.rna) err(`brin ${e.f} : démarre par de l'ADN, sans amorce`);
+        starts++; p5.set(e.f, e.pos);
+      } else if(e.pos !== p3.get(e.f) - TPL53[e.s]){
+        err(`pas ${e.tick} : brin ${e.f} allongé ailleurs qu'à son extrémité 3′ (position ${e.pos})`);
+      } else ext3++;
+      p3.set(e.f, e.pos);
+    } else if(e.k === 'retrait'){
+      repl++;
+      if(!e.rna) err(`pas ${e.tick} : ADN retiré en ${e.pos}`);
+      if(e.pos !== p5.get(e.f)) err(`pas ${e.tick} : retrait ailleurs qu'à l'extrémité 5′`);
+      p5.set(e.f, e.pos - TPL53[e.s]);
+      occ[e.s].set(e.pos, false);
+      pendingRepl = e;
+    } else if(e.k === 'ligature'){
+      ligs++;
+      if(p3.get(e.f) - TPL53[e.s] !== p5.get(e.g)) err(`pas ${e.tick} : ligature entre extrémités non voisines`);
+      p3.set(e.f, p3.get(e.g)); p3.delete(e.g); p5.delete(e.g);
+    } else if(e.k === 'anomalie') err(`pas ${e.tick} : brin ${e.f} bute sur le brin ${e.g} ailleurs qu'à son extrémité 5′`);
+  }
+  for(const [key, v] of perFork) if(v.lead !== 1) err(`fourche ${key} : ${v.lead} brins continus`);
+  const res = { ok: false, errs, adds, starts, ext3, repl, ligs, lead, lag, time: S.doneTick,
+                lmin: spans.length ? Math.min(...spans) : 0, lmax: spans.length ? Math.max(...spans) : 0 };
+  if(!partial){
+    if(S.failed || !S.done) err('copie non terminée');
+    let nDna = 0, copy0 = '', copy1 = '', par0 = '', par1 = '';
+    for(let s = 0; s < 2; s++){
+      let f0 = null;
+      for(let p = -REP.D; p < S.N + REP.D; p++){
+        const r = S.nt[s][p - S.lo];
+        if(!r){ err(`position ${p} de la matrice ${s} : pas de nucléotide neuf`); continue; }
+        if(r.rna) err(`position ${p} de la matrice ${s} : amorce ARN restante`);
+        if(r.b !== COMP[tplAt(s, p)]) err(`position ${p} de la matrice ${s} : ${r.b} face à ${tplAt(s, p)}`);
+        if(f0 === null) f0 = r.f; else if(r.f !== f0) err(`matrice ${s} : coupure non scellée avant la position ${p}`);
+        if(p >= 0 && p < S.N){ nDna += r.rna ? 0 : 1; if(s === 0) copy0 += r.b; else copy1 += r.b; }
+      }
+    }
+    for(let p = 0; p < S.N; p++){ par0 += tplAt(0, p); par1 += tplAt(1, p); }
+    res.nDna = nDna;
+    res.copy0 = copy0 === par1;   // brin neuf posé sur le brin du haut = même séquence que le brin parental du bas
+    res.copy1 = copy1 === par0;
+    if(!res.copy0 || !res.copy1) err('un brin neuf ne reproduit pas le brin parental opposé');
+  }
+  res.ok = errs.length === 0;
+  return res;
+}
+
+// Contrôle complet : les deux modes, jusqu'au bout, plus la simulation affichée (état courant).
+function replicationCheck(){
+  const out = {};
+  for(const n of [1, 3]){
+    const S = makeRep(n);
+    while(!S.done) S.step();
+    out[n] = verifyRep(S, false);
+  }
+  if(typeof sim !== 'undefined' && sim) out.courant = verifyRep(sim, !sim.done);
+  out.ok = out[1].ok && out[3].ok && (!out.courant || out.courant.ok);
+  return out;
+}
+window.replicationCheck = replicationCheck;
+</script>
+
+<script>
+// ============================================================
+//  Affichage et contrôles
+// ============================================================
+const $ = id => document.getElementById(id);
+const cv = $('cv'), ctx = cv.getContext('2d');
+const layer = document.createElement('canvas'), lctx = layer.getContext('2d');
+const COL = { ink:'#0f172a', muted:'#64748b', brand:'#2563eb', brand2:'#0ea5e9', accent:'#f43f5e',
+              water:'#eaf6fd', white:'#ffffff' };
+const FONT = '-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif';
+// Géométrie en px d'une slide 1280 × 720, mise à l'échelle en mode « Agrandir »
+const VW = 1280, VH = 720, YC = 352;
+const PITCH = 15, TW = 12.5, TH = 18;       // pas entre paires de bases ; case d'un nucléotide
+const HALF = 24;                            // rail → axe de la double hélice fermée
+const DELTA = 64, DELTA_END = 84, RAMP = 6;     // écartement des brins parentaux : pendant la copie, à la fin ; longueur de la fourche (paires)
+const SPEEDS = [0.25, 0.5, 1, 2, 4], TICK = 0.25; // durée d'un pas à vitesse ×1 (s)
+const GAP = 2/PITCH;                        // demi-coupure entre deux fragments voisins (en paires)
+const X = p => VW/2 + (p - (REP.N - 1)/2)*PITCH;
+const opening = x => 1 - (1 - x)*(1 - x);   // fourche en Y : écartement rapide à la pointe, puis brins parallèles
+
+let nOrig = 1, sim = null, running = false, phase = 1, speed = 1;
+let disp = null, fin = 0, flashes = [], rafOn = false, lastT = 0;
+const results = {};                         // temps de copie mesurés, par nombre d'origines
+
+function dispAt(p){
+  const q = Math.max(sim.lo, Math.min(sim.hi, p)) - sim.lo, i = Math.floor(q), f = q - i;
+  return i + 1 < disp.length ? disp[i]*(1 - f) + disp[i + 1]*f : disp[i];
+}
+const yT = p => YC - HALF - dispAt(p);                       // rail du brin parental du haut
+const yB = p => YC + HALF + dispAt(p);                       // rail du brin parental du bas
+const ny = (s, p) => s === 0 ? yT(p) + 2*HALF : yB(p) - 2*HALF;   // rail du brin neuf posé sur la matrice s
+const front = f => (f.openedAt === sim.tick && !sim.done) ? f.pos + f.dir*(phase - 0.5) : f.pos + f.dir*0.5;
+
+function build(){
+  sim = makeRep(nOrig);
+  disp = new Float64Array(sim.hi - sim.lo + 1);
+  phase = 1; fin = 0; flashes = [];
+  updateInfo(); draw();
+}
+
+// écartement visé de chaque paire : nul si fermée, croissant sur RAMP paires derrière chaque fourche
+function targets(){
+  const S = sim, T = new Float64Array(S.hi - S.lo + 1);
+  if(S.done){ T.fill(DELTA_END); return T; }
+  let p = S.lo;
+  while(p <= S.hi){
+    if(!S.open[S.I(p)]){ p++; continue; }
+    const a = p; while(p <= S.hi && S.open[S.I(p)]) p++; const b = p - 1;
+    let xl = a === S.lo ? -Infinity : a - 0.5, xr = b === S.hi ? Infinity : b + 0.5;
+    for(const f of S.forks){
+      if(f.openedAt !== S.tick) continue;
+      if(f.dir < 0 && f.pos === a) xl = a + 0.5 - phase;
+      if(f.dir > 0 && f.pos === b) xr = b - 0.5 + phase;
+    }
+    for(let q = a; q <= b; q++){
+      const d = Math.min(q - xl, xr - q);
+      T[S.I(q)] = d <= 0 ? 0 : DELTA*opening(Math.min(1, d/RAMP));
+    }
+  }
+  return T;
+}
+function relax(dt){
+  const T = targets(), tau = sim.done ? 0.35 : Math.max(0.02, 0.2*TICK/speed);
+  const k = 1 - Math.exp(-dt/tau);
+  let moving = false;
+  for(let i = 0; i < T.length; i++){
+    const d = T[i] - disp[i];
+    if(Math.abs(d) > 0.05){ disp[i] += d*k; moving = true; } else disp[i] = T[i];
+  }
+  const ft = sim.done ? 1 : 0;
+  if(Math.abs(ft - fin) > 0.005){ fin += (ft - fin)*(1 - Math.exp(-dt/0.35)); moving = true; } else fin = ft;
+  return moving;
+}
+function snap(){ disp = targets(); fin = sim.done ? 1 : 0; }
+
+// ---------- dessin ----------
+function smoothPath(c, pts){
+  c.moveTo(pts[0][0], pts[0][1]);
+  for(let i = 1; i < pts.length - 1; i++)
+    c.quadraticCurveTo(pts[i][0], pts[i][1], (pts[i][0] + pts[i+1][0])/2, (pts[i][1] + pts[i+1][1])/2);
+  const L = pts[pts.length - 1]; c.lineTo(L[0], L[1]);
+}
+// trait de la position a à la position b (fractionnaires), à la hauteur yf(position)
+function strokeSpan(c, a, b, yf){
+  const pts = [[X(a), yf(a)]];
+  for(let p = Math.floor(a) + 1; p < b; p++) pts.push([X(p), yf(p)]);
+  pts.push([X(b), yf(b)]);
+  c.beginPath(); smoothPath(c, pts); c.stroke();
+}
+function tile(c, x, y, fill, letter, fg, a){
+  if(a <= 0.01) return;
+  c.globalAlpha = a; c.fillStyle = fill; c.beginPath();
+  if(c.roundRect) c.roundRect(x - TW/2, y - TH/2, TW, TH, 3); else c.rect(x - TW/2, y - TH/2, TW, TH);
+  c.fill(); c.fillStyle = fg; c.fillText(letter, x, y + 0.5); c.globalAlpha = 1;
+}
+function hbonds(c, x, y1, y2, n, a){          // 2 liaisons hydrogène pour A–T, 3 pour G–C
+  if(a <= 0.02) return;
+  c.globalAlpha = a; c.beginPath();
+  for(let k = 0; k < n; k++){ const dx = (k - (n - 1)/2)*3; c.moveTo(x + dx, y1); c.lineTo(x + dx, y2); }
+  c.stroke(); c.globalAlpha = 1;
+}
+
+function drawDNA(c){
+  const S = sim, N = REP.N, D = REP.D, I = S.I, pa = -D, pb = N - 1 + D;
+  const live = !S.done, ap = live ? 1 - (1 - phase)*(1 - phase) : 1;
+  const fresh = r => live && r.t === S.tick;
+
+  // liaisons hydrogène : entre brins parentaux (s'effacent à l'ouverture), puis matrice–brin neuf
+  c.strokeStyle = COL.muted; c.lineWidth = 1.2; c.lineCap = 'butt';
+  for(let p = 0; p < N; p++){
+    const b0 = S.tpl[0][I(p)], nH = (b0 === 'G' || b0 === 'C') ? 3 : 2, yt = yT(p), yb = yB(p);
+    hbonds(c, X(p), yt + 20, yb - 20, nH, 1 - Math.min(1, disp[I(p)]/8));
+    const r0 = S.nt[0][I(p)], r1 = S.nt[1][I(p)];
+    if(r0) hbonds(c, X(p), yt + 20, yt + 28, nH, fresh(r0) && !r0.rep ? ap : 1);
+    if(r1) hbonds(c, X(p), yb - 28, yb - 20, nH, fresh(r1) && !r1.rep ? ap : 1);
+  }
+
+  // squelettes des brins parentaux
+  c.lineWidth = 3; c.lineJoin = 'round'; c.strokeStyle = COL.ink;
+  strokeSpan(c, pa - 0.5, pb + 0.5, yT);
+  strokeSpan(c, pa - 0.5, pb + 0.5, yB);
+
+  // squelettes des brins neufs : un trait par brin, coloré par nature (ARN / ADN), coupures visibles
+  for(const F of S.frags){
+    if(F.state === 'lié' || F.len === 0) continue;
+    const lowP = Math.min(F.p5, F.p3), highP = Math.max(F.p5, F.p3);
+    if(highP < pa || lowP > pb) continue;
+    const yf = p => ny(F.s, p), r3 = S.nt[F.s][I(F.p3)], grow = fresh(r3);
+    let A = lowP - 0.5 + GAP, B = highP + 0.5 - GAP;
+    if(grow){ if(F.dir > 0) B -= 1 - ap; else A += 1 - ap; }   // l'extrémité 3' avance pendant le pas
+    A = Math.max(A, pa - 0.5); B = Math.min(B, pb + 0.5);
+    if(grow && r3.rep && F.p3 >= pa && F.p3 <= pb){           // ARN en cours de remplacement
+      c.globalAlpha = 1 - ap; c.strokeStyle = COL.brand2;
+      strokeSpan(c, F.p3 - 0.5, F.p3 + 0.5, yf); c.globalAlpha = 1;
+    }
+    if(B <= A) continue;
+    const q0 = Math.max(lowP, pa), q1 = Math.min(highP, pb);
+    let runStart = q0, runRna = S.nt[F.s][I(q0)].rna;
+    for(let p = q0 + 1; p <= q1 + 1; p++){
+      const r = p <= q1 ? S.nt[F.s][I(p)] : null;
+      if(r && r.rna === runRna) continue;
+      const a = Math.max(A, runStart - 0.5), b = Math.min(B, p - 0.5);
+      if(b > a){ c.strokeStyle = runRna ? COL.brand2 : COL.brand; strokeSpan(c, a, b, yf); }
+      if(r){ runStart = p; runRna = r.rna; }
+    }
+  }
+
+  // nucléotides (lettres) : parentaux, puis neufs
+  c.font = `700 13px ${FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+  for(let p = 0; p < N; p++){
+    const x = X(p), yt = yT(p), yb = yB(p);
+    tile(c, x, yt + 11, COL.ink, S.tpl[0][I(p)], COL.white, 1);
+    tile(c, x, yb - 11, COL.ink, S.tpl[1][I(p)], COL.white, 1);
+    for(let s = 0; s < 2; s++){
+      const r = S.nt[s][I(p)]; if(!r) continue;
+      const y = s === 0 ? yt + 37 : yb - 37;
+      if(fresh(r) && r.rep){
+        tile(c, x, y, COL.brand2, r.b === 'T' ? 'U' : r.b, COL.ink, 1 - ap);
+        tile(c, x, y, COL.brand, r.b, COL.white, ap);
+      } else if(r.rna) tile(c, x, y, COL.brand2, r.b, COL.ink, fresh(r) ? ap : 1);
+      else tile(c, x, y, COL.brand, r.b, COL.white, fresh(r) ? ap : 1);
+    }
+  }
+
+  // extrémités 3' en cours d'allongement : pointe dans le sens de synthèse
+  for(const F of S.frags){
+    if((F.state !== 'amorce' && F.state !== 'allonge') || F.len === 0) continue;
+    if(F.p3 < pa || F.p3 > pb) continue;
+    const r3 = S.nt[F.s][I(F.p3)];
+    const e = F.p3 + F.dir*(0.5 - GAP) - (fresh(r3) ? F.dir*(1 - ap) : 0);
+    const x = X(e), y = ny(F.s, e);
+    // orientée selon la tangente du brin (incliné près des fourches)
+    const th = Math.atan2(ny(F.s, e + 0.25*F.dir) - ny(F.s, e - 0.25*F.dir), 0.5*PITCH*F.dir);
+    const ux = Math.cos(th), uy = Math.sin(th);
+    c.fillStyle = r3.rna ? COL.brand2 : COL.brand;
+    c.beginPath(); c.moveTo(x + ux*8, y + uy*8);
+    c.lineTo(x - ux + uy*5.5, y - uy - ux*5.5); c.lineTo(x - ux - uy*5.5, y - uy + ux*5.5);
+    c.closePath(); c.fill();
+  }
+
+  // hélicase : coin à la pointe de chaque fourche active, tourné vers l'ADN encore fermé
+  c.fillStyle = COL.muted;
+  for(const f of S.forks){
+    if(!f.active) continue;
+    const xf = front(f);
+    if(xf < pa - 0.5 || xf > pb + 0.5) continue;
+    const x = X(xf);
+    c.beginPath(); c.moveTo(x + f.dir*2, YC); c.lineTo(x - f.dir*22, YC - 10); c.lineTo(x - f.dir*22, YC + 10);
+    c.closePath(); c.fill();
+  }
+}
+
+function overlap(a, b){ return a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3]; }
+function richText(c, parts, xc, y){
+  const w = parts.reduce((s, [t]) => s + c.measureText(t).width, 0);
+  let x = xc - w/2; c.textAlign = 'left';
+  for(const [t, col] of parts){ c.fillStyle = col; c.fillText(t, x, y); x += c.measureText(t).width; }
+  c.textAlign = 'center';
+}
+
+function drawLabels(c, now){
+  const S = sim, N = REP.N, D = REP.D;
+  c.textAlign = 'center'; c.textBaseline = 'middle';
+  // extrémités 5' / 3' des brins parentaux (et des brins neufs, une fois la copie terminée)
+  const xl = X(-D - 0.5) - 13, xr = X(N - 1 + D + 0.5) + 13;
+  c.font = `700 15px ${FONT}`; c.fillStyle = COL.ink;
+  c.fillText('5′', xl, yT(-D)); c.fillText('3′', xl, yB(-D));
+  c.fillText('3′', xr, yT(N - 1 + D)); c.fillText('5′', xr, yB(N - 1 + D));
+  if(fin > 0.01){
+    c.globalAlpha = fin; c.fillStyle = COL.brand;
+    c.fillText('3′', xl, ny(0, -D)); c.fillText('5′', xl, ny(1, -D));
+    c.fillText('5′', xr, ny(0, N - 1 + D)); c.fillText('3′', xr, ny(1, N - 1 + D));
+    c.globalAlpha = 1;
+  }
+  // origines
+  if(fin < 0.99){
+    c.globalAlpha = 1 - fin; c.fillStyle = COL.accent; c.font = `700 13px ${FONT}`;
+    for(const o of S.origins){
+      const pm = o - 0.5, x = X(pm), y = yT(pm) - 5;
+      c.beginPath(); c.moveTo(x, y); c.lineTo(x - 6, y - 10); c.lineTo(x + 6, y - 10); c.closePath(); c.fill();
+      c.fillText('origine', x, y - 21);
+    }
+    c.globalAlpha = 1;
+  }
+  // « brin continu » / « fragments » près de chaque fourche active, s'il y a la place
+  const boxes = [];
+  c.font = `italic 500 13px ${FONT}`; c.fillStyle = COL.muted;
+  for(const f of S.forks){
+    if(!f.active) continue;
+    const anchor = front(f) - f.dir*4.5;
+    for(const [s, txt] of [[f.dir > 0 ? 1 : 0, 'brin continu'], [f.dir > 0 ? 0 : 1, 'fragments']]){
+      const w = c.measureText(txt).width/PITCH, lo_ = f.dir > 0 ? anchor - w : anchor, hi_ = lo_ + w;
+      if(lo_ < 0 || hi_ > N - 1) continue;
+      if(Math.min(dispAt(lo_), dispAt(hi_), dispAt((lo_ + hi_)/2)) < 0.9*DELTA) continue;
+      const pm = (lo_ + hi_)/2, y = s === 0 ? ny(0, pm) + 14 : ny(1, pm) - 14;
+      const box = [X(lo_) - 6, y - 9, X(hi_) + 6, y + 9];
+      if(boxes.some(b => overlap(b, box))) continue;
+      boxes.push(box);
+      c.fillText(txt, X(pm), y);
+    }
+  }
+  // ligatures : bref cercle sur la jonction scellée
+  c.font = `600 12px ${FONT}`;
+  for(const fl of flashes){
+    const u = (now - fl.t0)/fl.dur; if(u < 0 || u >= 1) continue;
+    const ev = fl.ev, pm = (ev.a + ev.b)/2;
+    if(pm < -0.5 || pm > N - 0.5) continue;
+    const x = X(pm), y = ny(ev.s, pm);
+    c.globalAlpha = 1 - u; c.strokeStyle = COL.brand; c.lineWidth = 2;
+    c.beginPath(); c.arc(x, y, 4 + 10*u, 0, 2*Math.PI); c.stroke();
+    const ly = ev.s === 0 ? y + 15 : y - 15, w = c.measureText('ligature').width;
+    const box = [x - w/2 - 2, ly - 8, x + w/2 + 2, ly + 8];
+    if(!boxes.some(b => overlap(b, box))){ c.fillStyle = COL.brand; c.fillText('ligature', x, ly); }
+    c.globalAlpha = 1;
+  }
+  // fin : deux doubles hélices filles
+  if(fin > 0.01){
+    c.globalAlpha = fin; c.font = `600 15px ${FONT}`;
+    const parts = [['Double hélice fille : ', COL.muted], ['brin parental', COL.ink], [' + ', COL.muted], ['brin neuf', COL.brand]];
+    const mid = (N - 1)/2;
+    richText(c, parts, VW/2, yT(mid) - 20);
+    richText(c, parts, VW/2, yB(mid) + 22);
+    // temps de copie, entre les deux doubles hélices ; comparaison dès que les deux modes ont été joués
+    const both = results[1] !== undefined && results[3] !== undefined;
+    c.font = `700 17px ${FONT}`; c.fillStyle = COL.ink;
+    c.fillText(`Temps de copie : ${S.doneTick} pas (${nOrig === 1 ? '1 origine' : '3 origines'})`, VW/2, YC - (both ? 11 : 0));
+    if(both){
+      c.font = `500 14px ${FONT}`; c.fillStyle = COL.muted;
+      c.fillText(`1 origine : ${results[1]} pas · 3 origines : ${results[3]} pas`, VW/2, YC + 14);
+    }
+    c.globalAlpha = 1;
+  }
+}
+
+function draw(){
+  if(!sim) return;
+  const w = cv.width, h = cv.height;
+  const s = Math.min(w/VW, h/VH), ox = (w - VW*s)/2, oy = (h - VH*s)/2;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle = COL.water; ctx.fillRect(0,0,w,h);
+  // ADN dessiné à part, puis estompé aux deux bouts : le segment fait partie d'une molécule plus longue
+  if(layer.width !== w || layer.height !== h){ layer.width = w; layer.height = h; }
+  lctx.setTransform(1,0,0,1,0,0); lctx.clearRect(0,0,w,h);
+  lctx.setTransform(s,0,0,s,ox,oy);
+  drawDNA(lctx);
+  lctx.globalCompositeOperation = 'destination-out';
+  const D = REP.D, a0 = X(-0.5), a1 = X(-D - 0.5), b0 = X(REP.N - 0.5), b1 = X(REP.N - 1 + D + 0.5);
+  let g = lctx.createLinearGradient(a1, 0, a0, 0);
+  g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+  lctx.fillStyle = g; lctx.fillRect(a1, 0, a0 - a1, VH);
+  g = lctx.createLinearGradient(b0, 0, b1, 0);
+  g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
+  lctx.fillStyle = g; lctx.fillRect(b0, 0, b1 - b0, VH);
+  lctx.globalCompositeOperation = 'source-over';
+  ctx.drawImage(layer, 0, 0);
+  ctx.setTransform(s,0,0,s,ox,oy);
+  drawLabels(ctx, performance.now());
+}
+
+function resize(){
+  const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+  if(!r.width || !r.height) return;
+  cv.width = Math.round(r.width*d); cv.height = Math.round(r.height*d);
+  draw();
+}
+
+// ---------- compteurs ----------
+const fmtPas = v => v === undefined ? '—' : `${v} pas`;
+function updateInfo(){
+  const st = sim.stats();
+  $('info').textContent = `${st.n} / ${st.total} nucléotides ajoutés · ${Math.round(100*st.dna/st.total)} % copié`;
+  $('temps').textContent = `${st.okz} fragment${st.okz > 1 ? 's' : ''} d'Okazaki · ` +
+    (sim.done ? `temps de copie : ${sim.doneTick} pas` : `temps : ${sim.tick} pas`);
+  const known = results[1] !== undefined || results[3] !== undefined;
+  $('bilan').hidden = !known;
+  if(known) $('bilan').textContent = `Temps de copie — 1 origine : ${fmtPas(results[1])} · 3 origines : ${fmtPas(results[3])}`;
+}
+function onTick(){
+  const now = performance.now(), dur = Math.max(0.4, 2*TICK/speed)*1000;
+  for(const ev of sim.ligs) if(ev.tick === sim.tick) flashes.push({ ev, t0: now, dur });
+  flashes = flashes.filter(f => now - f.t0 < f.dur);
+  updateInfo();
+}
+function finish(){
+  results[nOrig] = sim.doneTick;
+  running = false; updateButton(); updateInfo();
+}
+
+// ---------- boucle d'animation ----------
+function kick(){ if(!rafOn){ rafOn = true; lastT = performance.now(); requestAnimationFrame(frame); } }
+function frame(now){
+  const dt = Math.min(0.1, Math.max(0, (now - lastT)/1000)); lastT = now;
+  if(running && !sim.done){
+    phase += dt*speed/TICK;
+    while(phase >= 1 && !sim.done){ phase -= 1; sim.step(); onTick(); }
+    if(sim.done){ phase = 1; finish(); }
+  }
+  const moving = relax(dt);
+  draw();
+  const flashing = flashes.some(f => now - f.t0 < f.dur);
+  if(running || moving || flashing) requestAnimationFrame(frame); else rafOn = false;
+}
+
+// ---------- contrôles ----------
+function updateButton(){
+  $('play').textContent = running ? '❚❚ Pause' : (sim.done ? '▶ Relancer' : (sim.tick ? '▶ Reprendre' : '▶ Lancer'));
+}
+function setRunning(v){
+  if(v && sim.done) build();
+  running = v; updateButton();
+  if(v) kick();
+}
+$('play').onclick = () => setRunning(!running);
+$('fs').onclick = () => {
+  if(document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() => {});
+};
+document.addEventListener('fullscreenchange', () => {
+  $('fs').textContent = document.fullscreenElement ? '✕ Quitter' : '⛶ Agrandir';
+});
+$('reset').onclick = () => { build(); setRunning(false); };
+function setMode(n){
+  nOrig = n;
+  $('o-1').setAttribute('aria-pressed', n === 1);
+  $('o-3').setAttribute('aria-pressed', n === 3);
+  build(); setRunning(false);
+}
+$('o-1').onclick = () => setMode(1);
+$('o-3').onclick = () => setMode(3);
+function setSpeed(i){
+  speed = SPEEDS[i]; $('speed').value = i;
+  $('speedv').textContent = '×' + String(speed).replace('.', ',');
+}
+$('speed').oninput = e => setSpeed(+e.target.value);
+
+// Dans le deck : renvoyer les touches de navigation à reveal.js,
+// et mettre en pause quand la slide est quittée.
+const NAV = { ArrowRight:'right', ArrowLeft:'left', PageDown:'next', PageUp:'prev', ' ':'next' };
+window.addEventListener('keydown', e => {
+  const m = NAV[e.key];
+  if(m && window.parent !== window && !document.fullscreenElement){
+    e.preventDefault();
+    window.parent.postMessage(JSON.stringify({ method: m, args: [] }), '*');
+  }
+});
+window.addEventListener('message', e => { if(e.data === 'slide:stop') setRunning(false); });
+
+// accès pour les tests
+window.__rep = () => sim;
+
+// ---------- paramètres d'URL (tests, captures) ----------
+//  ?origines=3        démarre en mode « 3 origines »
+//  ?vitesse=2         vitesse initiale (0.25, 0.5, 1, 2 ou 4)
+//  ?t=20              avance de 20 pas au chargement (sans animation)
+//  ?demo=mid | end    avance à 45 % du temps de copie, ou jusqu'à la fin ; ?demo=0.3 : fraction libre
+//  ?autoplay=1        lance l'animation au chargement
+//  ?check=1           affiche le résultat de l'auto-contrôle (aussi : replicationCheck() dans la console)
+const Q = new URLSearchParams(location.search);
+new ResizeObserver(resize).observe(cv);
+if(Q.get('origines') === '3') setMode(3); else build();
+{
+  const i = SPEEDS.indexOf(+Q.get('vitesse'));
+  if(i >= 0) setSpeed(i);
+}
+{
+  const demo = Q.get('demo');
+  let n = Math.max(0, Math.floor(+Q.get('t') || 0));
+  if(demo){
+    const probe = makeRep(nOrig);
+    while(!probe.done) probe.step();
+    const frac = demo === 'end' ? 1 : demo === 'mid' ? 0.45 : Math.min(1, Math.max(0, +demo || 0));
+    n = Math.round(probe.doneTick*frac);
+  }
+  if(n > 0){
+    for(let k = 0; k < n && !sim.done; k++) sim.step();
+    phase = 1;
+    if(sim.done) finish();
+    snap(); updateInfo(); updateButton(); draw();
+  }
+}
+if(Q.get('autoplay') === '1') setRunning(true);
+if(Q.get('check') === '1'){
+  const res = replicationCheck(), L = [];
+  const mode = (n, r) => {
+    L.push(`${n === 1 ? '1 origine' : '3 origines'} : ${r.ok ? 'CONFORME' : 'NON CONFORME'}`);
+    L.push(`  ${r.nDna} nucléotides d'ADN neufs dans le segment de ${REP.N} pb, chacun complémentaire de sa matrice (A–T, G–C)`);
+    L.push(`  ${r.adds} ajouts : ${r.starts} premiers nucléotides d'amorce (ARN, de novo), ${r.ext3} à l'extrémité 3′ du brin, ${r.adds - r.starts - r.ext3} ailleurs`);
+    L.push(`  ${r.repl} nucléotides d'ARN d'amorce remplacés par de l'ADN ; ${r.ligs} ligatures, toutes entre une extrémité 3′ et l'extrémité 5′ voisine`);
+    L.push(`  ${r.lead} brins continus (1 par fourche, sens de la fourche) ; ${r.lag} fragments d'Okazaki (sens opposé à leur fourche), ${r.lmin} à ${r.lmax} nt`);
+    L.push(`  brin neuf sur la matrice du haut = brin parental du bas : ${r.copy0 ? 'oui' : 'NON'} ; sur la matrice du bas = brin parental du haut : ${r.copy1 ? 'oui' : 'NON'}`);
+    L.push(`  temps de copie : ${r.time} pas`);
+    for(const e of r.errs.slice(0, 8)) L.push('  ✗ ' + e);
+  };
+  mode(1, res[1]); mode(3, res[3]);
+  if(res.courant) L.push(`Simulation affichée (${sim.done ? 'terminée' : 'pas ' + sim.tick}) : ${res.courant.ok ? 'CONFORME' : 'NON CONFORME'}`);
+  L.push(`Résultat global : ${res.ok ? 'CONFORME' : 'NON CONFORME'}`);
+  const pre = document.createElement('pre');
+  pre.className = 'card check'; pre.id = 'check'; pre.textContent = L.join('\n');
+  document.body.appendChild(pre);
+  document.body.dataset.check = res.ok ? 'ok' : 'echec';
+  console.log('AUTO-CONTROLE', res.ok ? 'OK' : 'ECHEC', JSON.stringify({ 1: res[1], 3: res[3] }));
+}
+</script>
+</body>
+</html>

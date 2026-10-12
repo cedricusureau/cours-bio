@@ -1,0 +1,101 @@
+<section>
+  <span class="kicker">Respiration cellulaire</span>
+  <h2>L'O₂, au bout de la chaîne respiratoire</h2>
+  <div class="barline"></div>
+  <p class="small muted" style="margin:.2em 0 .2em">Les électrons du glucose, portés par le NADH, traversent trois complexes qui utilisent leur énergie pour pomper des H⁺.
+  L'O₂ les reçoit en bout de chaîne.</p>
+
+  <svg viewBox="0 0 1200 380" style="width:100%;max-height:365px;display:block;margin:0 auto" font-family="inherit">
+    <defs>
+      <marker id="o2p-arr-h" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+      </marker>
+      <marker id="o2p-arr-e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--brand)"/>
+      </marker>
+    </defs>
+
+    <!-- compartiments -->
+    <rect x="0" y="240" width="1200" height="140" fill="var(--accent)" opacity=".07"/>
+    <text x="10" y="22" font-size="14" font-weight="700" fill="var(--muted)" letter-spacing="1">MATRICE — peu de H⁺</text>
+    <text x="10" y="370" font-size="14" font-weight="700" fill="var(--muted)" letter-spacing="1">ESPACE INTERMEMBRANAIRE — beaucoup de H⁺</text>
+
+    <!-- membrane interne -->
+    <rect x="0" y="170" width="1200" height="70" fill="var(--soft)"/>
+    <g fill="var(--muted)" opacity=".45">
+      <circle cx="8" cy="176" r="5"/><circle cx="24" cy="176" r="5"/><circle cx="40" cy="176" r="5"/><circle cx="56" cy="176" r="5"/><circle cx="72" cy="176" r="5"/><circle cx="88" cy="176" r="5"/><circle cx="104" cy="176" r="5"/><circle cx="120" cy="176" r="5"/><circle cx="248" cy="176" r="5"/><circle cx="264" cy="176" r="5"/><circle cx="280" cy="176" r="5"/><circle cx="296" cy="176" r="5"/><circle cx="312" cy="176" r="5"/><circle cx="328" cy="176" r="5"/><circle cx="344" cy="176" r="5"/><circle cx="360" cy="176" r="5"/><circle cx="376" cy="176" r="5"/><circle cx="392" cy="176" r="5"/><circle cx="408" cy="176" r="5"/><circle cx="520" cy="176" r="5"/><circle cx="536" cy="176" r="5"/><circle cx="552" cy="176" r="5"/><circle cx="568" cy="176" r="5"/><circle cx="584" cy="176" r="5"/><circle cx="600" cy="176" r="5"/><circle cx="616" cy="176" r="5"/><circle cx="632" cy="176" r="5"/><circle cx="648" cy="176" r="5"/><circle cx="664" cy="176" r="5"/><circle cx="776" cy="176" r="5"/><circle cx="792" cy="176" r="5"/><circle cx="808" cy="176" r="5"/><circle cx="824" cy="176" r="5"/><circle cx="840" cy="176" r="5"/><circle cx="856" cy="176" r="5"/><circle cx="872" cy="176" r="5"/><circle cx="888" cy="176" r="5"/><circle cx="904" cy="176" r="5"/><circle cx="920" cy="176" r="5"/><circle cx="936" cy="176" r="5"/><circle cx="952" cy="176" r="5"/><circle cx="1096" cy="176" r="5"/><circle cx="1112" cy="176" r="5"/><circle cx="1128" cy="176" r="5"/><circle cx="1144" cy="176" r="5"/><circle cx="1160" cy="176" r="5"/><circle cx="1176" cy="176" r="5"/><circle cx="1192" cy="176" r="5"/>
+      <circle cx="8" cy="234" r="5"/><circle cx="24" cy="234" r="5"/><circle cx="40" cy="234" r="5"/><circle cx="56" cy="234" r="5"/><circle cx="72" cy="234" r="5"/><circle cx="88" cy="234" r="5"/><circle cx="104" cy="234" r="5"/><circle cx="120" cy="234" r="5"/><circle cx="248" cy="234" r="5"/><circle cx="264" cy="234" r="5"/><circle cx="280" cy="234" r="5"/><circle cx="296" cy="234" r="5"/><circle cx="312" cy="234" r="5"/><circle cx="328" cy="234" r="5"/><circle cx="344" cy="234" r="5"/><circle cx="360" cy="234" r="5"/><circle cx="376" cy="234" r="5"/><circle cx="392" cy="234" r="5"/><circle cx="408" cy="234" r="5"/><circle cx="520" cy="234" r="5"/><circle cx="536" cy="234" r="5"/><circle cx="552" cy="234" r="5"/><circle cx="568" cy="234" r="5"/><circle cx="584" cy="234" r="5"/><circle cx="600" cy="234" r="5"/><circle cx="616" cy="234" r="5"/><circle cx="632" cy="234" r="5"/><circle cx="648" cy="234" r="5"/><circle cx="664" cy="234" r="5"/><circle cx="776" cy="234" r="5"/><circle cx="792" cy="234" r="5"/><circle cx="808" cy="234" r="5"/><circle cx="824" cy="234" r="5"/><circle cx="840" cy="234" r="5"/><circle cx="856" cy="234" r="5"/><circle cx="872" cy="234" r="5"/><circle cx="888" cy="234" r="5"/><circle cx="904" cy="234" r="5"/><circle cx="920" cy="234" r="5"/><circle cx="936" cy="234" r="5"/><circle cx="952" cy="234" r="5"/><circle cx="1096" cy="234" r="5"/><circle cx="1112" cy="234" r="5"/><circle cx="1128" cy="234" r="5"/><circle cx="1144" cy="234" r="5"/><circle cx="1160" cy="234" r="5"/><circle cx="1176" cy="234" r="5"/><circle cx="1192" cy="234" r="5"/>
+    </g>
+    <text x="10" y="210" font-size="13" fill="var(--muted)">membrane interne</text>
+
+    <!-- H+ accumulés -->
+    <g font-size="16" font-weight="700" fill="var(--accent)">
+      <text x="120" y="335">H⁺</text><text x="190" y="300">H⁺</text><text x="300" y="330">H⁺</text>
+      <text x="380" y="298">H⁺</text><text x="540" y="332">H⁺</text><text x="600" y="296">H⁺</text>
+      <text x="820" y="330">H⁺</text><text x="880" y="296">H⁺</text><text x="940" y="336">H⁺</text>
+      <text x="1130" y="300">H⁺</text>
+    </g>
+
+    <!-- NADH -->
+    <text x="20" y="58" font-size="18" font-weight="800" fill="var(--ink)">NADH</text>
+    <text x="20" y="76" font-size="13" fill="var(--muted)">issu de l'oxydation</text>
+    <text x="20" y="92" font-size="13" fill="var(--muted)">du glucose</text>
+    <line x1="70" y1="102" x2="126" y2="128" stroke="var(--brand)" stroke-width="2.5" marker-end="url(#o2p-arr-e)"/>
+    <text x="40" y="134" font-size="14" font-weight="700" fill="var(--brand)">2 e⁻</text>
+
+    <!-- complexes I, III, IV -->
+    <g fill="var(--muted)" fill-opacity=".3" stroke="var(--muted)" stroke-width="1.5">
+      <rect x="130" y="100" width="110" height="160" rx="14"/>
+      <rect x="420" y="140" width="90" height="120" rx="14"/>
+      <rect x="680" y="140" width="90" height="120" rx="14"/>
+    </g>
+    <g font-size="20" font-weight="800" fill="var(--ink)" text-anchor="middle">
+      <text x="172" y="150">I</text><text x="452" y="168">III</text><text x="712" y="168">IV</text>
+    </g>
+
+    <!-- trajet des électrons -->
+    <path d="M240 212 L420 212 M510 212 L680 212" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#o2p-arr-e)"/>
+    <line x1="410" y1="212" x2="420" y2="212" stroke="var(--brand)" stroke-width="2.5" marker-end="url(#o2p-arr-e)"/>
+    <text x="330" y="204" font-size="14" font-weight="700" fill="var(--brand)" text-anchor="middle">e⁻</text>
+    <text x="595" y="204" font-size="14" font-weight="700" fill="var(--brand)" text-anchor="middle">e⁻</text>
+    <line x1="700" y1="188" x2="700" y2="118" stroke="var(--brand)" stroke-width="2.5" marker-end="url(#o2p-arr-e)"/>
+
+    <!-- O2 : accepteur final -->
+    <text x="725" y="104" font-size="18" font-weight="700" fill="var(--ink)" text-anchor="middle">½ <tspan fill="var(--bad)" font-weight="800">O₂</tspan> + 2 H⁺ + 2 e⁻ → H₂O</text>
+    <text x="725" y="78" font-size="13" fill="var(--muted)" text-anchor="middle">accepteur final des électrons</text>
+
+    <!-- pompage des H+ -->
+    <g stroke="var(--accent)" stroke-width="3" marker-end="url(#o2p-arr-h)">
+      <line x1="215" y1="118" x2="215" y2="282"/>
+      <line x1="485" y1="150" x2="485" y2="282"/>
+      <line x1="748" y1="150" x2="748" y2="282"/>
+    </g>
+    <g font-size="15" font-weight="800" fill="var(--accent)">
+      <text x="224" y="282">4 H⁺</text><text x="494" y="282">4 H⁺</text><text x="757" y="282">2 H⁺</text>
+    </g>
+
+    <!-- ATP synthase (simplifiée) -->
+    <ellipse cx="1020" cy="70" rx="66" ry="44" fill="var(--brand2)" opacity=".85"/>
+    <rect x="1012" y="100" width="16" height="72" fill="var(--brand)"/>
+    <rect x="960" y="170" width="120" height="70" rx="10" fill="var(--brand)" opacity=".85"/>
+    <text x="1020" y="210" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">ATP synthase</text>
+    <line x1="1098" y1="300" x2="1098" y2="150" stroke="var(--accent)" stroke-width="3" marker-end="url(#o2p-arr-h)"/>
+    <text x="1106" y="325" font-size="15" font-weight="800" fill="var(--accent)">H⁺</text>
+    <text x="946" y="60" font-size="15" font-weight="700" fill="var(--good)" text-anchor="end">ADP + Pᵢ → ATP</text>
+
+    <text x="1190" y="370" font-size="14" font-weight="700" fill="var(--ink)" text-anchor="end">Pour 2 e⁻ d'un NADH : 10 H⁺ pompés, ½ O₂ consommé</text>
+  </svg>
+
+  <div class="grid2" style="gap:14px;margin-top:.35em">
+    <div class="card" style="padding:10px 16px">
+      <p class="tiny" style="margin:0"><strong>Sans O₂</strong> : les électrons n'ont plus d'accepteur, la chaîne s'arrête,
+      plus aucun H⁺ n'est pompé. Le gradient se dissipe et l'ATP synthase cesse de produire.</p>
+    </div>
+    <div class="card" style="padding:10px 16px">
+      <p class="tiny" style="margin:0"><strong>L'O₂ arrive par le sang</strong>, fixé sur l'hémoglobine : 1,34 mL d'O₂ au plus
+      par gramme. Patient à 8,2 g/dL : ≈ 11 mL d'O₂ par dL de sang, contre 17 à 23 mL pour 13 à 17 g/dL.</p>
+    </div>
+  </div>
+
+
+</section>

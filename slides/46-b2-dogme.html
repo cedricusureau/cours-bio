@@ -1,0 +1,80 @@
+<section>
+  <style>
+    .b2dg-box{fill:#fff;stroke-width:3}
+    .b2dg-name{font-size:30px;font-weight:800;text-anchor:middle}
+    .b2dg-sub{font-size:15px;fill:var(--muted);text-anchor:middle}
+    .b2dg-proc{font-size:16px;font-weight:700;text-anchor:middle}
+    .b2dg-hbb{font-size:15px;font-weight:700;fill:var(--ink);text-anchor:middle}
+    .b2dg-hbb2{font-size:13px;fill:var(--muted);text-anchor:middle}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="b2dg-ink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink)"/></marker>
+      <marker id="b2dg-b2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--brand2)"/></marker>
+      <marker id="b2dg-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--brand)"/></marker>
+      <marker id="b2dg-mu" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/></marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Le pipeline</span>
+  <h2>ADN → ARN → protéine</h2>
+  <div class="barline"></div>
+  <p class="small muted">Trois molécules, trois alphabets, des transferts d'information dans un seul sens.</p>
+
+  <div class="figframe" style="margin-top:.2em;padding:6px 10px">
+    <svg viewBox="0 0 1000 320" class="fig" style="width:100%;max-height:285px">
+      <rect x="10" y="14" width="610" height="296" rx="24" fill="var(--soft)" stroke="var(--line)" stroke-width="2" stroke-dasharray="7,6"/>
+      <text x="32" y="42" font-size="16" font-weight="700" fill="var(--muted)">noyau</text>
+      <text x="985" y="42" font-size="16" font-weight="700" fill="var(--muted)" text-anchor="end">cytoplasme</text>
+
+      <rect class="b2dg-box" x="60" y="140" width="200" height="80" rx="14" stroke="var(--ink)"/>
+      <text class="b2dg-name" x="160" y="178" fill="var(--ink)">ADN</text>
+      <text class="b2dg-sub" x="160" y="205">A C G T</text>
+
+      <g class="fragment" data-fragment-index="0">
+        <path d="M122,138 C100,70 220,70 198,138" fill="none" stroke="var(--ink)" stroke-width="3" marker-end="url(#b2dg-ink)"/>
+        <text class="b2dg-proc" x="160" y="74" fill="var(--ink)">réplication</text>
+      </g>
+
+      <g class="fragment" data-fragment-index="1">
+        <line x1="264" y1="180" x2="384" y2="180" stroke="var(--brand2)" stroke-width="4" marker-end="url(#b2dg-b2)"/>
+        <text class="b2dg-proc" x="324" y="167" fill="var(--brand2)">transcription</text>
+        <rect class="b2dg-box" x="390" y="140" width="200" height="80" rx="14" stroke="var(--brand2)"/>
+        <text class="b2dg-name" x="490" y="178" fill="var(--brand2)">ARN</text>
+        <text class="b2dg-sub" x="490" y="205">A C G U</text>
+      </g>
+
+      <g class="fragment" data-fragment-index="2">
+        <line x1="594" y1="180" x2="734" y2="180" stroke="var(--brand)" stroke-width="4" marker-end="url(#b2dg-b)"/>
+        <text class="b2dg-proc" x="664" y="167" fill="var(--brand)">traduction</text>
+        <rect class="b2dg-box" x="740" y="140" width="220" height="80" rx="14" stroke="var(--brand)"/>
+        <text class="b2dg-name" x="850" y="178" fill="var(--brand)">protéine</text>
+        <text class="b2dg-sub" x="850" y="205">20 acides aminés</text>
+      </g>
+
+      <g class="fragment" data-fragment-index="3">
+        <text class="b2dg-hbb" x="160" y="250">gène HBB</text>
+        <text class="b2dg-hbb2" x="160" y="268">chromosome 11</text>
+        <text class="b2dg-hbb" x="490" y="250">ARNm de HBB</text>
+        <text class="b2dg-hbb" x="850" y="250">chaîne β</text>
+        <text class="b2dg-hbb2" x="850" y="268">de l'hémoglobine</text>
+      </g>
+
+      <g class="fragment" data-fragment-index="4">
+        <path d="M430,222 C405,300 245,300 222,224" fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="6,5" marker-end="url(#b2dg-mu)"/>
+        <text x="326" y="298" font-size="13" fill="var(--muted)" text-anchor="middle">transcription inverse</text>
+        <path d="M820,138 C790,78 560,78 530,138" fill="none" stroke="var(--bad)" stroke-width="2.5" stroke-dasharray="6,5"/>
+        <text x="675" y="100" font-size="26" font-weight="800" fill="var(--bad)" text-anchor="middle">✕</text>
+        <text x="675" y="70" font-size="13" font-weight="700" fill="var(--bad)" text-anchor="middle">protéine → acide nucléique : jamais observé</text>
+      </g>
+    </svg>
+  </div>
+
+  <p class="small fragment" data-fragment-index="4" style="margin-top:.35em">Dogme central (Crick, 1958 et 1970) : l'information
+  passe d'un acide nucléique à un autre, ou à une protéine ; elle ne ressort jamais d'une protéine.</p>
+
+  <p class="center fragment fade-up" data-fragment-index="5" style="margin-top:.3em">
+    <span class="pill ghost"><span class="tag">Traduction</span>&nbsp; Un pipeline à trois formats, sans retour depuis la protéine</span>
+  </p>
+
+</section>

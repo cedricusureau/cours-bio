@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto-assemblage des lipides</title>
+<style>
+  :root{
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --brand:#2563eb; --brand2:#0ea5e9;
+    --tail:#d97706; --water:#eaf6fd; --soft:#f8fafc;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#fff;color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+  .card{position:absolute;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 2px 10px rgba(15,23,42,.08)}
+  .bar{top:14px;right:14px;padding:12px;display:grid;gap:10px;justify-items:start}
+  .bar .row{display:flex;gap:10px}
+  button{font:inherit;font-size:15px;font-weight:600;border-radius:9px;cursor:pointer;
+    padding:7px 14px;border:2px solid var(--brand);background:#fff;color:var(--brand)}
+  button.primary{background:var(--brand);color:#fff;min-width:118px}
+  button:focus-visible{outline:3px solid var(--brand2);outline-offset:2px}
+  .seg{display:inline-flex;border:2px solid var(--brand);border-radius:9px;overflow:hidden}
+  .seg button{border:0;border-radius:0;padding:7px 12px}
+  .seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+  label.kt{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);font-weight:600}
+  input[type=range]{accent-color:var(--brand);width:130px}
+  .kt output{font-variant-numeric:tabular-nums;color:var(--ink);min-width:2.2em}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block;background:var(--water)}
+  .legend{bottom:14px;right:14px;padding:9px 14px;display:grid;gap:4px;font-size:14px;color:var(--muted)}
+  .legend .dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--brand);vertical-align:-1px;margin-right:5px}
+  .legend .tl{display:inline-block;width:18px;height:4px;border-radius:2px;background:var(--tail);vertical-align:3px;margin-right:5px}
+  #info{color:var(--ink);font-weight:600}
+  /* mode agrandi : la simulation seule, un encart discret pour Pause / Quitter */
+  :fullscreen .legend, :fullscreen .seg, :fullscreen .kt, :fullscreen #reset{display:none}
+  :fullscreen .bar{padding:8px;opacity:.3;transition:opacity .2s}
+  :fullscreen .bar:hover{opacity:1}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div class="card bar">
+  <div class="row">
+    <button id="play" class="primary">▶ Lancer</button>
+    <button id="reset">↺ Nouveau tirage</button>
+    <button id="fs">⛶ Agrandir</button>
+  </div>
+  <div class="seg" role="group" aria-label="Type de molécule">
+    <button id="m-deux" aria-pressed="true">Phospholipide · 2 chaînes</button>
+    <button id="m-une" aria-pressed="false">Acide gras · 1 chaîne</button>
+  </div>
+  <label class="kt">Agitation thermique (kT/ε)
+    <input id="kt" type="range" min="0.3" max="2.0" step="0.05" value="1">
+    <output id="ktv">1,00</output>
+  </label>
+</div>
+<div class="card legend">
+  <span id="info"></span>
+  <span><span class="dot"></span>tête polaire (hydrophile)</span>
+  <span><span class="tl"></span>chaîne carbonée (hydrophobe)</span>
+</div>
+
+<script id="core">
+// ============================================================
+//  Moteur : dynamique brownienne 2D de molécules rigides,
+//  eau implicite (modèle de type Cooke–Deserno).
+//  Forces entre sites : répulsion de contact pour toutes les paires,
+//  attraction supplémentaire entre sites de chaîne uniquement.
+// ============================================================
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+// sites dans le repère de la molécule : [x, y, type, rayon]  (type 0 = tête, 1 = chaîne)
+// Phospholipide : tête de même largeur que le bloc des deux chaînes -> forme cylindrique.
+// Acide gras : tête nettement plus large que l'unique chaîne -> forme conique.
+const MODELS = {
+  deux: [[0,0,0,0.475],[0,-1,1,0.5],[0,-2,1,0.5],[0,-3,1,0.5]],
+  une:  [[0,0.2,0,0.8],[0,-1,1,0.5],[0,-2,1,0.5]],
+};
+
+const P = {
+  W: 64, H: 32,          // boîte périodique, en diamètres de site
+  eps: 1, wc: 1.6,       // profondeur et portée de l'attraction chaîne–chaîne
+  dt: 0.008, gT: 1, gR: 3,
+  maxStep: 0.1,
+};
+
+function makeSim(opts){
+  const S = Object.assign({}, P, opts);
+  const tpl = MODELS[S.model];
+  // centrer les sites sur leur barycentre
+  let cx=0, cy=0; for(const s of tpl){cx+=s[0];cy+=s[1]}
+  cx/=tpl.length; cy/=tpl.length;
+  const M = tpl.length, N = S.N, NS = N*M;
+  const lx = new Float64Array(M), ly = new Float64Array(M), ty = new Uint8Array(M), rad = new Float64Array(M);
+  tpl.forEach((s,k)=>{lx[k]=s[0]-cx; ly[k]=s[1]-cy; ty[k]=s[2]; rad[k]=s[3]});
+  const x = new Float64Array(N), y = new Float64Array(N), th = new Float64Array(N);
+  const sx = new Float64Array(NS), sy = new Float64Array(NS);
+  const fx = new Float64Array(NS), fy = new Float64Array(NS);
+  const rng = mulberry32(S.seed);
+  let spare = null;
+  const gauss = () => { if(spare!==null){const v=spare;spare=null;return v}
+    let u=0; while(u===0) u=rng(); const v=rng(), r=Math.sqrt(-2*Math.log(u));
+    spare = r*Math.sin(2*Math.PI*v); return r*Math.cos(2*Math.PI*v); };
+
+  // placement initial aléatoire sans recouvrement des centres
+  const minD2 = 2.6*2.6;
+  for(let i=0;i<N;i++){
+    for(let tries=0;tries<5000;tries++){
+      const px=rng()*S.W, py=rng()*S.H; let ok=true;
+      for(let j=0;j<i && ok;j++){
+        let dx=px-x[j], dy=py-y[j];
+        dx-=S.W*Math.round(dx/S.W); dy-=S.H*Math.round(dy/S.H);
+        if(dx*dx+dy*dy<minD2) ok=false;
+      }
+      if(ok){x[i]=px;y[i]=py;break}
+    }
+    th[i]=rng()*2*Math.PI;
+  }
+
+  const rcTT = Math.pow(2,1/6);        // minimum du potentiel chaîne–chaîne
+  const cut = rcTT + S.wc;
+  const ncx = Math.max(3, Math.floor(S.W/cut)), ncy = Math.max(3, Math.floor(S.H/cut));
+  const csx = S.W/ncx, csy = S.H/ncy;
+  const head = new Int32Array(ncx*ncy), next = new Int32Array(NS);
+  const bOf = new Int32Array(NS), tOf = new Uint8Array(NS), rOf = new Float64Array(NS);
+  for(let i=0;i<N;i++) for(let k=0;k<M;k++){bOf[i*M+k]=i; tOf[i*M+k]=ty[k]; rOf[i*M+k]=rad[k]}
+  // voisinage d'une cellule : elle-même + 4 voisines (chaque paire vue une fois)
+  const NBX = [0,1,-1,0,1], NBY = [0,0,1,1,1];
+  const W = S.W, H = S.H, W2 = W/2, H2 = H/2, cut2 = cut*cut;
+  const rcTT2 = rcTT*rcTT;
+
+  function pair(a,b){
+    let dx=sx[a]-sx[b], dy=sy[a]-sy[b];
+    if(dx> W2) dx-=W; else if(dx<-W2) dx+=W;
+    if(dy> H2) dy-=H; else if(dy<-H2) dy+=H;
+    const r2=dx*dx+dy*dy;
+    if(r2>=cut2) return;
+    const tt = (tOf[a] & tOf[b]) === 1;
+    let f;                               // f/r > 0 : répulsif
+    if(tt){
+      if(r2<rcTT2){ const s2=1/r2, s6=s2*s2*s2; f=24*S.eps*(2*s6*s6-s6)*s2; }
+      else { const r=Math.sqrt(r2);
+        f = -S.eps*Math.PI/(2*S.wc)*Math.sin(Math.PI*(r-rcTT)/S.wc)/r; }
+    } else {
+      const bb=rOf[a]+rOf[b], b2=bb*bb;
+      if(r2>=1.259921*b2) return;          // (2^(1/6) b)^2
+      const s2=b2/r2, s6=s2*s2*s2; f=24*S.eps*(2*s6*s6-s6)/r2;
+    }
+    if(f>200) f=200;
+    const ux=f*dx, uy=f*dy;
+    fx[a]+=ux; fy[a]+=uy; fx[b]-=ux; fy[b]-=uy;
+  }
+
+  function sites(){
+    for(let i=0;i<N;i++){
+      const c=Math.cos(th[i]), s=Math.sin(th[i]);
+      for(let k=0;k<M;k++){
+        const n=i*M+k;
+        let px=x[i]+c*lx[k]-s*ly[k], py=y[i]+s*lx[k]+c*ly[k];
+        px-=S.W*Math.floor(px/S.W); py-=S.H*Math.floor(py/S.H);
+        sx[n]=px; sy[n]=py;
+      }
+    }
+  }
+
+  function step(){
+    sites();
+    head.fill(-1); fx.fill(0); fy.fill(0);
+    for(let n=0;n<NS;n++){
+      const cxI=Math.min(ncx-1,(sx[n]/csx)|0), cyI=Math.min(ncy-1,(sy[n]/csy)|0);
+      const c=cyI*ncx+cxI; next[n]=head[c]; head[c]=n;
+    }
+    for(let cy2=0;cy2<ncy;cy2++) for(let cx2=0;cx2<ncx;cx2++){
+      const c=cy2*ncx+cx2;
+      for(let q=0;q<5;q++){
+        const nx=(cx2+NBX[q]+ncx)%ncx, ny=(cy2+NBY[q]+ncy)%ncy, c2=ny*ncx+nx;
+        const same = c2===c;
+        for(let a=head[c];a>=0;a=next[a]){
+          for(let b=same?next[a]:head[c2];b>=0;b=next[b]){
+            if(bOf[a]!==bOf[b]) pair(a,b);
+          }
+        }
+      }
+    }
+    const kT=S.kT, dt=S.dt;
+    const aT=Math.sqrt(2*kT*dt/S.gT), aR=Math.sqrt(2*kT*dt/S.gR);
+    for(let i=0;i<N;i++){
+      let Fx=0,Fy=0,T=0;
+      const c=Math.cos(th[i]), s=Math.sin(th[i]);
+      for(let k=0;k<M;k++){
+        const n=i*M+k, rx=c*lx[k]-s*ly[k], ry=s*lx[k]+c*ly[k];
+        Fx+=fx[n]; Fy+=fy[n]; T+=rx*fy[n]-ry*fx[n];
+      }
+      let dx=Fx*dt/S.gT+aT*gauss(), dy=Fy*dt/S.gT+aT*gauss(), dth=T*dt/S.gR+aR*gauss();
+      const m=Math.hypot(dx,dy); if(m>S.maxStep){dx*=S.maxStep/m;dy*=S.maxStep/m}
+      if(dth>0.1) dth=0.1; else if(dth<-0.1) dth=-0.1;
+      x[i]=(x[i]+dx+S.W)%S.W; y[i]=(y[i]+dy+S.H)%S.H; th[i]+=dth;
+    }
+  }
+
+  return { S, N, M, x, y, th, lx, ly, ty, rad, step, sites, sx, sy };
+}
+</script>
+
+<script>
+// ============================================================
+//  Affichage et contrôles
+// ============================================================
+// densité (molécules par unité de surface) validée hors navigateur : 160 et 150 pour 64 × 32
+const DENS = { deux: 160/2048, une: 150/2048 };
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const $ = id => document.getElementById(id);
+let model = 'deux', kT = 1, running = false, sim = null, seed = 7, steps = 0;
+let stepsPerFrame = 20;          // ajusté pour garder ~20 ms de calcul par image
+
+// La boîte a une surface fixe (environ 12 px par diamètre de site sur une slide 1280 × 720)
+// et prend les proportions de la zone d'affichage au moment du tirage.
+const AREA = 6400;
+let aspect = 2;
+
+function build(){
+  const W = Math.sqrt(AREA*aspect), H = AREA/W;
+  sim = makeSim({ model, N: Math.round(DENS[model]*AREA), seed, kT, W, H });
+  steps = 0; draw();
+}
+
+function resize(){
+  const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+  if(!r.width || !r.height) return;
+  cv.width = Math.round(r.width*d); cv.height = Math.round(r.height*d);
+  const a = r.width / r.height;
+  if(steps === 0 && Math.abs(a - aspect) > 0.02){ aspect = a; build(); }
+  draw();
+}
+
+function draw(){
+  if(!sim) return;
+  const { S, N, M, x, y, th, lx, ly, ty } = sim;
+  // la boîte est périodique : on la répète pour couvrir toute la zone, sans bande vide
+  const w = cv.width, h = cv.height, sc = Math.max(w/S.W, h/S.H);
+  const ox = (w - S.W*sc)/2, oy = (h - S.H*sc)/2;
+  const x0 = -ox/sc - 3, x1 = (w-ox)/sc + 3, y0 = -oy/sc - 3, y1 = (h-oy)/sc + 3;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle = '#eaf6fd'; ctx.fillRect(0,0,w,h);
+  ctx.setTransform(sc,0,0,sc,ox,oy);
+  // site 0 = tête, site M-1 = bout de chaîne ; chaînes dessinées de la tête au bout
+  const hy = ly[0], ey = ly[M-1] - 0.3;
+  const offs = model === 'deux' ? [-0.2, 0.2] : [0];
+  const headR = model === 'deux' ? 0.56 : 0.8;
+  // deux passes groupées (toutes les chaînes, puis toutes les têtes) : un seul tracé chacune
+  const each = fn => {
+    for(let i=0;i<N;i++){
+      const c = Math.cos(th[i]), s = Math.sin(th[i]);
+      for(let X = x[i] + S.W*Math.ceil((x0 - x[i])/S.W); X <= x1; X += S.W)
+        for(let Y = y[i] + S.H*Math.ceil((y0 - y[i])/S.H); Y <= y1; Y += S.H)
+          fn(X, Y, c, s);
+    }
+  };
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#d97706'; ctx.lineWidth = model === 'deux' ? 0.26 : 0.34;
+  ctx.beginPath();
+  each((X, Y, c, s) => {
+    for(const o of offs){
+      ctx.moveTo(X + c*o - s*hy, Y + s*o + c*hy);
+      ctx.lineTo(X + c*o - s*ey, Y + s*o + c*ey);
+    }
+  });
+  ctx.stroke();
+  ctx.fillStyle = '#2563eb';
+  ctx.beginPath();
+  each((X, Y, c, s) => {
+    const hx = X - s*hy, hY = Y + c*hy;
+    ctx.moveTo(hx + headR, hY); ctx.arc(hx, hY, headR, 0, 2*Math.PI);
+  });
+  ctx.fill();
+  $('info').textContent = `${N} ${model==='deux'?'phospholipides':'acides gras'}`;
+}
+
+function loop(){
+  if(!running) return;
+  const t0 = performance.now();
+  for(let k=0;k<stepsPerFrame;k++) sim.step();
+  const per = (performance.now() - t0) / stepsPerFrame;
+  stepsPerFrame = Math.max(6, Math.min(40, Math.round(20 / Math.max(per, 1e-3))));
+  steps += stepsPerFrame;
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function setRunning(v){
+  running = v;
+  $('play').textContent = v ? '❚❚ Pause' : (steps ? '▶ Reprendre' : '▶ Lancer');
+  if(v) requestAnimationFrame(loop);
+}
+
+$('play').onclick = () => setRunning(!running);
+$('fs').onclick = () => {
+  if(document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() => {});
+};
+document.addEventListener('fullscreenchange', () => {
+  $('fs').textContent = document.fullscreenElement ? '✕ Quitter' : '⛶ Agrandir';
+});
+$('reset').onclick = () => { seed = (Math.random()*1e9)|0; build(); setRunning(false); };
+function setModel(m){
+  model = m;
+  $('m-deux').setAttribute('aria-pressed', m==='deux');
+  $('m-une').setAttribute('aria-pressed', m==='une');
+  build(); setRunning(false);
+}
+for(const m of ['deux','une']) $('m-'+m).onclick = () => setModel(m);
+
+// ?model=une  → démarre en mode « acide gras · 1 chaîne » (micelles).
+{
+  const wanted = new URLSearchParams(location.search).get('model');
+  if(wanted === 'une' || wanted === 'deux') setModel(wanted);
+}
+$('kt').oninput = e => {
+  kT = +e.target.value; $('ktv').textContent = kT.toFixed(2).replace('.', ',');
+  if(sim) sim.S.kT = kT;
+};
+
+// Dans le deck : renvoyer les touches de navigation à reveal.js,
+// et mettre en pause quand la slide est quittée.
+const NAV = { ArrowRight:'right', ArrowLeft:'left', PageDown:'next', PageUp:'prev', ' ':'next' };
+window.addEventListener('keydown', e => {
+  const m = NAV[e.key];
+  if(m && window.parent !== window && !document.fullscreenElement){
+    e.preventDefault();
+    window.parent.postMessage(JSON.stringify({ method: m, args: [] }), '*');
+  }
+});
+window.addEventListener('message', e => { if(e.data === 'slide:stop') setRunning(false); });
+
+new ResizeObserver(resize).observe(cv);
+build();
+</script>
+</body>
+</html>

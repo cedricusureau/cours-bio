@@ -1,0 +1,51 @@
+<section>
+  <style>
+    .sng-lbl{font-size:19px;fill:var(--muted)}
+    .sng-lbl-b{font-size:20px;font-weight:700;fill:var(--ink)}
+    table.tbl.sng-tbl td{padding:4px 8px;white-space:nowrap}
+    table.tbl.sng-tbl td.sng-role{text-align:left}
+  </style>
+
+  <span class="kicker">Les tissus</span>
+  <h2>Le sang</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">Un tissu conjonctif dont la matrice est liquide : le plasma. ≈ 5 L chez l'adulte.</p>
+
+  <div class="grid2" style="margin-top:.3em;gap:16px;align-items:stretch;grid-template-columns:1.25fr .75fr">
+    <div class="figframe" style="padding:6px">
+      <img class="fig" src="figures/sang-meb.jpg" alt="Sang humain en microscopie électronique à balayage : globules rouges, globules blancs, plaquettes" style="height:160px;width:100%;object-fit:cover">
+      <p class="tiny" style="margin:.2em 0 0;text-align:left;font-size:.36em">Sang humain, microscopie électronique à balayage — B. Wetzel &amp; H. Schaefer (NCI), Wikimedia Commons, domaine public.</p>
+    </div>
+    <div class="figframe" style="padding:6px;display:flex;align-items:center">
+      <svg viewBox="0 0 360 230" class="fig" style="width:100%;max-height:175px">
+        <!-- tube centrifugé -->
+        <path d="M 30 10 L 30 190 Q 30 222 62 222 Q 94 222 94 190 L 94 10" fill="none" stroke="var(--muted)" stroke-width="3"/>
+        <rect x="32" y="30" width="60" height="96" fill="var(--brand2)" opacity=".2"/>
+        <rect x="32" y="126" width="60" height="6" fill="#fff" stroke="var(--muted)" stroke-width="1.5"/>
+        <path d="M 32 132 L 32 190 Q 32 220 62 220 Q 92 220 92 190 L 92 132 Z" fill="var(--accent)"/>
+        <!-- étiquettes -->
+        <g stroke="var(--line)" stroke-width="1.5">
+          <line x1="98" y1="72" x2="118" y2="60"/><line x1="98" y1="129" x2="118" y2="129"/><line x1="98" y1="180" x2="118" y2="188"/>
+        </g>
+        <text class="sng-lbl-b" x="124" y="54">plasma ≈ 55 %</text>
+        <text class="sng-lbl" x="124" y="76">eau, protéines, glucose,</text>
+        <text class="sng-lbl" x="124" y="97">sels minéraux</text>
+        <text class="sng-lbl-b" x="124" y="135" style="font-size:18px">globules blancs</text>
+        <text class="sng-lbl-b" x="124" y="155" style="font-size:18px">+ plaquettes &lt; 1 %</text>
+        <text class="sng-lbl-b" x="124" y="192" style="fill:var(--accent)">globules rouges</text>
+        <text class="sng-lbl" x="124" y="214">≈ 45 % (hématocrite)</text>
+      </svg>
+    </div>
+  </div>
+
+  <table class="tbl sng-tbl" style="margin-top:.3em;font-size:.38em">
+    <tr><th colspan="2">Cellule</th><th>Par µL de sang</th><th>Rôle</th><th>Durée de vie</th></tr>
+    <tr><td colspan="2"><strong style="color:var(--accent)">Globule rouge</strong></td><td>4 à 6 millions</td><td class="sng-role">transport de l'O₂, et d'une partie du CO₂</td><td>≈ 120 j</td></tr>
+    <tr><td colspan="2"><strong>Plaquette</strong></td><td>150 000 à 400 000</td><td class="sng-role">fragment de cellule sans noyau : coagulation, colmate les brèches</td><td>7 à 10 j</td></tr>
+    <tr><td rowspan="3"><strong>Globules blancs</strong></td><td>Neutrophile</td><td>1 500 à 7 000</td><td class="sng-role">phagocyte les bactéries</td><td>&lt; 1 j dans le sang</td></tr>
+    <tr><td>Lymphocytes B, T</td><td>1 000 à 4 000</td><td class="sng-role">B : anticorps ; T : reconnaissent les cellules infectées (molécules HLA)</td><td>semaines à années</td></tr>
+    <tr><td>Monocyte</td><td>200 à 1 000</td><td class="sng-role">devient macrophage : phagocytose, retrait des globules rouges âgés</td><td>1 à 3 j dans le sang</td></tr>
+  </table>
+  <p class="tiny" style="margin:.25em 0 0;font-size:.4em;color:var(--ink)">Toutes ces cellules descendent des cellules souches hématopoïétiques de la moelle osseuse.</p>
+
+</section>

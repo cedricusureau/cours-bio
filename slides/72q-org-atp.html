@@ -1,0 +1,82 @@
+<section>
+  <style>
+    .atp-box{fill:var(--soft);stroke:var(--line);stroke-width:2}
+    .atp-t{font-size:21px;font-weight:800;fill:var(--ink);text-anchor:middle}
+    .atp-d{font-size:17px;fill:var(--muted);text-anchor:middle}
+    .atp-sq{display:inline-block;width:11px;height:11px;border-radius:2px;margin:1px;background:var(--accent)}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="atp-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/></marker>
+      <marker id="atp-arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/></marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Les systèmes</span>
+  <h2>Pourquoi l'oxygène est vital : l'ATP</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">L'énergie chimique du vivant vient de la lumière du soleil, captée par la photosynthèse. L'ATP est la forme sous laquelle les cellules la dépensent.</p>
+
+  <div class="figframe" style="margin-top:.3em;padding:6px 8px">
+    <svg viewBox="0 0 1180 250" class="fig" style="width:100%;max-height:250px">
+      <!-- O₂ produit par les plantes, respiré par les cellules -->
+      <path d="M 330 62 C 380 32, 820 32, 876 62" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#atp-arr-r)"/>
+      <text x="603" y="22" font-size="18" font-weight="700" fill="var(--accent)" text-anchor="middle">O₂ libéré par les plantes, respiré par les animaux</text>
+      <!-- CO₂ + H₂O rendus aux plantes -->
+      <path d="M 876 190 C 820 218, 380 218, 330 190" fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#atp-arr)"/>
+      <text x="603" y="244" font-size="18" font-weight="700" fill="var(--muted)" text-anchor="middle">CO₂ + H₂O</text>
+
+      <!-- flux principal -->
+      <g stroke="var(--muted)" stroke-width="3" marker-end="url(#atp-arr)">
+        <line x1="150" y1="126" x2="196" y2="126"/><line x1="462" y1="126" x2="500" y2="126"/>
+        <line x1="738" y1="126" x2="776" y2="126"/><line x1="1000" y1="126" x2="1036" y2="126"/>
+      </g>
+
+      <!-- soleil -->
+      <circle cx="72" cy="126" r="30" fill="#fff" stroke="var(--ink)" stroke-width="3"/>
+      <g stroke="var(--ink)" stroke-width="3" stroke-linecap="round">
+        <line x1="72" y1="80" x2="72" y2="68"/><line x1="72" y1="172" x2="72" y2="184"/><line x1="26" y1="126" x2="14" y2="126"/><line x1="118" y1="126" x2="130" y2="126"/>
+        <line x1="40" y1="94" x2="31" y2="85"/><line x1="104" y1="158" x2="113" y2="167"/><line x1="40" y1="158" x2="31" y2="167"/><line x1="104" y1="94" x2="113" y2="85"/>
+      </g>
+      <text class="atp-d" x="72" y="208">lumière</text>
+
+      <!-- photosynthèse -->
+      <rect class="atp-box" x="200" y="66" width="260" height="120" rx="14"/>
+      <text class="atp-t" x="330" y="98">Photosynthèse</text>
+      <text class="atp-d" x="330" y="128">6 CO₂ + 6 H₂O + lumière</text>
+      <text class="atp-d" x="330" y="152">→ glucose + 6 O₂</text>
+      <text class="atp-d" x="330" y="174" style="font-size:15px">(plantes, algues)</text>
+
+      <!-- réserves -->
+      <rect class="atp-box" x="504" y="66" width="232" height="120" rx="14"/>
+      <text class="atp-t" x="620" y="98">Réserves</text>
+      <text class="atp-d" x="620" y="128">glucides : 17 kJ/g, rapides</text>
+      <text class="atp-d" x="620" y="152">lipides : 37 kJ/g, denses</text>
+
+      <!-- respiration cellulaire -->
+      <rect class="atp-box" x="780" y="66" width="218" height="120" rx="14" style="stroke:var(--good)"/>
+      <text class="atp-t" x="889" y="98" style="fill:var(--good)">Mitochondrie</text>
+      <text class="atp-d" x="889" y="128">glucose + 6 O₂</text>
+      <text class="atp-d" x="889" y="152">→ 6 CO₂ + 6 H₂O</text>
+
+      <!-- ATP -->
+      <rect class="atp-box" x="1040" y="66" width="136" height="120" rx="14" style="stroke:var(--accent)"/>
+      <text class="atp-t" x="1108" y="104" style="fill:var(--accent);font-size:28px">ATP</text>
+      <text class="atp-d" x="1108" y="134">contraction,</text>
+      <text class="atp-d" x="1108" y="156">pompes,</text>
+      <text class="atp-d" x="1108" y="178">synthèses</text>
+    </svg>
+  </div>
+
+  <div class="grid2" style="margin-top:.35em;gap:14px;align-items:stretch">
+    <div class="card" style="padding:8px 14px">
+      <p class="tiny" style="margin:0 0 .25em;color:var(--ink)"><b>Sans O₂ : 2 ATP par glucose au lieu de ≈ 30</b></p>
+      <p class="tiny" style="margin:0;display:flex;align-items:center;gap:8px"><span style="width:6.2em">avec O₂ ≈ 30</span><span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span><span class="atp-sq"></span></span></p>
+      <p class="tiny" style="margin:0;display:flex;align-items:center;gap:8px"><span style="width:6.2em">sans O₂ : 2</span><span><span class="atp-sq"></span><span class="atp-sq"></span></span></p>
+    </div>
+    <div class="card" style="padding:8px 14px">
+      <p class="tiny" style="margin:0;color:var(--ink)">≈ 100&nbsp;g d'ATP présents dans le corps à un instant donné ; ≈ 50&nbsp;kg fabriqués et consommés par jour : chaque molécule est recyclée des centaines de fois.</p>
+    </div>
+  </div>
+
+</section>

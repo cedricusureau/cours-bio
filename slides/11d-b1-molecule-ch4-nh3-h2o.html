@@ -1,0 +1,147 @@
+<section>
+  <style>
+    .mslot{fill:#fff;stroke:var(--line);stroke-width:1.5;stroke-dasharray:2,2}
+    .mdot{opacity:0;transform-origin:center;transform-box:fill-box}
+    .fragment.visible .mdot{animation:mdotPop .4s ease forwards}
+    @keyframes mdotPop{from{opacity:0;transform:scale(.25)}to{opacity:1;transform:scale(1)}}
+    .mH{opacity:0}
+    .fragment.visible .mH{animation:mdotPop .4s ease forwards}
+    .mcard{text-align:center}
+    .mlabel{font-weight:800;font-size:1.1em}
+    .mcount{min-height:1.4em;font-weight:700;color:var(--accent);font-size:.7em;margin-top:4px}
+  </style>
+
+  <span class="kicker">Les briques</span>
+  <h2>Des molécules aux couches complètes</h2>
+  <div class="barline"></div>
+  <p class="small muted">Les mêmes cases vides qu'à l'instant — mais comblées par de vrais voisins, un hydrogène à la fois.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:.3em">
+
+    <!-- CH4 -->
+    <div class="mcard">
+      <div class="mlabel" style="color:var(--brand)">CH4</div>
+      <svg viewBox="0 0 180 180" style="width:100%;max-width:210px">
+        <line x1="90" y1="90" x2="129" y2="51" stroke="var(--line)" stroke-width="3"/>
+        <line x1="90" y1="90" x2="129" y2="129" stroke="var(--line)" stroke-width="3"/>
+        <line x1="90" y1="90" x2="51" y2="129" stroke="var(--line)" stroke-width="3"/>
+        <line x1="90" y1="90" x2="51" y2="51" stroke="var(--line)" stroke-width="3"/>
+        <circle cx="90" cy="90" r="16" fill="var(--brand)"/>
+        <text x="90" y="95" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">C</text>
+        <circle class="mslot" cx="129" cy="51" r="8"/>
+        <circle class="mslot" cx="129" cy="129" r="8"/>
+        <circle class="mslot" cx="51" cy="129" r="8"/>
+        <circle class="mslot" cx="51" cy="51" r="8"/>
+
+        <g class="fragment" data-fragment-index="1">
+          <circle class="mH" cx="150" cy="30" r="10" fill="var(--brand2)"/>
+          <text class="mH" x="150" y="34" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+          <circle class="mdot" cx="126" cy="54" r="4" fill="var(--brand)"/>
+          <circle class="mdot" cx="132" cy="48" r="4" fill="var(--brand2)"/>
+        </g>
+        <g class="fragment" data-fragment-index="2">
+          <circle class="mH" cx="150" cy="150" r="10" fill="var(--brand2)"/>
+          <text class="mH" x="150" y="154" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+          <circle class="mdot" cx="126" cy="126" r="4" fill="var(--brand)"/>
+          <circle class="mdot" cx="132" cy="132" r="4" fill="var(--brand2)"/>
+        </g>
+        <g class="fragment" data-fragment-index="3">
+          <circle class="mH" cx="30" cy="150" r="10" fill="var(--brand2)"/>
+          <text class="mH" x="30" y="154" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+          <circle class="mdot" cx="54" cy="126" r="4" fill="var(--brand)"/>
+          <circle class="mdot" cx="48" cy="132" r="4" fill="var(--brand2)"/>
+        </g>
+        <g class="fragment" data-fragment-index="4">
+          <circle class="mH" cx="30" cy="30" r="10" fill="var(--brand2)"/>
+          <text class="mH" x="30" y="34" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+          <circle class="mdot" cx="54" cy="54" r="4" fill="var(--brand)"/>
+          <circle class="mdot" cx="48" cy="48" r="4" fill="var(--brand2)"/>
+        </g>
+      </svg>
+      <div class="mcount fragment" data-fragment-index="4">4 liaisons — 0 doublet non liant</div>
+    </div>
+
+    <!-- NH3 -->
+    <div class="mcard">
+      <div class="mlabel" style="color:var(--brand)">NH3</div>
+      <svg viewBox="0 0 180 180" style="width:100%;max-width:210px">
+        <line x1="90" y1="90" x2="129" y2="51" stroke="var(--line)" stroke-width="3"/>
+        <line x1="90" y1="90" x2="129" y2="129" stroke="var(--line)" stroke-width="3"/>
+        <line x1="90" y1="90" x2="51" y2="129" stroke="var(--line)" stroke-width="3"/>
+        <circle cx="90" cy="90" r="16" fill="var(--brand)"/>
+        <text x="90" y="95" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">N</text>
+        <circle class="mslot" cx="129" cy="51" r="8"/>
+        <circle class="mslot" cx="129" cy="129" r="8"/>
+        <circle class="mslot" cx="51" cy="129" r="8"/>
+        <circle class="mslot" cx="51" cy="51" r="8"/>
+
+        <g class="fragment" data-fragment-index="0">
+          <circle class="mdot" cx="48" cy="48" r="4" fill="var(--brand)"/>
+          <circle class="mdot" cx="54" cy="54" r="4" fill="var(--brand)"/>
+        </g>
+        <g class="fragment" data-fragment-index="1">
+          <circle class="mH" cx="150" cy="30" r="10" fill="var(--brand2)"/>
+          <text class="mH" x="150" y="34" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+          <circle class="mdot" cx="126" cy="54" r="4" fill="var(--brand)"/>
+          <circle class="mdot" cx="132" cy="48" r="4" fill="var(--brand2)"/>
+        </g>
+        <g class="fragment" data-fragment-index="2">
+          <circle class="mH" cx="150" cy="150" r="10" fill="var(--brand2)"/>
+          <text class="mH" x="150" y="154" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+          <circle class="mdot" cx="126" cy="126" r="4" fill="var(--brand)"/>
+          <circle class="mdot" cx="132" cy="132" r="4" fill="var(--brand2)"/>
+        </g>
+        <g class="fragment" data-fragment-index="3">
+          <circle class="mH" cx="30" cy="150" r="10" fill="var(--brand2)"/>
+          <text class="mH" x="30" y="154" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+          <circle class="mdot" cx="54" cy="126" r="4" fill="var(--brand)"/>
+          <circle class="mdot" cx="48" cy="132" r="4" fill="var(--brand2)"/>
+        </g>
+      </svg>
+      <div class="mcount fragment" data-fragment-index="3">3 liaisons — 1 doublet non liant</div>
+    </div>
+
+    <!-- H2O -->
+    <div class="mcard">
+      <div class="mlabel" style="color:var(--accent)">H2O</div>
+      <svg viewBox="0 0 180 180" style="width:100%;max-width:210px">
+        <line x1="90" y1="90" x2="51" y2="129" stroke="var(--line)" stroke-width="3"/>
+        <line x1="90" y1="90" x2="129" y2="129" stroke="var(--line)" stroke-width="3"/>
+        <circle cx="90" cy="90" r="16" fill="var(--accent)"/>
+        <text x="90" y="95" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">O</text>
+        <circle class="mslot" cx="129" cy="51" r="8"/>
+        <circle class="mslot" cx="51" cy="51" r="8"/>
+        <circle class="mslot" cx="129" cy="129" r="8"/>
+        <circle class="mslot" cx="51" cy="129" r="8"/>
+
+        <g class="fragment" data-fragment-index="0">
+          <circle class="mdot" cx="126" cy="54" r="4" fill="var(--accent)"/>
+          <circle class="mdot" cx="132" cy="48" r="4" fill="var(--accent)"/>
+          <circle class="mdot" cx="48" cy="48" r="4" fill="var(--accent)"/>
+          <circle class="mdot" cx="54" cy="54" r="4" fill="var(--accent)"/>
+        </g>
+        <g class="fragment" data-fragment-index="1">
+          <circle class="mH" cx="30" cy="150" r="10" fill="var(--brand2)"/>
+          <text class="mH" x="30" y="154" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+          <circle class="mdot" cx="54" cy="126" r="4" fill="var(--accent)"/>
+          <circle class="mdot" cx="48" cy="132" r="4" fill="var(--brand2)"/>
+        </g>
+        <g class="fragment" data-fragment-index="2">
+          <circle class="mH" cx="150" cy="150" r="10" fill="var(--brand2)"/>
+          <text class="mH" x="150" y="154" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">H</text>
+          <circle class="mdot" cx="126" cy="126" r="4" fill="var(--accent)"/>
+          <circle class="mdot" cx="132" cy="132" r="4" fill="var(--brand2)"/>
+        </g>
+      </svg>
+      <div class="mcount fragment" data-fragment-index="2">2 liaisons — 2 doublets non liants</div>
+    </div>
+
+  </div>
+
+  <p class="center beat" style="margin-top:.6em; min-height:2em">
+    <span class="fragment fade-up" data-fragment-index="5">
+      <span class="pill ghost">0, 1, 2 doublets non liants : CH4 n'en a aucun, H2O en a deux</span>
+    </span>
+  </p>
+
+</section>

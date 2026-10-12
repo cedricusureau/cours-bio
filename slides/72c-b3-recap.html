@@ -1,0 +1,74 @@
+<section>
+  <style>
+    .b3rc-box{fill:var(--soft);stroke:var(--line);stroke-width:2}
+    .b3rc-t{font-size:19px;font-weight:800;text-anchor:middle}
+    .b3rc-d{font-size:14px;fill:var(--muted);text-anchor:middle}
+    .b3rc-p{font-size:15px;font-weight:700;fill:var(--brand);text-anchor:middle}
+    .b3rc-zone{font-size:14px;font-weight:700;fill:var(--muted);text-anchor:middle}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="b3rc-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/></marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Récapitulatif</span>
+  <h2>HBB, du gène à la chaîne β</h2>
+  <div class="barline"></div>
+  <p class="small muted">Le trajet complet, avec les longueurs mesurées sur les séquences de référence (GRCh38, NM_000518.5).</p>
+
+  <div class="figframe" style="margin-top:.4em;padding:8px 10px">
+    <svg viewBox="0 0 1000 250" class="fig" style="width:100%;max-height:300px">
+      <!-- zones -->
+      <rect x="2" y="214" width="566" height="30" rx="8" fill="var(--soft)" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="6,5"/>
+      <text class="b3rc-zone" x="285" y="234">noyau</text>
+      <rect x="580" y="214" width="418" height="30" rx="8" fill="#fff" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="6,5"/>
+      <text class="b3rc-zone" x="789" y="234">cytoplasme</text>
+
+      <!-- étapes -->
+      <text class="b3rc-p" x="187" y="46">transcription</text>
+      <text class="b3rc-p" x="397" y="46">épissage</text>
+      <text class="b3rc-p" x="607" y="46">traduction</text>
+      <text class="b3rc-p" x="817" y="46">retrait de la Met</text>
+      <line x1="163" y1="125" x2="208" y2="125" stroke="var(--muted)" stroke-width="3" marker-end="url(#b3rc-arr)"/>
+      <line x1="373" y1="125" x2="418" y2="125" stroke="var(--muted)" stroke-width="3" marker-end="url(#b3rc-arr)"/>
+      <line x1="583" y1="125" x2="628" y2="125" stroke="var(--muted)" stroke-width="3" marker-end="url(#b3rc-arr)"/>
+      <line x1="793" y1="125" x2="838" y2="125" stroke="var(--muted)" stroke-width="3" marker-end="url(#b3rc-arr)"/>
+
+      <!-- boîtes -->
+      <rect class="b3rc-box" x="2" y="62" width="158" height="140" rx="14"/>
+      <text class="b3rc-t" x="81" y="96" fill="var(--ink)">gène HBB</text>
+      <text class="b3rc-d" x="81" y="124">chromosome 11</text>
+      <text class="b3rc-d" x="81" y="146">1 608 pb</text>
+      <text class="b3rc-d" x="81" y="168">3 exons, 2 introns</text>
+
+      <rect class="b3rc-box" x="212" y="62" width="158" height="140" rx="14"/>
+      <text class="b3rc-t" x="291" y="96" fill="var(--ink)">pré-ARNm</text>
+      <text class="b3rc-d" x="291" y="124">1 608 nt</text>
+      <text class="b3rc-d" x="291" y="146">introns compris</text>
+
+      <rect class="b3rc-box" x="422" y="62" width="158" height="140" rx="14" style="stroke:var(--brand2)"/>
+      <text class="b3rc-t" x="501" y="96" fill="var(--brand2)">ARNm</text>
+      <text class="b3rc-d" x="501" y="124">628 nt</text>
+      <text class="b3rc-d" x="501" y="146">dont 444 codants</text>
+      <text class="b3rc-d" x="501" y="168">148 codons</text>
+      <text class="b3rc-d" x="501" y="190">AUG … UAA</text>
+
+      <rect class="b3rc-box" x="632" y="62" width="158" height="140" rx="14" style="stroke:var(--brand)"/>
+      <text class="b3rc-t" x="711" y="96" fill="var(--brand)">chaîne β</text>
+      <text class="b3rc-d" x="711" y="124">147 acides aminés</text>
+      <text class="b3rc-d" x="711" y="146">M V H L T P …</text>
+
+      <rect class="b3rc-box" x="842" y="62" width="156" height="140" rx="14" style="stroke:var(--brand)"/>
+      <text class="b3rc-t" x="920" y="96" fill="var(--brand)">chaîne β</text>
+      <text class="b3rc-d" x="920" y="120" style="font-weight:700">mature</text>
+      <text class="b3rc-d" x="920" y="146">146 acides aminés</text>
+      <text class="b3rc-d" x="920" y="168">V H L T P …</text>
+    </svg>
+  </div>
+
+  <p class="center" style="margin-top:.6em">
+    <span class="pill ghost">444 nucléotides codants → 148 codons → 147 acides aminés + 1 stop</span>
+  </p>
+
+</section>

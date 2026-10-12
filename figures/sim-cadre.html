@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadre de lecture — ARNm HBB</title>
+<style>
+  :root{
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --brand:#2563eb; --brand2:#0ea5e9;
+    --accent:#f43f5e; --soft:#f8fafc; --water:#eaf6fd; --sel:#eef2ff;
+    --k:1;   /* échelle de l'interface : 1 dans la slide (1280 × 720), davantage en mode agrandi */
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  /* export PDF : conserver les fonds (stops, surlignage) à l'impression */
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{margin:0;height:100%;background:var(--water);color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+  .card{position:absolute;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 2px 10px rgba(15,23,42,.08)}
+  .ui{font-size:calc(15px*var(--k))}
+  .bar{top:calc(14px*var(--k));right:calc(14px*var(--k));padding:.8em;display:grid;gap:.667em;justify-items:start}
+  .bar .row{display:flex;gap:.667em}
+  button{font:inherit;font-size:1em;font-weight:600;border-radius:.6em;cursor:pointer;
+    padding:.467em .933em;border:2px solid var(--brand);background:#fff;color:var(--brand)}
+  button.primary{background:var(--brand);color:#fff}
+  button:focus-visible{outline:3px solid var(--brand2);outline-offset:2px}
+  .seg{display:inline-flex;border:2px solid var(--brand);border-radius:.6em;overflow:hidden}
+  .seg button{border:0;border-radius:0;padding:.467em .8em}
+  .seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+
+  /* panneau de statistiques (bas droite) : une ligne de message, le tableau des trois cadres, le rappel */
+  .stats{right:calc(14px*var(--k));bottom:calc(14px*var(--k));width:calc(480px*var(--k));
+    padding:.45em .95em .5em;font-size:calc(14px*var(--k))}
+  #info{font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stats table{border-collapse:collapse;width:100%;margin:.25em 0 .2em;font-variant-numeric:tabular-nums}
+  .stats th{font-size:.93em;font-weight:600;color:var(--muted);text-align:left;padding:0 .45em .1em;
+    border-bottom:1px solid var(--line);white-space:nowrap}
+  .stats td{padding:.05em .45em;white-space:nowrap}
+  .stats .n{text-align:right}
+  .stats tr.cur td{color:var(--brand);font-weight:700;background:var(--sel)}
+  .rappel{font-size:.93em;color:var(--muted)}
+
+  /* bande de séquence : grille fixe, un nucléotide par cellule ; seul le regroupement change avec le cadre */
+  .band{position:absolute;left:calc(14px*var(--k));right:calc(14px*var(--k));top:166px;height:400px;
+    display:flex;flex-direction:column;justify-content:safe center;
+    background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 10px rgba(15,23,42,.08);
+    overflow-x:hidden;overflow-y:auto;scrollbar-gutter:stable;scrollbar-width:thin}
+  #seq{position:relative;flex-shrink:0;margin:0 auto;user-select:none;-webkit-user-select:none}
+  .ln{position:relative}
+  .ln>*{position:absolute}
+  .nt{width:var(--cw);height:var(--nth);line-height:var(--nth);text-align:center;font-family:var(--mono);
+    font-size:var(--ntf);cursor:pointer;border-radius:3px}
+  .nt.aug{color:var(--brand);font-weight:700}
+  .nt.utrnt{color:var(--muted)}
+  .nt.start{background:var(--brand);color:#fff;font-weight:700}
+  .nt:hover{background:var(--brand2);color:#fff}
+  .zb{background:rgba(15,23,42,.07);border-radius:5px}
+  .aa{height:var(--aab);line-height:var(--aab);text-align:center;font-family:var(--mono);font-size:var(--aaf);
+    font-weight:600;border-radius:4px;cursor:pointer}
+  .aa.z{background:rgba(15,23,42,.07)}
+  .aa.met{color:var(--brand);font-weight:800;box-shadow:inset 0 0 0 1.5px var(--brand)}
+  .aa.stop{background:var(--ink);color:#fff;box-shadow:none}
+  .aa.stop.suite{background:none;box-shadow:inset 0 0 0 2px var(--ink)}   /* stop coupé en fin de ligne : partie sans « * » */
+  .hl{background:var(--sel);border:2px solid var(--brand);border-radius:7px}
+  .hlnt{background:var(--sel);border-radius:4px}
+  .num{font-family:var(--mono);font-size:var(--numf);color:var(--muted);text-align:right;
+    height:var(--nth);line-height:var(--nth)}
+  .flab{font-size:var(--labf);color:var(--muted);text-align:right;white-space:nowrap}
+  .utrlab{display:flex;align-items:center;gap:.6em;padding:0 .4em;font-size:var(--labf);color:var(--muted);
+    white-space:nowrap;overflow:hidden}
+  .utrlab::before,.utrlab::after{content:"";flex:1;border-top:1.5px solid var(--line)}
+
+  /* auto-contrôle (?check=1) et zones réservées de la slide (?zones=1) : paramètres de test */
+  .chk{left:50%;top:50%;transform:translate(-50%,-50%);width:calc(930px*var(--k));max-height:94%;overflow:auto;
+    padding:.8em 1.1em;font-size:calc(13px*var(--k));z-index:10;background:#fff}
+  .chk ul{margin:.45em 0 0;padding:0;list-style:none}
+  .chk li{margin:.2em 0;padding-left:1.4em;text-indent:-1.4em}
+  .chk .ok{color:var(--brand);font-weight:800}
+  .chk .ko{color:var(--accent);font-weight:800}
+  .zone{position:absolute;border:2px dashed var(--accent);background:rgba(244,63,94,.07);pointer-events:none;
+    z-index:20;font-size:12px;color:var(--accent);padding:4px 8px}
+
+  /* mode agrandi : pas d'encarts de la slide, toute la surface ; Réinitialiser masqué */
+  :fullscreen #reset, html.fs #reset{display:none}
+</style>
+</head>
+<body>
+<div id="band" class="band"><div id="seq"></div></div>
+<div class="card bar ui">
+  <div class="row">
+    <button id="orf" class="primary">ORF la plus longue</button>
+    <button id="reset">↺ Réinitialiser</button>
+    <button id="fs">⛶ Agrandir</button>
+  </div>
+  <div class="seg" role="group" aria-label="Cadre de lecture affiché">
+    <button id="m1" aria-pressed="true">Cadre 1</button>
+    <button id="m2" aria-pressed="false">Cadre 2</button>
+    <button id="m3" aria-pressed="false">Cadre 3</button>
+    <button id="m0" aria-pressed="false">Les trois</button>
+  </div>
+</div>
+<div id="stats" class="card stats">
+  <div id="info"></div>
+  <table>
+    <thead><tr><th></th><th>1er codon</th><th class="n">stops</th><th>plus longue ORF (AUG → stop)</th></tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+  <div class="rappel">séquence aléatoire : un stop tous les 64/3 ≈ 21 codons en moyenne</div>
+</div>
+<div id="chk" class="card chk" hidden></div>
+
+<script id="data">
+// ARNm NM_000518.5 (HBB, Homo sapiens), 628 nt : section ORIGIN du fichier GenBank, T → U.
+// Une ligne de code = une ligne affichée (90 nt, 30 codons du cadre 1).
+const ARNM =
+  "ACAUUUGCUUCUGACACAACUGUGUUCACUAGCAACCUCAAACAGACACCAUGGUGCAUCUGACUCCUGAGGAGAAGUCUGCCGUUACUG" +   // nt 1–90
+  "CCCUGUGGGGCAAGGUGAACGUGGAUGAAGUUGGUGGUGAGGCCCUGGGCAGGCUGCUGGUGGUCUACCCUUGGACCCAGAGGUUCUUUG" +   // nt 91–180
+  "AGUCCUUUGGGGAUCUGUCCACUCCUGAUGCUGUUAUGGGCAACCCUAAGGUGAAGGCUCAUGGCAAGAAAGUGCUCGGUGCCUUUAGUG" +   // nt 181–270
+  "AUGGCCUGGCUCACCUGGACAACCUCAAGGGCACCUUUGCCACACUGAGUGAGCUGCACUGUGACAAGCUGCACGUGGAUCCUGAGAACU" +   // nt 271–360
+  "UCAGGCUCCUGGGCAACGUGCUGGUCUGUGUGCUGGCCCAUCACUUUGGCAAAGAAUUCACCCCACCAGUGCAGGCUGCCUAUCAGAAAG" +   // nt 361–450
+  "UGGUGGCUGGUGUGGCUAAUGCCCUGGCCCACAAGUAUCACUAAGCUCGCUUUCUUGCUGUCCAAUUUCUAUUAAAGGUUCCUUUGUUCC" +   // nt 451–540
+  "CUAAGUCCAACUACUAAACUGGGGGAUAUUAUGAAGGGCCUUGAGCAUCUGGAUUCUGCCUAAUAAAAAACAUUUAUUUUCAUUGCAA";     // nt 541–628
+
+// Pour l'auto-contrôle (?check=1) : section ORIGIN recopiée telle quelle du fichier GenBank NM_000518.5,
+// CDS annotée et sa traduction (/translation, NP_000509.1).
+const ORIGIN_GB = `
+        1 acatttgctt ctgacacaac tgtgttcact agcaacctca aacagacacc atggtgcatc
+       61 tgactcctga ggagaagtct gccgttactg ccctgtgggg caaggtgaac gtggatgaag
+      121 ttggtggtga ggccctgggc aggctgctgg tggtctaccc ttggacccag aggttctttg
+      181 agtcctttgg ggatctgtcc actcctgatg ctgttatggg caaccctaag gtgaaggctc
+      241 atggcaagaa agtgctcggt gcctttagtg atggcctggc tcacctggac aacctcaagg
+      301 gcacctttgc cacactgagt gagctgcact gtgacaagct gcacgtggat cctgagaact
+      361 tcaggctcct gggcaacgtg ctggtctgtg tgctggccca tcactttggc aaagaattca
+      421 ccccaccagt gcaggctgcc tatcagaaag tggtggctgg tgtggctaat gccctggccc
+      481 acaagtatca ctaagctcgc tttcttgctg tccaatttct attaaaggtt cctttgttcc
+      541 ctaagtccaa ctactaaact gggggatatt atgaagggcc ttgagcatct ggattctgcc
+      601 taataaaaaa catttatttt cattgcaa
+`;
+const CDS_GB = [51, 494];
+const PROT_GB =
+  "MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLS" +
+  "TPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVD" +
+  "PENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH";
+const UTR5_ATTENDUE = "ACAUUUGCUUCUGACACAACUGUGUUCACUAGCAACCUCAAACAGACACC";
+</script>
+
+<script>
+// ============================================================
+//  Code génétique standard : bases dans l'ordre UCAG,
+//  codon (b1,b2,b3) -> TABLE[16 i + 4 j + k] ; « * » = stop
+// ============================================================
+const $ = id => document.getElementById(id);
+const band = $('band'), seq = $('seq'), bar = document.querySelector('.bar'), stats = $('stats');
+const Q = new URLSearchParams(location.search);          // paramètres de test : voir en fin de script
+
+const BASES = 'UCAG';
+const TABLE = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG';
+const traduire = c => TABLE[16*BASES.indexOf(c[0]) + 4*BASES.indexOf(c[1]) + BASES.indexOf(c[2])];
+
+const N = ARNM.length;                    // 628 nt
+const PER = 90;                           // nucléotides par ligne affichée (30 codons)
+const LINES = Math.ceil(N / PER);         // 7 lignes
+const codon = p => ARNM.slice(p - 1, p + 2);          // codon qui commence au nt p (numérotation à partir de 1)
+const cadreDe = p => (p - 1) % 3 + 1;                 // cadre 1 : codons dès le nt 1 ; cadre 2 : nt 2 ; cadre 3 : nt 3
+
+// AA[p] : acide aminé (code 1 lettre) du codon qui commence au nt p ; '' si le codon est incomplet
+const AA = [''];
+for(let p = 1; p <= N; p++) AA.push(p + 2 <= N ? traduire(codon(p)) : '');
+
+// lecture à partir du nt p, codon par codon, jusqu'au premier stop du même cadre
+// -> k = codons lus avant le stop ; stop = position du stop (0 si aucun avant la fin de l'ARNm)
+function lire(p){
+  let k = 0;
+  for(let q = p; q + 2 <= N; q += 3){
+    if(AA[q] === '*') return { k, stop: q };
+    k++;
+  }
+  return { k, stop: 0 };
+}
+
+// pour chaque cadre : codons complets, stops, plus longue ORF (AUG -> premier stop du même cadre)
+const CADRES = [1, 2, 3].map(f => {
+  let n = 0, stops = 0, best = null;
+  for(let p = f; p + 2 <= N; p += 3){
+    n++;
+    if(AA[p] === '*') stops++;
+    if(codon(p) === 'AUG'){
+      const r = lire(p);
+      if(r.stop && (!best || r.k > best.k)) best = { start: p, k: r.k, stop: r.stop };
+    }
+  }
+  return { f, n, stops, best };
+});
+
+// ============================================================
+//  État : cadre affiché (1, 2, 3 ; 0 = « Les trois ») et lecture surlignée
+// ============================================================
+const S = { mode: 1, sel: null };   // sel : { kind: 'lecture' | 'orf', frame, a, b, k, stop } (nt a..b surlignés)
+
+function setMode(m){
+  if(S.sel && m !== 0 && m !== S.sel.frame) S.sel = null;   // la lecture n'est gardée que si son cadre reste affiché
+  S.mode = m;
+  update();
+}
+function lireDepuis(p){
+  const f = cadreDe(p), r = lire(p);
+  S.mode = f;
+  S.sel = { kind: 'lecture', frame: f, a: p, b: r.stop ? r.stop + 2 : p + 3*r.k - 1, k: r.k, stop: r.stop };
+  update();
+}
+function orfLaPlusLongue(){
+  const c = CADRES.filter(c => c.best).sort((x, y) => y.best.k - x.best.k)[0];
+  S.mode = c.f;
+  S.sel = { kind: 'orf', frame: c.f, a: c.best.start, b: c.best.stop + 2, k: c.best.k, stop: c.best.stop };
+  update();
+}
+function reinitialiser(){
+  S.mode = 1; S.sel = null;
+  update();
+  band.scrollTop = 0;
+}
+
+// message du panneau, une ligne
+function texteInfo(){
+  const s = S.sel;
+  if(s && s.kind === 'orf') return `séquence codante : nt ${s.a}–${s.b}, ${s.k} acides aminés + stop`;
+  if(s){
+    const cod = s.k < 2 ? 'codon' : 'codons';
+    if(s.stop) return `lecture à partir du nt ${s.a} : ${s.k} ${cod} avant le premier stop`;
+    if(s.k) return `lecture à partir du nt ${s.a} : ${s.k} ${cod}, aucun stop jusqu'à la fin`;
+    return `lecture à partir du nt ${s.a} : aucun codon complet`;
+  }
+  return `ARNm NM_000518.5 (HBB) : ${N} nt`;
+}
+
+function update(){
+  for(const m of [1, 2, 3, 0]) $('m' + m).setAttribute('aria-pressed', S.mode === m);
+  $('info').textContent = texteInfo();
+  const cur = S.sel ? S.sel.frame : S.mode;
+  for(const tr of $('tb').rows) tr.classList.toggle('cur', +tr.dataset.f === cur);
+  render();
+}
+
+// ============================================================
+//  Géométrie : cellule de largeur fixe par nucléotide, 90 par ligne
+// ============================================================
+let G = null;
+const pleinEcran = () => !!document.fullscreenElement || document.documentElement.classList.contains('fs');
+
+function layout(){
+  const W = innerWidth, H = innerHeight;
+  if(W < 200 || H < 150) return;              // iframe pas encore affichée : attendre le redimensionnement
+  const k = Math.max(.6, Math.min(W / 1280, H / 720));
+  document.documentElement.style.setProperty('--k', k);
+  const rb = bar.getBoundingClientRect(), rs = stats.getBoundingClientRect();
+  let top = rb.bottom + 8*k, bot = rs.top - 8*k;
+  // dans la slide (encarts façon 26b, mesurés) : titre en haut à gauche jusqu'à y ≈ 160, légende en bas à gauche dès y ≈ 599
+  if(!pleinEcran()){ top = Math.max(top, 166*k); bot = Math.min(bot, 592*k); }
+  band.style.top = top + 'px';
+  band.style.height = Math.max(120, bot - top) + 'px';
+  const padX = Math.round(8*k), padY = Math.round(4*k);
+  const w = band.clientWidth - 2*padX, h = band.clientHeight - 2*padY;
+  // largeur : 90 cellules + gouttière de 3,6 cellules ; hauteur : 7 blocs d'au moins 4,1 cellules (un cadre)
+  const cw = Math.max(8, Math.floor(2*Math.min(w / (PER + 3.6), h / (LINES*4.1))) / 2);
+  const ntH = Math.round(1.92*cw), aaH = Math.round(1.7*cw);
+  const gap = Math.max(Math.round(.45*cw), Math.min(Math.round(1.2*cw), Math.floor(h / LINES) - ntH - aaH));
+  G = { cw, ntH, aaH, gap, gut: Math.round(3.6*cw), gpad: Math.round(.7*cw) };
+  const st = seq.style;
+  st.width = (G.gut + PER*cw) + 'px';
+  st.margin = `${padY}px auto`;
+  st.setProperty('--cw', cw + 'px');
+  st.setProperty('--nth', ntH + 'px');
+  st.setProperty('--ntf', (1.52*cw).toFixed(1) + 'px');
+  st.setProperty('--aab', (aaH - 4) + 'px');
+  st.setProperty('--aaf', (1.25*cw).toFixed(1) + 'px');
+  st.setProperty('--numf', (1.02*cw).toFixed(1) + 'px');
+  st.setProperty('--labf', (.92*cw).toFixed(1) + 'px');
+  render();
+  if(Q.get('check') === '1') console.log(`[auto-contrôle] géométrie ${W} × ${H} : cellule ${cw} px, ` +
+    `lignes ${ntH} + ${aaH} px, intervalle ${gap} px, bande y = ${Math.round(top)}–${Math.round(top + band.offsetHeight)}`);
+}
+
+// le nt p appartient-il à un AUG ? (un cadre : AUG de ce cadre ; « Les trois » : tout AUG)
+function estAug(p){
+  if(S.mode){
+    const q = p - ((p - S.mode) % 3 + 3) % 3;
+    return q >= 1 && codon(q) === 'AUG';
+  }
+  return [p - 2, p - 1, p].some(q => q >= 1 && codon(q) === 'AUG');
+}
+
+function render(){
+  if(!G) return;
+  const { cw, ntH, aaH, gap, gut, gpad } = G;
+  const rows = S.mode ? [S.mode] : [1, 2, 3];
+  const sel = S.sel && rows.includes(S.sel.frame) ? S.sel : null;
+  const orf = sel && sel.kind === 'orf' ? sel : null;
+  const yNt = gap, yAa = i => gap + ntH + i*aaH;
+  const blockH = gap + ntH + rows.length*aaH;
+  let h = '';
+  for(let L = 0; L < LINES; L++){
+    const s = L*PER + 1, e = Math.min(N, s + PER - 1);
+    const X = p => gut + (p - s)*cw;
+    // rectangle couvrant les nucléotides a..b de la ligne
+    const rect = (cls, a, b, top, hh, inset, attrs = '') =>
+      `<div class="${cls}" style="left:${X(a) + inset}px;width:${(b - a + 1)*cw - 2*inset}px;top:${top}px;height:${hh}px"${attrs}>`;
+    h += `<div class="ln" style="height:${blockH}px">`;
+    h += `<div class="num" style="left:0;width:${gut - gpad}px;top:${yNt}px">${s}</div>`;
+    if(!S.mode) rows.forEach((f, i) => {
+      h += `<div class="flab" style="left:0;width:${gut - gpad}px;top:${yAa(i)}px;height:${aaH}px;line-height:${aaH}px">cadre ${f}</div>`;
+    });
+    // surlignage de la lecture (fond + bordure), sous les codons et les lettres
+    if(sel){
+      const a = Math.max(sel.a, s), b = Math.min(sel.b, e);
+      if(a <= b){
+        if(S.mode) h += rect('hl', a, b, yNt - 3, ntH + aaH + 5, -3) + '</div>';
+        else {
+          h += rect('hlnt', a, b, yNt, ntH, 0) + '</div>';
+          h += rect('hl', a, b, yAa(rows.indexOf(sel.frame)) - 2, aaH + 3, -3) + '</div>';
+        }
+      }
+    }
+    // codons du ou des cadres affichés : fond alterné un codon sur deux, acide aminé sous le nucléotide central
+    rows.forEach((f, i) => {
+      let p = s - ((s - f) % 3 + 3) % 3;
+      if(p < 1) p += 3;
+      for(; p <= e && p + 2 <= N; p += 3){
+        if(orf && f === orf.frame && (p < orf.a || p > orf.stop)) continue;   // UTR : pas de codons affichés
+        const a = Math.max(p, s), b = Math.min(p + 2, e), pair = ((p - f) / 3) % 2 === 0, aa = AA[p];
+        const mid = p + 1 >= s && p + 1 <= e;          // codon coupé en fin de ligne : lettre du côté du nt central
+        if(S.mode && pair) h += rect('zb', a, b, yNt, ntH + aaH - 1, 1) + '</div>';
+        const cls = 'aa' + (aa === '*' ? ' stop' : aa === 'M' ? ' met' : '') + (!S.mode && pair ? ' z' : '') + (mid ? '' : ' suite');
+        h += rect(cls, a, b, yAa(i) + 2, aaH - 4, 2, ` data-f="${f}" data-p="${p}"`) + (mid ? aa : '') + '</div>';
+      }
+      if(orf && f === orf.frame){
+        const utr = [[1, orf.a - 1, `5'UTR · nt 1–${orf.a - 1}`], [orf.b + 1, N, `3'UTR · nt ${orf.b + 1}–${N}`]];
+        for(const [A, B, lab] of utr){
+          const a = Math.max(A, s), b = Math.min(B, e);
+          if(a > b) continue;
+          const bord = (a === A ? 'border-left:1.5px solid var(--muted);' : '') +
+                       (b === B ? 'border-right:1.5px solid var(--muted);' : '');
+          h += `<div class="utrlab" style="left:${X(a) + 2}px;width:${(b - a + 1)*cw - 4}px;top:${yAa(i) + 3}px;` +
+               `height:${aaH - 6}px;${bord}"><span>${a === A ? lab : lab.split(' ·')[0]}</span></div>`;
+        }
+      }
+    });
+    // nucléotides
+    for(let p = s; p <= e; p++){
+      let cls = 'nt';
+      if(estAug(p)) cls += ' aug';
+      if(orf && (p < orf.a || p > orf.b)) cls += ' utrnt';
+      if(sel && sel.kind === 'lecture' && p === sel.a) cls += ' start';
+      h += `<span class="${cls}" data-nt="${p}" title="nt ${p}" style="left:${X(p)}px;top:${yNt}px">${ARNM[p - 1]}</span>`;
+    }
+    h += '</div>';
+  }
+  seq.innerHTML = h;
+}
+
+// ============================================================
+//  Contrôles
+// ============================================================
+$('tb').innerHTML = CADRES.map(c =>
+  `<tr data-f="${c.f}"><td>cadre ${c.f}</td><td>nt ${c.f}</td><td class="n">${c.stops}</td>` +
+  `<td>${c.best ? c.best.k + ' codons + stop' : 'aucune'}</td></tr>`).join('');
+
+seq.addEventListener('click', e => {
+  const t = e.target.closest('.nt'), c = e.target.closest('.aa[data-p]');   // acide aminé : lecture depuis son codon
+  if(t) lireDepuis(+t.dataset.nt);
+  else if(c) lireDepuis(+c.dataset.p);
+});
+$('orf').onclick = orfLaPlusLongue;
+$('reset').onclick = reinitialiser;
+for(const m of [1, 2, 3, 0]) $('m' + m).onclick = () => setMode(m);
+$('fs').onclick = () => {
+  if(document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() => {});
+};
+document.addEventListener('fullscreenchange', () => {
+  $('fs').textContent = document.fullscreenElement ? '✕ Quitter' : '⛶ Agrandir';
+  layout();
+});
+new ResizeObserver(layout).observe(document.documentElement);   // aussi à l'affichage de la slide (iframe d'abord sans taille)
+
+// Dans le deck : renvoyer les touches de navigation à reveal.js
+// (sinon, après un clic dans la séquence, les flèches ne changent plus de slide).
+const NAV = { ArrowRight:'right', ArrowLeft:'left', PageDown:'next', PageUp:'prev', ' ':'next' };
+window.addEventListener('keydown', e => {
+  const m = NAV[e.key];
+  if(m && window.parent !== window && !document.fullscreenElement){
+    e.preventDefault();
+    window.parent.postMessage(JSON.stringify({ method: m, args: [] }), '*');
+  }
+});
+
+// ============================================================
+//  Auto-contrôle (?check=1) : données, calculs et interface
+// ============================================================
+function autoControle(){
+  const R = [];
+  const t = (cond, label) => R.push([!!cond, label]);
+
+  // 1. séquence écrite en dur == section ORIGIN du GenBank, transcrite T -> U
+  let adn = '', numeros = true;
+  ORIGIN_GB.trim().split('\n').forEach((l, i) => {
+    const m = /^(\d+) ((?:[acgt]{10} ){0,5}[acgt]{1,10})$/.exec(l.trim());
+    if(!m || +m[1] !== 60*i + 1) numeros = false;
+    else adn += m[2].replace(/ /g, '');
+  });
+  const arnGB = adn.toUpperCase().replace(/T/g, 'U');
+  t(numeros && N === 628 && ARNM === arnGB,
+    `ARNm écrit en dur : ${N} nt, identique à la section ORIGIN de NM_000518.5 (T → U)`);
+  t(ARNM.slice(0, 50) === UTR5_ATTENDUE && !ARNM.slice(0, 52).includes('AUG'),
+    "5'UTR nt 1–50 = ACAUUUGCUU…AACAGACACC, aucun AUG");
+  t(CDS_GB[0] === 51 && CDS_GB[1] === 494 && codon(51) === 'AUG' && codon(492) === 'UAA' && N - CDS_GB[1] === 134,
+    "CDS annotée 51..494 (444 nt) : AUG au nt 51, UAA aux nt 492–494 ; 3'UTR : 134 nt");
+
+  // 2. code génétique
+  const cods = [];
+  for(const a of BASES) for(const b of BASES) for(const c of BASES) cods.push(a + b + c);
+  const stopsCode = cods.filter(c => traduire(c) === '*');
+  t(cods.length === 64 && stopsCode.join() === 'UAA,UAG,UGA' && traduire('AUG') === 'M' &&
+    new Set(cods.map(traduire)).size === 21, 'code génétique : 64 codons, 3 stops (UAA, UAG, UGA), AUG → M, 20 acides aminés');
+
+  // 3. cadres : stops et plus longue ORF, valeurs attendues
+  const ATT = [{ stops: 7, k: 39, start: 115 }, { stops: 14, k: null }, { stops: 5, k: 147, start: 51 }];
+  CADRES.forEach((c, i) => {
+    const a = ATT[i];
+    const okOrf = a.k === null ? c.best === null : !!c.best && c.best.k === a.k && c.best.start === a.start;
+    const lu = c.best ? `${c.best.k} codons + stop depuis le nt ${c.best.start}` : 'aucune';
+    const att = a.k === null ? 'aucune' : `${a.k} depuis le nt ${a.start}`;
+    t(c.stops === a.stops && okOrf, `cadre ${c.f} : ${c.stops} stops (attendu ${a.stops}) ; plus longue ORF : ${lu} (attendu ${att})`);
+  });
+
+  // 4. traduction du cadre 3 depuis le nt 51
+  const r = lire(51);
+  let prot = '';
+  for(let p = 51; p < r.stop; p += 3) prot += AA[p];
+  t(prot === PROT_GB && r.stop === 492 && codon(492) === 'UAA',
+    `traduction du cadre 3 depuis le nt 51 = /translation GenBank (${prot.length} acides aminés), puis stop UAA`);
+
+  // 5. interface : état initial, bouton ORF, clics, « Les trois », panneau
+  reinitialiser();
+  const lettres = sel => [...seq.querySelectorAll(sel)].filter(x => x.textContent);
+  t(S.mode === 1 && !seq.querySelector('.hl,.hlnt,.utrlab,.utrnt,.start') && lettres('.aa.stop').length === 7,
+    'état initial : cadre 1, 7 stops affichés, séquence codante non marquée');
+  $('orf').click();
+  const lus = lettres('.aa[data-f="3"]').filter(x => +x.dataset.p >= 51 && +x.dataset.p <= 492).map(x => x.textContent).join('');
+  t(S.mode === 3 && S.sel.a === 51 && S.sel.b === 494 && lus === PROT_GB + '*' &&
+    $('info').textContent === 'séquence codante : nt 51–494, 147 acides aminés + stop' &&
+    seq.querySelectorAll('.utrlab').length === 3,
+    '« ORF la plus longue » : cadre 3, nt 51–494 surlignés, 147 acides aminés + stop affichés, 5\'UTR et 3\'UTR étiquetées');
+  const clic = p => seq.querySelector(`.nt[data-nt="${p}"]`).dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  clic(52);
+  t(S.mode === 1 && $('info').textContent === 'lecture à partir du nt 52 : 3 codons avant le premier stop',
+    'clic sur le nt 52 : cadre 1, « lecture à partir du nt 52 : 3 codons avant le premier stop »');
+  clic(115);
+  t(S.mode === 1 && S.sel.k === 39 && S.sel.b === 234, 'clic sur le nt 115 : 39 codons avant le premier stop (UGA, nt 232–234)');
+  clic(51);
+  t(S.mode === 3 && S.sel.k === 147 && S.sel.b === 494, 'clic sur le nt 51 : cadre 3, 147 codons avant le premier stop');
+  seq.querySelector('.aa[data-f="3"][data-p="216"]').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  t(S.mode === 3 && S.sel.a === 216 && S.sel.k === 92,
+    'clic sur l\'acide aminé M du codon 216–218 (cadre 3) : lecture depuis le nt 216, 92 codons avant le premier stop');
+  clic(600);
+  t($('info').textContent === "lecture à partir du nt 600 : 9 codons, aucun stop jusqu'à la fin",
+    'clic sur le nt 600 : 9 codons, aucun stop jusqu\'à la fin de l\'ARNm');
+  $('m0').click();
+  const n3 = [1, 2, 3].map(f => lettres(`.aa[data-f="${f}"]`).length).join(' + ');
+  const s3 = [1, 2, 3].map(f => lettres(`.aa.stop[data-f="${f}"]`).length).join(' + ');
+  t(n3 === '209 + 209 + 208' && s3 === '7 + 14 + 5',
+    `« Les trois » : ${n3} codons traduits, ${s3} stops affichés`);
+  const lignes = [...$('tb').rows].map(tr => [...tr.cells].map(c => c.textContent).join(' | ')).join(' ; ');
+  t(lignes === 'cadre 1 | nt 1 | 7 | 39 codons + stop ; cadre 2 | nt 2 | 14 | aucune ; cadre 3 | nt 3 | 5 | 147 codons + stop',
+    `panneau : ${lignes}`);
+  reinitialiser();
+
+  const nOk = R.filter(x => x[0]).length;
+  const titre = `Auto-contrôle : ${nOk}/${R.length} conformes`;
+  console.log('[auto-contrôle] ' + titre);
+  for(const [ok, l] of R) console.log(`[auto-contrôle] ${ok ? 'OK   ' : 'ÉCHEC'} ${l}`);
+  const chk = $('chk');
+  chk.innerHTML = `<b>${titre}</b><ul>` +
+    R.map(([ok, l]) => `<li><span class="${ok ? 'ok' : 'ko'}">${ok ? '✓' : '✗'}</span> ${l}</li>`).join('') + '</ul>';
+  chk.hidden = false;
+}
+
+// ============================================================
+//  Paramètres d'URL de test (ignorés dans le deck) :
+//    ?mode=1|2|3|trois   cadre affiché au départ
+//    ?start=N            lecture à partir du nt N (comme un clic)
+//    ?orf=1              bouton « ORF la plus longue »
+//    ?scroll=PX          défilement de la bande de séquence
+//    ?fs=1               mise en page du mode agrandi, sans passer en plein écran
+//    ?zones=1            contour des encarts posés par la slide (titre, légende)
+//    ?check=1            auto-contrôle affiché à l'écran et dans la console
+// ============================================================
+if(Q.get('fs') === '1') document.documentElement.classList.add('fs');
+update();
+layout();
+if(Q.get('check') === '1') autoControle();
+if(Q.get('orf') === '1') orfLaPlusLongue();
+if(Q.has('start')){
+  const p = parseInt(Q.get('start'), 10);
+  if(p >= 1 && p <= N) lireDepuis(p);
+}
+if(Q.has('mode')){
+  const m = { '1': 1, '2': 2, '3': 3, 'trois': 0 }[Q.get('mode')];
+  if(m !== undefined) setMode(m);
+}
+if(Q.has('scroll')) band.scrollTop = +Q.get('scroll') || 0;
+if(Q.get('zones') === '1') document.body.insertAdjacentHTML('beforeend',
+  '<div class="zone" style="left:14px;top:14px;width:664px;height:148px">encart titre de la slide</div>' +
+  '<div class="zone" style="left:14px;bottom:14px;width:756px;height:108px">légende de la slide</div>');
+</script>
+</body>
+</html>

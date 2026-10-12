@@ -1,0 +1,66 @@
+<section>
+  <style>
+    .bil-box{fill:var(--soft);stroke:var(--line);stroke-width:2}
+    .bil-t{font-size:22px;font-weight:800;text-anchor:middle}
+    .bil-d{font-size:15px;fill:var(--muted);text-anchor:middle}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="bil-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/></marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Bilan</span>
+  <h2>Des atomes à la cellule</h2>
+  <div class="barline"></div>
+
+  <div class="figframe" style="margin-top:.4em;padding:8px 10px">
+    <svg viewBox="0 0 1000 320" class="fig" style="width:100%;max-height:340px">
+      <!-- flèches ligne 1 -->
+      <line x1="262" y1="70" x2="366" y2="70" stroke="var(--muted)" stroke-width="3" marker-end="url(#bil-arr)"/>
+      <line x1="632" y1="70" x2="736" y2="70" stroke="var(--muted)" stroke-width="3" marker-end="url(#bil-arr)"/>
+      <!-- passage ligne 1 → ligne 2 -->
+      <path d="M 870 130 L 870 160 L 130 160 L 130 186" fill="none" stroke="var(--muted)" stroke-width="3" marker-end="url(#bil-arr)"/>
+      <!-- flèches ligne 2 -->
+      <line x1="262" y1="250" x2="366" y2="250" stroke="var(--muted)" stroke-width="3" marker-end="url(#bil-arr)"/>
+      <line x1="632" y1="250" x2="736" y2="250" stroke="var(--muted)" stroke-width="3" marker-end="url(#bil-arr)"/>
+
+      <!-- ligne 1 -->
+      <rect class="bil-box" x="2" y="10" width="258" height="120" rx="14"/>
+      <text class="bil-t" x="131" y="50" fill="var(--ink)">Atomes</text>
+      <text class="bil-d" x="131" y="80">C, H, O, N, P, S</text>
+      <text class="bil-d" x="131" y="104">liaisons covalentes</text>
+
+      <rect class="bil-box" x="371" y="10" width="258" height="120" rx="14"/>
+      <text class="bil-t" x="500" y="50" fill="var(--ink)">Molécules</text>
+      <text class="bil-d" x="500" y="80">polaires → hydrophiles</text>
+      <text class="bil-d" x="500" y="104">C–H seules → hydrophobes</text>
+
+      <rect class="bil-box" x="740" y="10" width="258" height="120" rx="14"/>
+      <text class="bil-t" x="869" y="50" fill="var(--ink)">Membranes</text>
+      <text class="bil-d" x="869" y="80">phospholipides</text>
+      <text class="bil-d" x="869" y="104">bicouche dans l'eau</text>
+
+      <!-- ligne 2 -->
+      <rect class="bil-box" x="2" y="190" width="258" height="120" rx="14"/>
+      <text class="bil-t" x="131" y="230" fill="var(--ink)">Compartiments</text>
+      <text class="bil-d" x="131" y="260">cellule, noyau, vésicules</text>
+      <text class="bil-d" x="131" y="284">délimités par une bicouche</text>
+
+      <rect class="bil-box" x="371" y="190" width="258" height="120" rx="14" style="stroke:var(--brand2)"/>
+      <text class="bil-t" x="500" y="230" fill="var(--brand2)">ADN</text>
+      <text class="bil-d" x="500" y="260">séquence de 4 bases</text>
+      <text class="bil-d" x="500" y="284">dans le noyau</text>
+
+      <rect class="bil-box" x="740" y="190" width="258" height="120" rx="14" style="stroke:var(--brand)"/>
+      <text class="bil-t" x="869" y="230" fill="var(--brand)">Protéines</text>
+      <text class="bil-d" x="869" y="260">séquence de 20 acides aminés</text>
+      <text class="bil-d" x="869" y="284">la forme fixe la fonction</text>
+    </svg>
+  </div>
+
+  <p class="center" style="margin-top:.6em">
+    <span class="pill ghost">Les protéines copient l'ADN et synthétisent les lipides des membranes : la cellule produit de quoi se diviser</span>
+  </p>
+
+</section>

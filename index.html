@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remise à niveau biologie — sommaire</title>
+<link rel="stylesheet" href="assets/vendor/reveal.min.css">
+<link rel="stylesheet" href="assets/vendor/white.min.css">
+<link rel="stylesheet" href="house-style.css">
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;font-family:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
+  body{display:flex}
+  #menu{width:300px;flex-shrink:0;height:100%;overflow-y:auto;border-right:1px solid var(--line);
+        background:var(--soft);box-sizing:border-box;padding:14px 10px}
+  #menu h1{font-size:1.05em;margin:2px 6px 10px;color:var(--ink)}
+  #menu .topbar{display:flex;gap:6px;margin:0 6px 12px}
+  #menu .topbar a{flex:1;text-align:center;text-decoration:none;font-size:.74em;font-weight:700;
+                  padding:6px 8px;border-radius:7px;background:var(--brand);color:#fff}
+  #menu .topbar a.ghost{background:#fff;color:var(--brand);border:1px solid var(--line)}
+  #menu .topbar a:hover{filter:brightness(1.08)}
+  #menu details{margin-bottom:6px}
+  #menu summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;justify-content:space-between;
+                gap:8px;padding:7px 8px;border-radius:8px;font-weight:700;color:var(--brand);font-size:.82em}
+  #menu summary::-webkit-details-marker{display:none}
+  #menu summary:hover{background:#eef2ff}
+  #menu summary .count{font-weight:600;color:var(--muted);font-size:.85em;white-space:nowrap}
+  #menu ul{list-style:none;margin:2px 0 8px;padding:0}
+  #menu li{margin:0}
+  #menu button{all:unset;display:flex;align-items:center;gap:6px;width:100%;box-sizing:border-box;
+               padding:5px 8px 5px 20px;border-radius:7px;font-size:.78em;color:var(--ink);cursor:pointer}
+  #menu button:hover{background:#eef2ff}
+  #menu button.active{background:var(--brand);color:#fff}
+  #menu button .num{color:var(--muted);font-variant-numeric:tabular-nums;flex-shrink:0}
+  #menu button.active .num{color:#dbeafe}
+  #menu button .todo{margin-left:auto;flex-shrink:0;font-size:.85em;background:var(--accent);color:#fff;
+                      border-radius:5px;padding:1px 5px;font-weight:700}
+  #stage{flex:1;position:relative;height:100%}
+  .reveal{width:100%;height:100%}   /* le cadre s'adapte aux proportions : voir fit-canvas.js */
+  #err{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:40px;
+       font-size:16px;color:var(--bad);text-align:center;white-space:pre-wrap}
+  #menu button .todo{display:none}
+</style>
+</head>
+<body>
+
+<nav id="menu">
+  <h1>Sommaire — par bloc</h1>
+  <div class="topbar">
+    <a id="fullscreen" href="deck.html">Plein écran ▸</a>
+    <a class="ghost" id="toggle-all" href="#">Tout replier</a>
+    <a class="ghost" href="cours-bio-hors-ligne.zip" download>Télécharger (zip)</a>
+  </div>
+  <div id="groups">Chargement…</div>
+</nav>
+
+<main id="stage">
+  <div class="reveal"><div class="slides" id="deck"></div></div>
+  <div id="err"></div>
+</main>
+
+<script src="assets/vendor/reveal.min.js"></script>
+<script src="slide-layout.js"></script>
+<script>
+// ============================================================
+//  SOMMAIRE (page par défaut). L'ordre officiel des slides vit
+//  dans le tableau SLIDES de deck.html — c'est là qu'on ajoute,
+//  retire ou réordonne. Cette page le lit et l'affiche.
+// ============================================================
+const DECK_FILE = "deck.html";
+
+const FALLBACK_LABEL = {
+  titre: "Ouverture",
+  intro: "Introduction — le patient",
+  fin: "Fin — la boucle refermée",
+};
+
+function groupKey(filename) {
+  const base = filename.replace(/\.html$/, "");
+  const parts = base.split("-");
+  return parts.length > 1 ? parts[1] : parts[0];
+}
+
+async function main() {
+  const errBox = document.getElementById("err");
+  let deckHtml, files;
+  try {
+    deckHtml = await fetch(DECK_FILE, { cache: "no-store" }).then(r => {
+      if (!r.ok) throw new Error(DECK_FILE + " → HTTP " + r.status);
+      return r.text();
+    });
+    const m = deckHtml.match(/const SLIDES\s*=\s*\[([\s\S]*?)\];/);
+    if (!m) throw new Error("Tableau SLIDES introuvable dans " + DECK_FILE);
+    // Une ligne commentée avec // masque la slide : l'ignorer comme le fait build-standalone.py.
+    files = m[1].split("\n")
+      .filter(line => !line.trim().startsWith("//"))
+      .map(line => (line.match(/"([^"]+\.html)"/) || [])[1])
+      .filter(Boolean);
+  } catch (err) {
+    errBox.style.display = "flex";
+    errBox.textContent = "Impossible de lire " + DECK_FILE + " : " + err.message +
+      "\n\nOuvrir via un serveur local (python -m http.server), pas en file://.";
+    return;
+  }
+
+  // Charge chaque slide, extrait titre + statut TODO.
+  const slides = await Promise.all(files.map(async (f, i) => {
+    let html = "";
+    try {
+      const r = await fetch("slides/" + f, { cache: "no-store" });
+      if (r.ok) html = await r.text();
+    } catch (e) { /* tant pis, on affichera sans titre */ }
+    const tpl = document.createElement("template");
+    tpl.innerHTML = html;
+    const h = tpl.content.querySelector("h1, h2");
+    const title = h ? h.textContent.trim() : f;
+    const kicker = tpl.content.querySelector(".kicker");
+    return {
+      file: f, index: i, title,
+      kicker: kicker ? kicker.textContent.trim() : "",
+      todo: /TODO/i.test(html),
+      isSection: /-section\.html$/.test(f),
+      html,
+    };
+  }));
+
+  // Regroupe par bloc en suivant strictement l'ordre de SLIDES : une slide
+  // d'un bloc placée après une autre partie (ex. 85b-b4 après le notebook 2)
+  // ouvre un nouveau groupe « (suite) » au lieu de remonter dans son bloc.
+  const runs = [];
+  for (const s of slides) {
+    const key = groupKey(s.file);
+    const last = runs[runs.length - 1];
+    if (last && last.key === key) last.slides.push(s);
+    else runs.push({ key, label: null, slides: [s] });
+  }
+  const labelOf = new Map();
+  for (const g of runs) {
+    const sectionSlide = g.slides.find(s => s.isSection);
+    if (sectionSlide) {
+      g.label = (sectionSlide.kicker ? sectionSlide.kicker + " — " : "") + sectionSlide.title;
+    } else if (/^notebook\d+$/.test(g.key) && g.slides.length === 1) {
+      g.label = g.slides[0].title;
+    } else if (labelOf.has(g.key)) {
+      g.label = labelOf.get(g.key) + " (suite)";
+    } else {
+      g.label = FALLBACK_LABEL[g.key] || g.key;
+    }
+    if (!labelOf.has(g.key)) labelOf.set(g.key, g.label);
+  }
+  const groups = new Map(runs.map((g, i) => [i, g]));
+
+  // Construit le menu.
+  const wrap = document.getElementById("groups");
+  wrap.innerHTML = "";
+  for (const g of groups.values()) {
+    const nTodo = g.slides.filter(s => s.todo).length;
+    const details = document.createElement("details");
+    details.open = true;
+    const summary = document.createElement("summary");
+    summary.innerHTML = `<span>${g.label}</span>` +
+      `<span class="count">${g.slides.length - nTodo}/${g.slides.length}${nTodo ? " · " + nTodo + " todo" : ""}</span>`;
+    details.appendChild(summary);
+    const ul = document.createElement("ul");
+    for (const s of g.slides) {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.dataset.index = s.index;
+      btn.innerHTML = `<span class="num">${String(s.index + 1).padStart(2, "0")}</span>` +
+        `<span>${s.title}</span>` + (s.todo ? '<span class="todo">todo</span>' : "");
+      btn.addEventListener("click", () => Reveal.slide(s.index));
+      li.appendChild(btn);
+      ul.appendChild(li);
+    }
+    details.appendChild(ul);
+    wrap.appendChild(details);
+  }
+
+  // Tout replier / tout déplier.
+  const toggleAll = document.getElementById("toggle-all");
+  toggleAll.addEventListener("click", e => {
+    e.preventDefault();
+    const all = [...wrap.querySelectorAll("details")];
+    const open = all.some(d => d.open);
+    all.forEach(d => d.open = !open);
+    toggleAll.textContent = open ? "Tout déplier" : "Tout replier";
+  });
+
+  document.getElementById("deck").innerHTML = slides.map(s => s.html).join("\n");
+
+  prepareSlides();
+  await Reveal.initialize({ hash: true, slideNumber: "c/t", width: 1280, height: 720, margin: 0.04, center: false, transition: "slide", pdfMaxPagesPerSlide: 1 });
+  startSlideLayout();
+
+  const fullscreen = document.getElementById("fullscreen");
+
+  function syncActive() {
+    const idx = Reveal.getIndices().h;
+    document.querySelectorAll("#menu button.active").forEach(b => b.classList.remove("active"));
+    const btn = document.querySelector(`#menu button[data-index="${idx}"]`);
+    if (btn) {
+      btn.classList.add("active");
+      btn.closest("details").open = true;
+      btn.scrollIntoView({ block: "nearest" });
+    }
+    // Le lien plein écran suit la slide courante.
+    fullscreen.href = DECK_FILE + "#/" + idx;
+  }
+  Reveal.on("slidechanged", syncActive);
+  syncActive();
+
+  // reveal.js masque les slides non courantes (display:none) : les <video autoplay loop>
+  // qu'elles contiennent se mettent en pause et ne reprennent pas seules en y revenant.
+  function syncVideos() {
+    document.querySelectorAll("#deck section").forEach(sec => {
+      const on = sec.classList.contains("present");
+      sec.querySelectorAll("video").forEach(v => { if (on) v.play().catch(() => {}); else v.pause(); });
+    });
+  }
+  Reveal.on("slidechanged", syncVideos);
+  syncVideos();
+}
+
+main();
+</script>
+</body>
+</html>

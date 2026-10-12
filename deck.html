@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remise à niveau biologie — de l'atome à la maladie</title>
+<!-- CDN (édition rapide). Pour un export offline, mettre les fichiers dans assets/vendor/
+     et remplacer ces 3 liens par <link>/<script> locaux, ou utiliser build-standalone.py. -->
+<link rel="stylesheet" href="assets/vendor/reveal.min.css">
+<link rel="stylesheet" href="assets/vendor/white.min.css">
+<link rel="stylesheet" href="house-style.css">
+</head>
+<body>
+<div class="reveal"><div class="slides" id="deck"></div></div>
+
+<script src="assets/vendor/reveal.min.js"></script>
+<script src="slide-layout.js"></script>
+<script>
+// ============================================================
+//  ORDRE DES SLIDES — éditer cette liste pour ajouter / retirer /
+//  réordonner. Commenter une ligne avec // pour masquer une slide.
+// ============================================================
+const SLIDES = [
+  "00-titre.html",
+  "00b-titre-acces.html",
+  "01-intro-patient.html",
+  "01b-plan-general.html",
+  "08-b1-section.html",
+  "09-b1-chonps.html",
+  "10-b1-atome.html",
+  "10b-b1-couches-electrons.html",
+  "11c-b1-couches.html",
+  "11-b1-covalente.html",
+  "11d-b1-molecule-ch4-nh3-h2o.html",
+  "11ba-b1-charge-ressentie.html",
+  "11b-b1-electronegativite.html",
+  "11bb-b1-paire-decalee.html",
+  "11g-b1-molecules-3d.html",
+  "11h-b1-molecules-3d-liaisons.html",
+  "11ha-b1-dipole-vecteur.html",
+  "11i-b1-charges-partielles.html",
+  // "14-b1-eau.html",   // retirée du déroulé — décommenter pour la remettre
+  "15-b1-polarite.html",
+  "14b-b1-eau-simulation.html",
+  // --- polaire / apolaire dans l'eau ---
+  // "14c-b1-eau-nh3-ch4.html",   // remplacée par 16b (simulation dynamique, molécules entières)
+  "16-b1-hydrophobie.html",
+  "16b-b1-simulation-solutes.html",   // après 16 : la simulation illustre hydrophile / hydrophobe déjà posés
+  "19-b1-recap-polaire.html",   // déplacée : clôt la partie polaire / apolaire, avant l'acide gras
+  // --- et une longue chaîne C–H ? l'acide gras ---
+  "16c-b1-chaine-longue.html",
+  "16d-b1-acide-gras-3d.html",   // essai : acide palmitique en 3D, même rendu que 11g
+  // "22-b1-lipides.html",   // allégé : 16c définit l'acide gras, 25 le phospholipide
+  // "22a-b1-simulation-acides-gras.html",   // doublon : la simulation du bloc membrane fait les deux modes
+  // "22c-b1-acides-gras-omega.html",   // allégé : bonus, hors fil
+  // "17-b1-huile.html",   // allégé
+  // --- la membrane, dans la foulée ---
+  // "22b-b1-lipides-membrane.html",   // allégé : réserve d'énergie hors fil
+  "25-b1-phospholipide.html",
+  // "26-b1-question-million.html",   // retirée (Cédric) — décommenter pour la remettre
+  "26b-b1-simulation.html",
+  "27-b1-bicouche.html",
+  "18-b1-regle-or.html",   // déplacée : conclusion généralisée après la bicouche
+  // "29b-b1-protocellules.html",   // allégé : mise en perspective, rien n'en dépend
+  // "28-b1-trad2.html",   // retirée (Cédric) : inutile
+  // --- les autres familles de molécules ---
+  "21-b1-glucides.html",
+  "21a-b1-glucides-assemblages.html",   // ajoutée (Cédric) : les autres sucres simples et leurs assemblages
+  "21b-b1-glucides-energie.html",
+  "23-b1-proteines.html",
+  "24-b1-acides-nucleiques.html",
+  // --- bilan ---
+  "20-b1-familles.html",
+  // "28b-notebook0.html",   // retiré : le premier notebook arrive après le bloc 3
+  // --- Niveau 2 : structure, puis le dogme comme carte, puis ses flèches ---
+  "29-b2-section.html",
+  "30-b2-nucleotide.html",
+  // "32-b2-orientation.html",   // absorbée dans 30 (sucre numéroté 1'→5')
+  "31a-b2-bases-structures.html",
+  "31-b2-bases.html",
+  // "34-b2-appariement.html",   // absorbée dans 31
+  // "35-b2-trad3.html",         // absorbée dans 31 (pill Traduction)
+  "33-b2-helice.html",
+  // --- poids du génome : retiré ---
+  // "36-b2-bits.html", "37-b2-taille.html", "38-b2-calcul.html", "39-b2-cle-usb.html", "40-b2-copies.html",
+  "46-b2-dogme.html",
+  // "47-b2-trad5.html",         // absorbée dans 46 (pill Traduction)
+  "41-b2-replication.html",
+  "41b-b2-simulation-replication.html",
+  // --- erreurs de copie, mutations : reportées (mutation → Notebook 1 ; erreurs de copie → bloc ultérieur) ---
+  // "42-b2-erreur.html", "43-b2-trad4.html", "44-b2-mutation.html",
+  "48-b2-transcription.html",
+  // "49-b2-pourquoi-copie.html",  // absorbée dans 48
+  "45-b2-gene.html",
+  // --- Niveau 3 : le code, la traduction, le cadre, les 20 ---
+  "50-b3-section.html",
+  "51-b3-probleme.html",
+  // "52-b3-une-lettre.html", "53-b3-deux-lettres.html", "54-b3-trois-lettres.html",  // absorbées dans 51
+  "55-b3-table.html",
+  // "56-b3-trad6.html",         // absorbée dans 55 (pill Traduction)
+  "57-b3-degenerescence.html",
+  // "58-b3-troisieme-base.html", "59-b3-trad7.html",  // absorbées dans 57
+  "62-b3-ribosome.html",
+  // "63-b3-arnt.html",          // absorbée dans 62
+  "64-b3-elongation.html",
+  "64b-b3-traduction-video.html",   // ajoutée (Cédric) : vidéo 3D courte, ARNm → ribosome → protéine
+  // "60-b3-start.html", "61-b3-stop.html",  // absorbées dans 64
+  "65-b3-cadre.html",
+  // "66-b3-trad8.html",         // absorbée dans 65 (pill Traduction)
+  // "65b-b3-simulation-cadre.html",   // retirée (Cédric) : HBB reste dans les notebooks
+  // "67-b3-substitution.html",  // reportée (mutations : Notebook 1)
+  // "68-b3-acide-amine.html", "69-b3-chaine-laterale.html",  // doublons de 23-b1-proteines
+  "70-b3-vingt.html",
+  "71-b3-glutamate.html",
+  // "72-b3-valine.html",        // absorbée dans 71
+  "72c-b3-recap.html",
+  "49b-notebook1.html",
+  // --- Niveau 4 allégé : de la chaîne à la forme, galerie 3D, AlphaFold, puis le notebook 2 ---
+  "73-b4-section.html",
+  "74-b4-pas-un-fil.html",
+  // "74e-b4-repliement.html",   // entonnoir d'énergie : jugée trop compliquée, remplacée par 74f
+  "74f-b4-repliement-video.html",   // deux vidéos YouTube de simulation de repliement (internet requis)
+  "74-b4-chaperonnes.html",
+  // "75-b4-primaire.html", "76-b4-secondaire.html", "77-b4-tertiaire.html", "78-b4-quaternaire.html",  // absorbées dans 74
+  // "79-b4-pourquoi.html", "80-b4-coeur.html",  // absorbées dans 74 (règle d'or)
+  "74a-b4-insuline.html",
+  "74b-b4-anticorps.html",
+  "74c-b4-aquaporine.html",
+  "74d-b4-atp-synthase.html",
+  "74dd-b4-glucose-nad-structures.html",   // structures : glucose (C–H) et NAD⁺ → NADH
+  "74dc-b4-glucose-nadh.html",   // oxydation du glucose : glycolyse, mitochondrie, Krebs → NADH
+  "74db-b4-oxygene-protons.html",   // d'où viennent les H⁺ : chaîne respiratoire, O₂ accepteur final
+  "74da-b4-atp-synthase-schema.html",   // schéma du mécanisme : H⁺ → rotation → 3 ATP
+  "83-b4-alphafold.html",
+  // "81-b4-levinthal.html", "82-b4-50-ans.html", "84-b4-plddt.html",  // absorbées dans 83
+  "85-b4-hemoglobine.html",
+  "72b-notebook2.html",
+  "85b-b4-hb-af3.html",
+  "72d-bilan.html",
+  "72e-bilan-cellule-video.html",   // Inner Life of the Cell + Powering the Cell (YouTube, internet requis)
+  // --- Niveau 5 : l'organisme — trois tissus, puis les systèmes le long du trajet de l'O₂ ---
+  "72f-org-section.html",
+  "72g-org-familles.html",
+  "72h-org-epithelium.html",
+  "72i-org-myocarde.html",
+  "72k-org-sang.html",
+  "72ka-org-immunite-organes.html",   // ajoutée (Cédric) : système immunitaire, organes primaires / secondaires
+  "72kb-org-immunite-defenses.html",  // inné / adaptatif
+  "72kc-org-immunite-video.html",     // Kurzgesagt, IMMUNE (YouTube, internet requis)
+  "72l-org-globule-rouge.html",
+  "72m-org-poumons.html",
+  "72n-org-coeur.html",
+  "72o-org-vaisseaux.html",
+  "72p-org-muscles.html",
+  "72q-org-atp.html",        // ex-97-b5-atp.html, déplacée du bloc médecine
+  "72r-org-boucle.html",
+  // --- Niveau 6 : la médecine ---
+  "94-b5-section.html",
+  "95-b5-globule.html",
+  // "96-b5-oxygene.html",   // absorbée dans 72m–72r (trajet de l'O₂)
+  "98-b5-organes.html",
+  "99-b5-medecine.html",
+  "86-fin-photo.html",
+  "87-fin-chaine.html",
+  "88-fin-une-lettre.html",
+  "89-fin-texte.html",
+  "90-fin-ordres.html",
+  // "91-fin-hla.html",   // retirée (Cédric) : pas de partie sur l'intervenant
+  "92-fin-suite.html",
+  "93-fin-merci.html",
+  // "100-notebook4.html",   // remplacée (Cédric) : le notebook transcriptomique n'a jamais été cadré
+  "100-notebook3.html",   // bonus, selon le temps restant : pourquoi cette mutation HbS ?
+];
+
+(async () => {
+  const deck = document.getElementById("deck");
+  try {
+    const parts = await Promise.all(
+      SLIDES.map(f => fetch("slides/" + f, { cache: "no-store" }).then(r => {
+        if (!r.ok) throw new Error(f + " → HTTP " + r.status);
+        return r.text();
+      }))
+    );
+    deck.innerHTML = parts.join("\n");
+  } catch (err) {
+    deck.innerHTML =
+      '<section><h2 style="color:#dc2626">Slides non chargées</h2>' +
+      '<p style="font-size:.7em">' + err.message + '</p>' +
+      '<p class="small">Ouvrir via un serveur local : <code>python -m http.server</code> ' +
+      'dans ce dossier, puis <code>http://localhost:8000</code>. ' +
+      'Ouvrir index.html en file:// bloque fetch().</p></section>';
+  }
+  prepareSlides();
+  await Reveal.initialize({ hash:true, slideNumber:'c/t', width:1280, height:720, margin:0.04, center:false, transition:'slide', pdfMaxPagesPerSlide:1 });
+  startSlideLayout();
+
+  // reveal.js masque les slides non courantes (display:none) : les <video autoplay loop>
+  // qu'elles contiennent se mettent en pause et ne reprennent pas seules en y revenant.
+  function syncVideos(){
+    document.querySelectorAll('.slides section').forEach(sec => {
+      const on = sec.classList.contains('present');
+      sec.querySelectorAll('video').forEach(v => { if(on) v.play().catch(()=>{}); else v.pause(); });
+    });
+  }
+  Reveal.on('slidechanged', syncVideos);
+  syncVideos();
+})();
+</script>
+</body>
+</html>

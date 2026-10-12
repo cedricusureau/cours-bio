@@ -1,0 +1,93 @@
+<section>
+  <span class="kicker">La membrane</span>
+  <h2>La bicouche s'auto-assemble</h2>
+  <div class="barline"></div>
+  <p class="small muted">Micelle, bicouche, vésicule fermée : les têtes vers l'eau, les queues entre elles.</p>
+
+  <style>
+    .arr{background:#eaf6fd;border:1px solid var(--line);border-radius:12px;padding:6px}
+    .arr .head{fill:none;stroke:var(--accent);stroke-width:2.5}
+    .arr .tail{stroke:var(--brand);stroke-width:2.5;stroke-linecap:round}
+  </style>
+
+  <div class="grid3" style="margin-top:.3em;align-items:stretch">
+
+    <!-- MICELLE -->
+    <div>
+      <div class="arr">
+        <svg viewBox="0 0 160 160" class="fig" style="max-height:180px">
+          <line class="tail" x1="135" y1="80" x2="110" y2="80"/><circle class="head" cx="135" cy="80" r="6"/>
+          <line class="tail" x1="128" y1="108" x2="106" y2="95"/><circle class="head" cx="128" cy="108" r="6"/>
+          <line class="tail" x1="108" y1="128" x2="95" y2="106"/><circle class="head" cx="108" cy="128" r="6"/>
+          <line class="tail" x1="80" y1="135" x2="80" y2="110"/><circle class="head" cx="80" cy="135" r="6"/>
+          <line class="tail" x1="52" y1="128" x2="65" y2="106"/><circle class="head" cx="52" cy="128" r="6"/>
+          <line class="tail" x1="32" y1="108" x2="54" y2="95"/><circle class="head" cx="32" cy="108" r="6"/>
+          <line class="tail" x1="25" y1="80" x2="50" y2="80"/><circle class="head" cx="25" cy="80" r="6"/>
+          <line class="tail" x1="32" y1="52" x2="54" y2="65"/><circle class="head" cx="32" cy="52" r="6"/>
+          <line class="tail" x1="52" y1="32" x2="65" y2="54"/><circle class="head" cx="52" cy="32" r="6"/>
+          <line class="tail" x1="80" y1="25" x2="80" y2="50"/><circle class="head" cx="80" cy="25" r="6"/>
+          <line class="tail" x1="108" y1="32" x2="95" y2="54"/><circle class="head" cx="108" cy="32" r="6"/>
+          <line class="tail" x1="128" y1="52" x2="106" y2="65"/><circle class="head" cx="128" cy="52" r="6"/>
+        </svg>
+      </div>
+      <p class="small center" style="margin-top:.35em"><strong>Micelle</strong></p>
+      <p class="tiny">Molécules à une seule chaîne : section conique, forte courbure. Sphère de 3 à 6 nm,
+      quelques dizaines de molécules.</p>
+    </div>
+
+    <!-- BICOUCHE -->
+    <div>
+      <div class="arr">
+        <svg viewBox="0 0 160 160" class="fig" style="max-height:180px">
+          <rect x="0" y="52" width="160" height="56" fill="#fff"/>
+          <line class="tail" x1="22" y1="58" x2="22" y2="80"/><circle class="head" cx="22" cy="52" r="6"/>
+          <line class="tail" x1="42" y1="58" x2="42" y2="80"/><circle class="head" cx="42" cy="52" r="6"/>
+          <line class="tail" x1="62" y1="58" x2="62" y2="80"/><circle class="head" cx="62" cy="52" r="6"/>
+          <line class="tail" x1="82" y1="58" x2="82" y2="80"/><circle class="head" cx="82" cy="52" r="6"/>
+          <line class="tail" x1="102" y1="58" x2="102" y2="80"/><circle class="head" cx="102" cy="52" r="6"/>
+          <line class="tail" x1="122" y1="58" x2="122" y2="80"/><circle class="head" cx="122" cy="52" r="6"/>
+          <line class="tail" x1="142" y1="58" x2="142" y2="80"/><circle class="head" cx="142" cy="52" r="6"/>
+          <line class="tail" x1="22" y1="102" x2="22" y2="80"/><circle class="head" cx="22" cy="108" r="6"/>
+          <line class="tail" x1="42" y1="102" x2="42" y2="80"/><circle class="head" cx="42" cy="108" r="6"/>
+          <line class="tail" x1="62" y1="102" x2="62" y2="80"/><circle class="head" cx="62" cy="108" r="6"/>
+          <line class="tail" x1="82" y1="102" x2="82" y2="80"/><circle class="head" cx="82" cy="108" r="6"/>
+          <line class="tail" x1="102" y1="102" x2="102" y2="80"/><circle class="head" cx="102" cy="108" r="6"/>
+          <line class="tail" x1="122" y1="102" x2="122" y2="80"/><circle class="head" cx="122" cy="108" r="6"/>
+          <line class="tail" x1="142" y1="102" x2="142" y2="80"/><circle class="head" cx="142" cy="108" r="6"/>
+          <text x="80" y="24" font-size="11" fill="var(--muted)" text-anchor="middle">eau</text>
+          <text x="80" y="146" font-size="11" fill="var(--muted)" text-anchor="middle">eau</text>
+        </svg>
+      </div>
+      <p class="small center" style="margin-top:.35em"><strong>Bicouche</strong></p>
+      <p class="tiny">Deux chaînes : section constante, empilement plan. Épaisseur 4 à 5 nm —
+      mais les bords du feuillet restent au contact de l'eau.</p>
+    </div>
+
+    <!-- VÉSICULE -->
+    <div>
+      <div class="arr">
+        <svg viewBox="0 0 160 160" class="fig" style="max-height:180px">
+          <circle cx="80" cy="80" r="66" fill="#fff" stroke="none"/>
+          <circle cx="80" cy="80" r="40" fill="#eaf6fd" stroke="none"/>
+          <circle cx="80" cy="80" r="66" fill="none" stroke="var(--accent)" stroke-width="5"/>
+          <circle cx="80" cy="80" r="40" fill="none" stroke="var(--accent)" stroke-width="5"/>
+          <line class="tail" x1="80" y1="61" x2="80" y2="45"/>
+          <line class="tail" x1="104" y1="70" x2="116" y2="58"/>
+          <line class="tail" x1="56" y1="70" x2="44" y2="58"/>
+          <line class="tail" x1="80" y1="99" x2="80" y2="115"/>
+          <line class="tail" x1="104" y1="90" x2="116" y2="102"/>
+          <line class="tail" x1="56" y1="90" x2="44" y2="102"/>
+          <text x="80" y="84" font-size="10" fill="var(--muted)" text-anchor="middle">eau</text>
+        </svg>
+      </div>
+      <p class="small center" style="margin-top:.35em"><strong>Vésicule</strong></p>
+      <p class="tiny">La bicouche se referme : plus aucun bord exposé, et un compartiment intérieur.
+      10⁶ phospholipides forment une sphère d'environ 300 nm.</p>
+    </div>
+  </div>
+
+  <p class="small center" style="margin-top:.4em">Aucune liaison covalente entre ces molécules :
+  l'assemblage ne tient que par l'effet hydrophobe. Il se referme après une déchirure, et se reforme
+  après dispersion.</p>
+
+</section>

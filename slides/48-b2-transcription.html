@@ -1,0 +1,50 @@
+<section>
+  <style>
+    .b2tr-grid{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:6px;align-items:baseline}
+    .b2tr-lab{font-size:.5em;font-weight:700;color:var(--muted);text-align:right;white-space:nowrap}
+    .b2tr-seq{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.66em;letter-spacing:.08em;white-space:nowrap}
+    .b2tr-seq .e{color:var(--muted);font-size:.8em}
+    .b2tr-u{color:var(--accent);font-weight:700}
+    .b2tr-pol{font-size:.5em;color:var(--brand2);font-weight:700;grid-column:2}
+  </style>
+
+  <span class="kicker">Lire</span>
+  <h2>La transcription : du brin codant à l'ARNm</h2>
+  <div class="barline"></div>
+  <p class="small muted">L'ARN polymérase lit un seul des deux brins, le brin matrice, et assemble un ARN qui lui est complémentaire.</p>
+
+  <div class="grid2" style="grid-template-columns:1.05fr 1fr;margin-top:.2em;align-items:start">
+    <div class="figframe" style="padding:14px 16px;text-align:left">
+      <div class="b2tr-grid">
+        <span class="b2tr-lab">brin codant</span>
+        <span class="b2tr-seq"><span class="e">5'-</span>ATGGTGCATCTGACTCCT<span class="e">-3'</span></span>
+        <span class="b2tr-lab">brin matrice</span>
+        <span class="b2tr-seq" style="color:var(--muted)"><span class="e">3'-</span>TACCACGTAGACTGAGGA<span class="e">-5'</span></span>
+        <span class="b2tr-pol fragment" data-fragment-index="0">↓ l'ARN polymérase II lit la matrice de 3' vers 5' et assemble l'ARN de 5' vers 3'</span>
+        <span class="b2tr-lab fragment" data-fragment-index="1" style="color:var(--brand)">ARNm</span>
+        <span class="b2tr-seq fragment" data-fragment-index="1" style="color:var(--brand)"><span class="e">5'-</span>A<span class="b2tr-u">U</span>GG<span class="b2tr-u">U</span>GCA<span class="b2tr-u">U</span>C<span class="b2tr-u">U</span>GAC<span class="b2tr-u">U</span>CC<span class="b2tr-u">U</span><span class="e">-3'</span></span>
+      </div>
+      <p class="small fragment" data-fragment-index="2" style="margin:.7em 0 0">L'ARNm a la séquence du <strong>brin codant</strong>,
+      avec <strong>U</strong> (uracile) à la place de <strong>T</strong> (thymine).</p>
+      <p class="tiny" style="margin:.5em 0 0">début du gène HBB, 18 premiers nucléotides</p>
+    </div>
+
+    <div>
+      <table class="tbl fragment" data-fragment-index="3" style="font-size:.5em">
+        <tr><th></th><th>ADN</th><th>ARN</th></tr>
+        <tr><td>Sucre</td><td>désoxyribose (H en 2')</td><td>ribose (OH en 2')</td></tr>
+        <tr><td>Bases</td><td>A C G T</td><td>A C G U</td></tr>
+        <tr><td>Brins</td><td>deux, appariés</td><td>un seul</td></tr>
+        <tr><td>Durée de vie</td><td>celle de la cellule</td><td>demi-vie médiane ≈ 9 h</td></tr>
+      </table>
+      <p class="small fragment" data-fragment-index="4" style="margin-top:.55em">Un précurseur du globule rouge porte
+      <strong>deux</strong> copies du gène HBB. Un globule rouge contient ≈ 2,7 × 10⁸ molécules d'hémoglobine,
+      soit ≈ <strong>5,4 × 10⁸ chaînes β</strong> : chaque ARNm est traduit de nombreuses fois.</p>
+    </div>
+  </div>
+
+  <p class="center fragment fade-up" data-fragment-index="5" style="margin-top:.4em">
+    <span class="pill ghost"><span class="tag">Traduction</span>&nbsp; L'ARNm est un cache : copie temporaire, multipliée, puis purgée</span>
+  </p>
+
+</section>

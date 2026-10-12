@@ -1,0 +1,70 @@
+<section>
+  <style>
+    .gr-lbl{font-size:19px;fill:var(--muted)}
+    .gr-lbl-b{font-size:19px;font-weight:700;fill:var(--ink)}
+    .gr-stat{font-size:.85em;font-weight:800;color:var(--accent);line-height:1}
+    @keyframes gr-flow{from{transform:translateX(0)}to{transform:translateX(120px)}}
+    .gr-file{animation:gr-flow 2.4s linear infinite}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="gr-dim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="var(--muted)"/></marker>
+      <clipPath id="gr-clip"><rect x="20" y="178" width="360" height="56"/></clipPath>
+    </defs>
+  </svg>
+
+  <span class="kicker">Les tissus</span>
+  <h2>Le globule rouge</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">Une cellule sans noyau ni mitochondrie, remplie d'hémoglobine.</p>
+
+  <div class="grid2" style="margin-top:.3em;gap:16px;align-items:stretch;grid-template-columns:.85fr 1.15fr">
+    <div class="figframe" style="padding:6px">
+      <img class="fig" src="figures/globule-rouge-meb.jpg" alt="Globules rouges en microscopie électronique à balayage" style="height:212px;width:100%;object-fit:cover">
+      <p class="tiny" style="margin:.2em 0 0;text-align:left">Microscopie électronique à balayage (×8 400) : disques biconcaves, de face et de profil.</p>
+    </div>
+    <div class="figframe" style="padding:6px">
+      <svg viewBox="0 0 600 262" class="fig" style="width:100%;max-height:262px">
+        <!-- coupe du disque biconcave (échelle : 40 px = 1 µm) -->
+        <path d="M 50 70 C 50 40, 70 30, 95 30 C 130 30, 160 50, 200 50 C 240 50, 270 30, 305 30 C 330 30, 350 40, 350 70 C 350 100, 330 110, 305 110 C 270 110, 240 90, 200 90 C 160 90, 130 110, 95 110 C 70 110, 50 100, 50 70 Z"
+              fill="var(--accent)" opacity=".85"/>
+        <line x1="50" y1="130" x2="350" y2="130" stroke="var(--muted)" stroke-width="2" marker-start="url(#gr-dim)" marker-end="url(#gr-dim)"/>
+        <text class="gr-lbl-b" x="200" y="154" text-anchor="middle">7,5 µm</text>
+        <line x1="20" y1="30" x2="20" y2="110" stroke="var(--muted)" stroke-width="2" marker-start="url(#gr-dim)" marker-end="url(#gr-dim)"/>
+        <text class="gr-lbl" x="200" y="20" text-anchor="middle">≈ 2 µm au bord, ≈ 1 µm au centre</text>
+
+        <text class="gr-lbl-b" x="380" y="44">pas de noyau</text>
+        <text class="gr-lbl-b" x="380" y="68">pas de mitochondrie</text>
+        <text class="gr-lbl" x="380" y="96">≈ 2,7 × 10⁸ hémoglobines,</text>
+        <text class="gr-lbl" x="380" y="119">≈ ⅓ de sa masse</text>
+
+        <!-- capillaire : passage en file, en se déformant -->
+        <g clip-path="url(#gr-clip)">
+          <g class="gr-file" fill="var(--accent)" opacity=".85">
+            <path d="M -100 186 Q -60 186 -60 206 Q -60 226 -100 226 Q -86 206 -100 186 Z"/>
+            <path d="M 20 186 Q 60 186 60 206 Q 60 226 20 226 Q 34 206 20 186 Z"/>
+            <path d="M 140 186 Q 180 186 180 206 Q 180 226 140 226 Q 154 206 140 186 Z"/>
+            <path d="M 260 186 Q 300 186 300 206 Q 300 226 260 226 Q 274 206 260 186 Z"/>
+            <path d="M 380 186 Q 420 186 420 206 Q 420 226 380 226 Q 394 206 380 186 Z"/>
+          </g>
+        </g>
+        <line x1="20" y1="180" x2="380" y2="180" stroke="var(--brand)" stroke-width="3"/>
+        <line x1="20" y1="232" x2="380" y2="232" stroke="var(--brand)" stroke-width="3"/>
+        <text class="gr-lbl-b" x="396" y="200">capillaire de 5 à 10 µm :</text>
+        <text class="gr-lbl" x="396" y="224">il passe en file,</text>
+        <text class="gr-lbl" x="396" y="247">en se déformant</text>
+      </svg>
+    </div>
+  </div>
+
+  <p class="tiny" style="margin:.35em 0 0;color:var(--ink)">Sans mitochondrie, il produit son ATP par la seule glycolyse : il ne consomme pas l'O₂ qu'il transporte.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:.3em">
+    <div class="card" style="padding:8px 12px"><div class="gr-stat">2,5 × 10¹³</div><p class="tiny" style="margin:.2em 0 0">dans le corps : 84 % de ses cellules</p></div>
+    <div class="card" style="padding:8px 12px"><div class="gr-stat">≈ 120 j</div><p class="tiny" style="margin:.2em 0 0">de durée de vie</p></div>
+    <div class="card" style="padding:8px 12px"><div class="gr-stat">≈ 2 × 10⁶ / s</div><p class="tiny" style="margin:.2em 0 0">produits par la moelle osseuse</p></div>
+    <div class="card" style="padding:8px 12px"><div class="gr-stat">≈ 10⁹ O₂</div><p class="tiny" style="margin:.2em 0 0">par globule : 2,7 × 10⁸ × 4</p></div>
+  </div>
+  <p class="tiny muted" style="margin:.25em 0 0;font-size:.36em">Photo : Scootdive, Wikimedia Commons, CC BY-SA 3.0.</p>
+
+</section>

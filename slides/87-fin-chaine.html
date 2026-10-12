@@ -1,0 +1,56 @@
+<section>
+  <style>
+    .chn-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:22px;margin-top:.6em;align-items:stretch}
+    .chn-card{position:relative;background:var(--soft);border:1px solid var(--line);border-top:6px solid var(--c);border-radius:12px;padding:10px 12px}
+    .chn-card:not(:last-child)::after{content:"→";position:absolute;right:-19px;top:42%;font-size:.7em;font-weight:800;color:var(--muted)}
+    .chn-lvl{font-size:.34em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+    .chn-obj{font-size:.44em;font-weight:800;color:var(--ink);margin:.15em 0 .25em;line-height:1.15}
+    .chn-big{white-space:nowrap;font-size:.46em;font-weight:800;color:var(--c);line-height:1.1;margin-bottom:.3em}
+    .chn-card p{font-size:.38em;line-height:1.35;color:var(--ink);margin:0}
+  </style>
+
+  <span class="kicker">La boucle</span>
+  <h2>La chaîne complète</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">Une seule cause, la substitution A→T dans le codon 6 du gène HBB, et ses conséquences à chaque niveau d'organisation.</p>
+
+  <div class="chn-row">
+    <div class="chn-card" style="--c:var(--brand)">
+      <div class="chn-lvl">Molécule</div>
+      <div class="chn-obj">ADN</div>
+      <div class="chn-big">GAG → GTG</div>
+      <p>Une base sur 3,1 × 10⁹, sur les deux copies du chromosome 11.</p>
+    </div>
+    <div class="chn-card" style="--c:var(--brand)">
+      <div class="chn-lvl">Molécule</div>
+      <div class="chn-obj">β‑globine</div>
+      <div class="chn-big">Glu6 → Val</div>
+      <p>Chaîne latérale chargée <span style="white-space:nowrap">(–COO⁻)</span> remplacée par une chaîne <span style="white-space:nowrap">C–H</span>.</p>
+    </div>
+    <div class="chn-card" style="--c:var(--brand)">
+      <div class="chn-lvl">Molécule</div>
+      <div class="chn-obj">Hémoglobine S (HbS)</div>
+      <div class="chn-big">Fibres</div>
+      <p>Sans O₂, la valine en surface se loge dans une poche apolaire d'une hémoglobine voisine : fibres de 14 brins, ≈ 21 nm.</p>
+    </div>
+    <div class="chn-card" style="--c:#5b8cf0">
+      <div class="chn-lvl">Cellule</div>
+      <div class="chn-obj">Globule rouge</div>
+      <div class="chn-big">Faucille</div>
+      <p>Rigide, ne se déforme plus dans les capillaires. Durée de vie 10 à 20 j au lieu de 120.</p>
+    </div>
+    <div class="chn-card" style="--c:#525865">
+      <div class="chn-lvl">Tissus</div>
+      <div class="chn-obj">Capillaires, moelle, rate</div>
+      <div class="chn-big">Occlusion</div>
+      <p>Capillaires bouchés : ischémie, 2 ATP par glucose au lieu de ≈ 30. Globules détruits&nbsp;: hémolyse.</p>
+    </div>
+    <div class="chn-card" style="--c:var(--ink)">
+      <div class="chn-lvl">Organisme</div>
+      <div class="chn-obj">Le patient</div>
+      <div class="chn-big">Crises</div>
+      <p>Douleurs osseuses, hémoglobine 8,2&nbsp;g/dL, ictère, risque d'AVC et d'infections.</p>
+    </div>
+  </div>
+
+</section>

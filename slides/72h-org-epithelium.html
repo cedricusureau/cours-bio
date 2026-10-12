@@ -1,0 +1,86 @@
+<section>
+  <style>
+    .epi-lbl{font-size:19px;fill:var(--muted)}
+    .epi-lbl-b{font-size:19px;font-weight:700;fill:var(--ink)}
+    table.tbl.epi-tbl td{text-align:left}
+    table.tbl.epi-tbl td:first-child{white-space:nowrap;font-weight:700}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="epi-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/></marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Les tissus</span>
+  <h2>L'épithélium</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">Cellules jointives, sans matrice entre elles, posées sur une lame basale ; aucun vaisseau.</p>
+
+  <div class="grid2" style="margin-top:.3em;gap:16px;align-items:stretch">
+    <div class="figframe" style="padding:6px">
+      <img class="fig" src="figures/tissu-epithelium.jpg" alt="Épithélium cylindrique simple de l'intestin, microscopie optique" style="height:200px;width:100%;object-fit:cover">
+      <p class="tiny" style="margin:.25em 0 0;text-align:left">Intestin, ×200 : une couche de cellules cylindriques, noyaux à la base, cellules à mucus (vacuoles claires).</p>
+    </div>
+    <div class="figframe" style="padding:6px;display:flex;align-items:center">
+      <svg viewBox="0 0 600 250" class="fig" style="width:100%;max-height:250px">
+        <text class="epi-lbl" x="230" y="18" text-anchor="middle">lumière de l'intestin</text>
+        <!-- microvillosités -->
+        <g stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round">
+          <line x1="82" y1="45" x2="82" y2="31"/><line x1="96" y1="45" x2="96" y2="31"/><line x1="110" y1="45" x2="110" y2="31"/><line x1="124" y1="45" x2="124" y2="31"/><line x1="138" y1="45" x2="138" y2="31"/>
+          <line x1="162" y1="45" x2="162" y2="31"/><line x1="176" y1="45" x2="176" y2="31"/><line x1="190" y1="45" x2="190" y2="31"/><line x1="204" y1="45" x2="204" y2="31"/><line x1="218" y1="45" x2="218" y2="31"/>
+          <line x1="242" y1="45" x2="242" y2="31"/><line x1="256" y1="45" x2="256" y2="31"/><line x1="270" y1="45" x2="270" y2="31"/><line x1="284" y1="45" x2="284" y2="31"/><line x1="298" y1="45" x2="298" y2="31"/>
+          <line x1="322" y1="45" x2="322" y2="31"/><line x1="336" y1="45" x2="336" y2="31"/><line x1="350" y1="45" x2="350" y2="31"/><line x1="364" y1="45" x2="364" y2="31"/><line x1="378" y1="45" x2="378" y2="31"/>
+        </g>
+        <!-- cellules -->
+        <g fill="var(--soft)" stroke="var(--brand)" stroke-width="2.5">
+          <rect x="70" y="45" width="80" height="120"/><rect x="150" y="45" width="80" height="120"/>
+          <rect x="230" y="45" width="80" height="120"/><rect x="310" y="45" width="80" height="120"/>
+        </g>
+        <g fill="var(--brand)">
+          <ellipse cx="110" cy="138" rx="14" ry="17"/><ellipse cx="190" cy="138" rx="14" ry="17"/>
+          <ellipse cx="270" cy="138" rx="14" ry="17"/><ellipse cx="350" cy="138" rx="14" ry="17"/>
+        </g>
+        <!-- jonctions serrées -->
+        <g fill="var(--ink)">
+          <rect x="146" y="46" width="8" height="13"/><rect x="226" y="46" width="8" height="13"/><rect x="306" y="46" width="8" height="13"/>
+        </g>
+        <!-- lame basale -->
+        <line x1="60" y1="169" x2="400" y2="169" stroke="var(--ink)" stroke-width="6"/>
+        <!-- tissu conjonctif + capillaire -->
+        <g fill="none" stroke="var(--muted)" stroke-width="1.5" opacity=".6">
+          <path d="M 64 192 C 110 184, 150 204, 200 192 S 300 184, 396 196"/>
+          <path d="M 64 236 C 100 228, 140 246, 190 236"/>
+        </g>
+        <ellipse cx="310" cy="218" rx="46" ry="21" fill="#fff" stroke="var(--accent)" stroke-width="3"/>
+        <ellipse cx="297" cy="218" rx="13" ry="10" fill="var(--accent)"/>
+        <ellipse cx="324" cy="218" rx="13" ry="10" fill="var(--accent)"/>
+        <line x1="270" y1="202" x2="252" y2="158" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#epi-arr)"/>
+        <text x="248" y="196" font-size="19" font-weight="700" fill="var(--accent)" text-anchor="end">O₂</text>
+
+        <!-- étiquettes à droite -->
+        <g stroke="var(--line)" stroke-width="1.5">
+          <line x1="380" y1="38" x2="412" y2="38"/><line x1="314" y1="54" x2="412" y2="72"/>
+          <line x1="364" y1="138" x2="412" y2="132"/><line x1="400" y1="169" x2="412" y2="169"/><line x1="356" y1="218" x2="412" y2="218"/>
+        </g>
+        <text class="epi-lbl-b" x="418" y="44">microvillosités</text>
+        <text class="epi-lbl-b" x="418" y="78">jonction serrée</text>
+        <text class="epi-lbl-b" x="418" y="138">noyau</text>
+        <text class="epi-lbl-b" x="418" y="175">lame basale</text>
+        <text class="epi-lbl-b" x="418" y="216">capillaire</text>
+        <text class="epi-lbl" x="418" y="238">(tissu conjonctif)</text>
+        <!-- pôles -->
+        <text class="epi-lbl" x="62" y="62" text-anchor="end">apical</text>
+        <text class="epi-lbl" x="62" y="160" text-anchor="end">basal</text>
+      </svg>
+    </div>
+  </div>
+
+  <table class="tbl epi-tbl" style="margin-top:.35em;font-size:.42em">
+    <tr><td>Épiderme</td><td>plusieurs couches, surface kératinisée : barrière contre la déshydratation et les microbes ; renouvelé en quelques semaines</td></tr>
+    <tr><td>Intestin grêle</td><td>une couche de cellules cylindriques à microvillosités : absorption des nutriments ; renouvelé en 3 à 5 jours</td></tr>
+    <tr><td style="color:var(--brand)">Endothélium</td><td>une couche de cellules aplaties : tapisse l'intérieur du cœur et de tous les vaisseaux</td></tr>
+    <tr><td style="color:var(--brand)">Alvéole pulmonaire</td><td>une couche de cellules très aplaties : échanges d'O₂ et de CO₂ entre l'air et le sang</td></tr>
+  </table>
+  <p class="tiny muted" style="margin:.25em 0 0;font-size:.36em">Photo : Berkshire Community College Bioscience Image Library, Wikimedia Commons, CC0.</p>
+
+</section>

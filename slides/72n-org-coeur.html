@@ -1,0 +1,71 @@
+<section>
+  <style>
+    .cr-lbl{font-size:17px;fill:var(--muted)}
+    .cr-in{font-size:17px;font-weight:700;text-anchor:middle}
+    .cr-stat{font-size:.72em;font-weight:800;color:var(--brand);line-height:1.05}
+    .cr-card{padding:8px 14px}
+    .cr-card p{margin:.15em 0 0}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="cr-arr-b" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--brand)"/></marker>
+      <marker id="cr-arr-r" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/></marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Les systèmes</span>
+  <h2>Le cœur</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">Deux pompes en série : le cœur droit envoie le sang aux poumons, le cœur gauche au reste du corps.</p>
+
+  <div class="grid2" style="margin-top:.3em;gap:16px;align-items:stretch;grid-template-columns:1.1fr .9fr">
+    <div class="figframe" style="padding:6px">
+      <svg viewBox="0 0 520 380" class="fig" style="width:100%;max-height:405px">
+        <!-- vaisseaux (derrière les cavités) -->
+        <g fill="none" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 150 40 L 150 90" stroke="var(--brand)"/>                    <!-- veine cave supérieure -->
+          <path d="M 20 360 L 20 150 L 50 150" stroke="var(--brand)"/>           <!-- veine cave inférieure -->
+          <path d="M 196 250 C 214 190, 214 110, 228 40" stroke="var(--brand)"/> <!-- artère pulmonaire -->
+          <path d="M 500 40 C 500 70, 480 84, 460 92" stroke="var(--accent)"/>   <!-- veines pulmonaires -->
+          <path d="M 322 250 C 300 190, 300 110, 292 40" stroke="var(--accent)"/> <!-- aorte -->
+        </g>
+        <!-- cavités -->
+        <rect x="46" y="84" width="180" height="104" rx="26" fill="#fff" stroke="var(--brand)" stroke-width="5"/>
+        <rect x="46" y="196" width="180" height="148" rx="30" fill="#fff" stroke="var(--brand)" stroke-width="7"/>
+        <rect x="294" y="84" width="180" height="104" rx="26" fill="#fff" stroke="var(--accent)" stroke-width="5"/>
+        <rect x="294" y="196" width="180" height="148" rx="30" fill="#fff" stroke="var(--accent)" stroke-width="18"/>
+        <!-- valves auriculo-ventriculaires -->
+        <path d="M 116 188 L 136 204 L 156 188" fill="none" stroke="var(--ink)" stroke-width="4"/>
+        <path d="M 364 188 L 384 204 L 404 188" fill="none" stroke="var(--ink)" stroke-width="4"/>
+        <!-- sens du flux dans les cavités -->
+        <g stroke-width="4" fill="none">
+          <path d="M 136 150 L 136 238" stroke="var(--brand)" marker-end="url(#cr-arr-b)"/>
+          <path d="M 170 300 C 192 290, 198 270, 198 258" stroke="var(--brand)" marker-end="url(#cr-arr-b)"/>
+          <path d="M 384 150 L 384 238" stroke="var(--accent)" marker-end="url(#cr-arr-r)"/>
+          <path d="M 350 300 C 328 290, 322 270, 322 258" stroke="var(--accent)" marker-end="url(#cr-arr-r)"/>
+        </g>
+        <!-- noms des cavités -->
+        <text class="cr-in" x="112" y="118" fill="var(--brand)">oreillette</text><text class="cr-in" x="112" y="138" fill="var(--brand)">droite</text>
+        <text class="cr-in" x="104" y="270" fill="var(--brand)">ventricule</text><text class="cr-in" x="104" y="290" fill="var(--brand)">droit</text>
+        <text class="cr-in" x="408" y="118" fill="var(--accent)">oreillette</text><text class="cr-in" x="408" y="138" fill="var(--accent)">gauche</text>
+        <text class="cr-in" x="416" y="270" fill="var(--accent)">ventricule</text><text class="cr-in" x="416" y="290" fill="var(--accent)">gauche</text>
+        <!-- noms des vaisseaux -->
+        <text class="cr-lbl" x="138" y="56" text-anchor="end">du corps ↓</text>
+        <text class="cr-lbl" x="34" y="376">↑ du corps (veines caves)</text>
+        <text class="cr-lbl" x="236" y="24" text-anchor="end">aux poumons ↑</text>
+        <text class="cr-lbl" x="286" y="24" text-anchor="start">↑ au corps</text>
+        <text class="cr-lbl" x="512" y="24" text-anchor="end">des poumons ↓</text>
+      </svg>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="card cr-card"><div class="cr-stat">≈ 5 L/min</div><p class="tiny">au repos : ≈ 70 battements/min × ≈ 70 mL par battement. Jusqu'à 20–25 L/min à l'effort.</p></div>
+      <div class="card cr-card"><div class="cr-stat">≈ 1 min</div><p class="tiny">pour faire le tour du corps : le volume sanguin (≈ 5 L) passe par le cœur une fois par minute.</p></div>
+      <div class="card cr-card"><div class="cr-stat">120 / 25 mmHg</div><p class="tiny">pression maximale, ventricule gauche / droit : paroi gauche ≈ 1 cm, droite 3–5 mm.</p></div>
+      <div class="card cr-card"><div class="cr-stat">4 valves</div><p class="tiny">le sang ne circule que dans un sens.</p></div>
+    </div>
+  </div>
+
+  <p class="tiny" style="margin:.3em 0 0"><span style="color:var(--accent);font-weight:700">■ sang riche en O₂</span> &nbsp; <span style="color:var(--brand);font-weight:700">■ sang pauvre en O₂</span> &nbsp;— schéma vu de face : le cœur droit est à gauche de l'image.</p>
+
+</section>

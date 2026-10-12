@@ -1,0 +1,57 @@
+<section>
+  <style>
+    table.tbl.b3t{font-size:.35em;width:100%;margin-top:.25em;line-height:1.15}
+    table.tbl.b3t th{padding:2px 4px}
+    table.tbl.b3t td{padding:0 5px;border:1px solid #fff}
+    table.tbl.b3t td.b3t-c{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.05em}
+    table.tbl.b3t td.b3t-a{white-space:nowrap}
+    table.tbl.b3t td.b3t-apo{background:#fde68a}
+    table.tbl.b3t td.b3t-pol{background:#eaf6fd}
+    table.tbl.b3t td.b3t-acid{background:#fff;color:var(--accent);font-weight:700;outline:1.5px solid var(--accent);outline-offset:-2px}
+    table.tbl.b3t td.b3t-bas{background:#eef2ff;color:var(--brand);font-weight:700}
+    table.tbl.b3t td.b3t-stop{background:var(--ink);color:#fff;font-weight:700}
+    table.tbl.b3t td.b3t-b,table.tbl.b3t td.b3t-b3{background:var(--soft);font-weight:800;color:var(--ink)}
+    section:has(.b3t-flag.visible) table.tbl.b3t td.b3t-start{outline:3px solid var(--brand);outline-offset:-3px}
+    .b3t-key{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;font-size:.46em;margin-top:.35em;color:var(--ink)}
+    .b3t-key span.sw{display:inline-block;width:1.1em;height:.85em;border-radius:3px;vertical-align:-2px;margin-right:5px}
+  </style>
+
+  <span class="kicker">La solution</span>
+  <h2>La table du code génétique</h2>
+  <div class="barline"></div>
+  <div class="b3t-key" style="margin-top:0;justify-content:flex-start">
+    <span class="muted">64 codons : 61 codent un acide aminé, 3 marquent l'arrêt.</span>
+    <span><span class="sw" style="background:#fde68a"></span>apolaire</span>
+    <span><span class="sw" style="background:#eaf6fd"></span>polaire, non chargé</span>
+    <span><span class="sw" style="background:#fff;outline:1.5px solid var(--accent)"></span><b style="color:var(--accent)">chargé −</b></span>
+    <span><span class="sw" style="background:#eef2ff"></span><b style="color:var(--brand)">chargé +</b></span>
+    <span><span class="sw" style="background:var(--ink)"></span>stop</span>
+    <span class="b3t-flag fragment" data-fragment-index="0"><span class="sw" style="background:#fff;outline:3px solid var(--brand)"></span><b>AUG</b> : codon start, et Met ailleurs</span>
+  </div>
+
+<table class="tbl b3t">
+<tr><th rowspan="2" class="b3t-h1">1<sup>re</sup> base</th><th colspan="8">2<sup>e</sup> base</th><th rowspan="2" class="b3t-h1">3<sup>e</sup></th></tr>
+<tr><th colspan="2">U</th><th colspan="2">C</th><th colspan="2">A</th><th colspan="2">G</th></tr>
+<tr><td rowspan="4" class="b3t-b">U</td><td class="b3t-c b3t-apo">UUU</td><td rowspan="2" class="b3t-a b3t-apo">Phe <b>F</b></td><td class="b3t-c b3t-pol">UCU</td><td rowspan="4" class="b3t-a b3t-pol">Ser <b>S</b></td><td class="b3t-c b3t-pol">UAU</td><td rowspan="2" class="b3t-a b3t-pol">Tyr <b>Y</b></td><td class="b3t-c b3t-pol">UGU</td><td rowspan="2" class="b3t-a b3t-pol">Cys <b>C</b></td><td class="b3t-b3">U</td></tr>
+<tr><td class="b3t-c b3t-apo">UUC</td><td class="b3t-c b3t-pol">UCC</td><td class="b3t-c b3t-pol">UAC</td><td class="b3t-c b3t-pol">UGC</td><td class="b3t-b3">C</td></tr>
+<tr><td class="b3t-c b3t-apo">UUA</td><td rowspan="2" class="b3t-a b3t-apo">Leu <b>L</b></td><td class="b3t-c b3t-pol">UCA</td><td class="b3t-c b3t-stop">UAA</td><td rowspan="2" class="b3t-a b3t-stop">stop</td><td class="b3t-c b3t-stop">UGA</td><td class="b3t-a b3t-stop">stop</td><td class="b3t-b3">A</td></tr>
+<tr><td class="b3t-c b3t-apo">UUG</td><td class="b3t-c b3t-pol">UCG</td><td class="b3t-c b3t-stop">UAG</td><td class="b3t-c b3t-apo">UGG</td><td class="b3t-a b3t-apo">Trp <b>W</b></td><td class="b3t-b3">G</td></tr>
+<tr><td rowspan="4" class="b3t-b">C</td><td class="b3t-c b3t-apo">CUU</td><td rowspan="4" class="b3t-a b3t-apo">Leu <b>L</b></td><td class="b3t-c b3t-apo">CCU</td><td rowspan="4" class="b3t-a b3t-apo">Pro <b>P</b></td><td class="b3t-c b3t-bas">CAU</td><td rowspan="2" class="b3t-a b3t-bas">His <b>H</b></td><td class="b3t-c b3t-bas">CGU</td><td rowspan="4" class="b3t-a b3t-bas">Arg <b>R</b></td><td class="b3t-b3">U</td></tr>
+<tr><td class="b3t-c b3t-apo">CUC</td><td class="b3t-c b3t-apo">CCC</td><td class="b3t-c b3t-bas">CAC</td><td class="b3t-c b3t-bas">CGC</td><td class="b3t-b3">C</td></tr>
+<tr><td class="b3t-c b3t-apo">CUA</td><td class="b3t-c b3t-apo">CCA</td><td class="b3t-c b3t-pol">CAA</td><td rowspan="2" class="b3t-a b3t-pol">Gln <b>Q</b></td><td class="b3t-c b3t-bas">CGA</td><td class="b3t-b3">A</td></tr>
+<tr><td class="b3t-c b3t-apo">CUG</td><td class="b3t-c b3t-apo">CCG</td><td class="b3t-c b3t-pol">CAG</td><td class="b3t-c b3t-bas">CGG</td><td class="b3t-b3">G</td></tr>
+<tr><td rowspan="4" class="b3t-b">A</td><td class="b3t-c b3t-apo">AUU</td><td rowspan="3" class="b3t-a b3t-apo">Ile <b>I</b></td><td class="b3t-c b3t-pol">ACU</td><td rowspan="4" class="b3t-a b3t-pol">Thr <b>T</b></td><td class="b3t-c b3t-pol">AAU</td><td rowspan="2" class="b3t-a b3t-pol">Asn <b>N</b></td><td class="b3t-c b3t-pol">AGU</td><td rowspan="2" class="b3t-a b3t-pol">Ser <b>S</b></td><td class="b3t-b3">U</td></tr>
+<tr><td class="b3t-c b3t-apo">AUC</td><td class="b3t-c b3t-pol">ACC</td><td class="b3t-c b3t-pol">AAC</td><td class="b3t-c b3t-pol">AGC</td><td class="b3t-b3">C</td></tr>
+<tr><td class="b3t-c b3t-apo">AUA</td><td class="b3t-c b3t-pol">ACA</td><td class="b3t-c b3t-bas">AAA</td><td rowspan="2" class="b3t-a b3t-bas">Lys <b>K</b></td><td class="b3t-c b3t-bas">AGA</td><td rowspan="2" class="b3t-a b3t-bas">Arg <b>R</b></td><td class="b3t-b3">A</td></tr>
+<tr><td class="b3t-c b3t-apo b3t-start">AUG</td><td class="b3t-a b3t-apo b3t-start">Met <b>M</b></td><td class="b3t-c b3t-pol">ACG</td><td class="b3t-c b3t-bas">AAG</td><td class="b3t-c b3t-bas">AGG</td><td class="b3t-b3">G</td></tr>
+<tr><td rowspan="4" class="b3t-b">G</td><td class="b3t-c b3t-apo">GUU</td><td rowspan="4" class="b3t-a b3t-apo">Val <b>V</b></td><td class="b3t-c b3t-apo">GCU</td><td rowspan="4" class="b3t-a b3t-apo">Ala <b>A</b></td><td class="b3t-c b3t-acid">GAU</td><td rowspan="2" class="b3t-a b3t-acid">Asp <b>D</b></td><td class="b3t-c b3t-apo">GGU</td><td rowspan="4" class="b3t-a b3t-apo">Gly <b>G</b></td><td class="b3t-b3">U</td></tr>
+<tr><td class="b3t-c b3t-apo">GUC</td><td class="b3t-c b3t-apo">GCC</td><td class="b3t-c b3t-acid">GAC</td><td class="b3t-c b3t-apo">GGC</td><td class="b3t-b3">C</td></tr>
+<tr><td class="b3t-c b3t-apo">GUA</td><td class="b3t-c b3t-apo">GCA</td><td class="b3t-c b3t-acid">GAA</td><td rowspan="2" class="b3t-a b3t-acid">Glu <b>E</b></td><td class="b3t-c b3t-apo">GGA</td><td class="b3t-b3">A</td></tr>
+<tr><td class="b3t-c b3t-apo">GUG</td><td class="b3t-c b3t-apo">GCG</td><td class="b3t-c b3t-acid">GAG</td><td class="b3t-c b3t-apo">GGG</td><td class="b3t-b3">G</td></tr>
+</table>
+
+  <p class="center fragment fade-up" data-fragment-index="1" style="margin-top:.3em">
+    <span class="pill ghost" style="font-size:.66em"><span class="tag">Traduction</span>&nbsp; Un dict de 64 clés et 21 valeurs distinctes : <code>CODE_GENETIQUE["AUG"]</code> → <code>"M"</code></span>
+  </p>
+
+</section>

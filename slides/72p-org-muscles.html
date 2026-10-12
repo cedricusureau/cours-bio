@@ -1,0 +1,82 @@
+<section>
+  <style>
+    .mus-lbl{font-size:18px;fill:var(--muted)}
+    .mus-lbl-b{font-size:18px;font-weight:700;fill:var(--ink)}
+    /* le globule rouge cède son O₂ en traversant le capillaire du muscle */
+    @keyframes mus-rbc{0%{transform:translateX(0);fill:var(--accent)}100%{transform:translateX(720px);fill:var(--brand)}}
+    .mus-rbc{animation:mus-rbc 4s linear infinite}
+    .mus-stat{font-size:.72em;font-weight:800;color:var(--accent);line-height:1.05}
+    .mus-card{padding:8px 14px}
+    .mus-card p{margin:.15em 0 0}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="mus-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/></marker>
+      <marker id="mus-arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/></marker>
+      <pattern id="mus-stries" width="14" height="10" patternUnits="userSpaceOnUse">
+        <rect width="14" height="10" fill="var(--soft)"/><rect width="6" height="10" fill="var(--accent)" opacity=".12"/>
+      </pattern>
+      <clipPath id="mus-clip"><rect x="10" y="26" width="600" height="52"/></clipPath>
+    </defs>
+  </svg>
+
+  <span class="kicker">Les systèmes</span>
+  <h2>Les muscles</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">À l'effort, les muscles squelettiques consomment l'essentiel de l'O₂ : il passe de l'hémoglobine à la myoglobine, puis aux mitochondries.</p>
+
+  <div class="grid2" style="margin-top:.3em;gap:16px;align-items:stretch;grid-template-columns:1.1fr .9fr">
+    <div class="figframe" style="padding:6px;display:flex;align-items:center">
+      <svg viewBox="0 0 620 370" class="fig" style="width:100%;max-height:390px">
+        <!-- capillaire -->
+        <text class="mus-lbl-b" x="10" y="18">capillaire</text>
+        <g clip-path="url(#mus-clip)">
+          <ellipse class="mus-rbc" cx="-100" cy="52" rx="26" ry="17"/>
+          <ellipse class="mus-rbc" cx="-100" cy="52" rx="26" ry="17" style="animation-delay:-1s"/>
+          <ellipse class="mus-rbc" cx="-100" cy="52" rx="26" ry="17" style="animation-delay:-2s"/>
+          <ellipse class="mus-rbc" cx="-100" cy="52" rx="26" ry="17" style="animation-delay:-3s"/>
+        </g>
+        <line x1="10" y1="24" x2="610" y2="24" stroke="var(--brand2)" stroke-width="3"/>
+        <line x1="10" y1="80" x2="610" y2="80" stroke="var(--brand2)" stroke-width="3"/>
+
+        <!-- fibre musculaire -->
+        <rect x="10" y="118" width="600" height="200" rx="30" fill="url(#mus-stries)" stroke="var(--accent)" stroke-width="3"/>
+        <g fill="var(--ink)" opacity=".7">
+          <ellipse cx="110" cy="126" rx="22" ry="6"/><ellipse cx="420" cy="126" rx="22" ry="6"/><ellipse cx="270" cy="310" rx="22" ry="6"/><ellipse cx="540" cy="310" rx="22" ry="6"/>
+        </g>
+        <!-- myoglobine -->
+        <g fill="var(--accent)" opacity=".7">
+          <circle cx="80" cy="160" r="4"/><circle cx="130" cy="176" r="4"/><circle cx="180" cy="158" r="4"/><circle cx="230" cy="180" r="4"/>
+          <circle cx="300" cy="162" r="4"/><circle cx="350" cy="182" r="4"/><circle cx="400" cy="160" r="4"/><circle cx="460" cy="178" r="4"/>
+          <circle cx="520" cy="160" r="4"/><circle cx="570" cy="180" r="4"/><circle cx="160" cy="280" r="4"/><circle cx="440" cy="284" r="4"/>
+        </g>
+        <!-- mitochondries -->
+        <g fill="#fff" stroke="var(--good)" stroke-width="3">
+          <ellipse cx="130" cy="236" rx="46" ry="20"/><ellipse cx="310" cy="244" rx="46" ry="20"/><ellipse cx="490" cy="236" rx="46" ry="20"/>
+        </g>
+        <g fill="none" stroke="var(--good)" stroke-width="2">
+          <path d="M 100 236 q 6 -12 12 0 q 6 12 12 0 q 6 -12 12 0 q 6 12 12 0 q 6 -12 12 0"/>
+          <path d="M 280 244 q 6 -12 12 0 q 6 12 12 0 q 6 -12 12 0 q 6 12 12 0 q 6 -12 12 0"/>
+          <path d="M 460 236 q 6 -12 12 0 q 6 12 12 0 q 6 -12 12 0 q 6 12 12 0 q 6 -12 12 0"/>
+        </g>
+        <!-- trajet de l'O₂ et du CO₂ -->
+        <g stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="5 4" fill="none" marker-end="url(#mus-arr)">
+          <path d="M 250 84 L 236 170"/><path d="M 236 184 L 286 222"/>
+        </g>
+        <text x="258" y="112" font-size="19" font-weight="700" fill="var(--accent)">O₂</text>
+        <line x1="566" y1="214" x2="566" y2="88" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#mus-arr2)"/>
+        <text x="556" y="112" font-size="19" font-weight="700" fill="var(--muted)" text-anchor="end">CO₂</text>
+        <!-- étiquettes -->
+        <text class="mus-lbl-b" x="300" y="146" style="fill:var(--accent)">myoglobine : stocke l'O₂</text>
+        <text class="mus-lbl-b" x="30" y="352" style="fill:var(--good)">mitochondries : consomment l'O₂, produisent l'ATP</text>
+      </svg>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="card mus-card"><div class="mus-stat">≈ 600 muscles</div><p class="tiny">squelettiques ; 30 à 40 % de la masse du corps.</p></div>
+      <div class="card mus-card"><div class="mus-stat">× 10 à × 20</div><p class="tiny">O₂ consommé par le corps : ≈ 250 mL/min au repos, 3 à 5 L/min à l'effort maximal, surtout par les muscles.</p></div>
+      <div class="card mus-card"><div class="mus-stat">Myoglobine</div><p class="tiny">153 acides aminés, 1 hème, même repliement qu'une chaîne de l'hémoglobine ; plus affine qu'elle pour l'O₂.</p></div>
+    </div>
+  </div>
+
+</section>

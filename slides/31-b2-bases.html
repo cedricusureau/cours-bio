@@ -1,0 +1,138 @@
+<section>
+  <style>
+    .b2bp-ring{fill:#fff;stroke:var(--brand2);stroke-width:3;stroke-linejoin:round}
+    .b2bp-bond{stroke:var(--muted);stroke-width:2.5;stroke-linecap:round}
+    .b2bp-hb{stroke:var(--accent);stroke-width:3;stroke-dasharray:4,4}
+    .b2bp-letter{font-size:21px;font-weight:700;fill:var(--brand2);text-anchor:middle}
+    .b2bp-at{font-size:14px;font-weight:700;text-anchor:middle}
+    .b2bp-acc{fill:var(--accent)}
+    .b2bp-don{fill:var(--brand)}
+    .b2bp-heavy{fill:var(--ink)}
+    .b2bp-sug{font-size:11px;fill:var(--muted);text-anchor:middle}
+    .b2bp-dim{stroke:var(--muted);stroke-width:1.5}
+    .b2bp-seq{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.62em;
+              line-height:1.35;letter-spacing:.06em;margin:.25em 0 0}
+  </style>
+
+  <span class="kicker">Structure</span>
+  <h2>A–T : deux liaisons hydrogène ; G–C : trois</h2>
+  <div class="barline"></div>
+  <p class="small muted">A face à T, G face à C : l'appariement repose sur la taille des bases et sur leurs liaisons hydrogène.</p>
+
+  <div class="grid2" style="grid-template-columns:1fr 1fr;margin-top:.15em;align-items:start">
+    <div class="figframe" style="padding:4px 8px">
+      <svg viewBox="0 0 400 350" class="fig" style="max-height:275px">
+        <!-- ============ A · T ============ -->
+        <polygon class="b2bp-ring" points="120.6,63 88.3,52.5 68.3,80 88.3,107.5 120.6,97"/>
+        <polygon class="b2bp-ring" points="150,46 179.4,63 179.4,97 150,114 120.6,97 120.6,63"/>
+        <text class="b2bp-letter" x="150" y="87">A</text>
+        <line class="b2bp-bond" x1="88.3" y1="107.5" x2="74" y2="126"/>
+        <circle cx="74" cy="128" r="4.5" fill="var(--muted)"/>
+        <text class="b2bp-sug" x="74" y="146">sucre</text>
+        <!-- A : N–H (donneur) en haut, N (accepteur) au milieu -->
+        <line class="b2bp-bond" x1="179.4" y1="63" x2="194" y2="54"/>
+        <text class="b2bp-at b2bp-heavy" x="201" y="57">N</text>
+        <line class="b2bp-bond" x1="208" y1="52" x2="215" y2="52"/>
+        <text class="b2bp-at b2bp-don" x="222" y="57">H</text>
+        <circle cx="179.4" cy="97" r="9" fill="#fff" stroke="var(--accent)" stroke-width="2"/>
+        <text class="b2bp-at b2bp-acc" x="179.4" y="102" style="font-size:12px">N</text>
+
+        <polygon class="b2bp-ring" points="324,46 353.4,63 353.4,97 324,114 294.6,97 294.6,63"/>
+        <text class="b2bp-letter" x="324" y="87">T</text>
+        <line class="b2bp-bond" x1="353.4" y1="97" x2="368" y2="120"/>
+        <circle cx="370" cy="124" r="4.5" fill="var(--muted)"/>
+        <text class="b2bp-sug" x="370" y="146">sucre</text>
+        <!-- T : O (accepteur) en haut, N–H (donneur) au milieu, O en bas sans partenaire -->
+        <line class="b2bp-bond" x1="294.6" y1="63" x2="283" y2="54"/>
+        <text class="b2bp-at b2bp-acc" x="276" y="57">O</text>
+        <circle cx="294.6" cy="97" r="9" fill="#fff" stroke="var(--ink)" stroke-width="2"/>
+        <text class="b2bp-at b2bp-heavy" x="294.6" y="102" style="font-size:12px">N</text>
+        <line class="b2bp-bond" x1="285.6" y1="97" x2="276" y2="97"/>
+        <text class="b2bp-at b2bp-don" x="269" y="102">H</text>
+        <line class="b2bp-bond" x1="324" y1="114" x2="316" y2="128"/>
+        <text class="b2bp-at b2bp-acc" x="312" y="142">O</text>
+
+        <g class="fragment" data-fragment-index="0">
+          <text x="236" y="30" font-size="13" font-weight="700" fill="var(--accent)" text-anchor="middle">2 liaisons hydrogène</text>
+          <line class="b2bp-hb" x1="229" y1="52" x2="268" y2="52"/>
+          <line class="b2bp-hb" x1="190" y1="97" x2="262" y2="97"/>
+        </g>
+        <g class="fragment" data-fragment-index="2">
+          <line class="b2bp-dim" x1="74" y1="151" x2="74" y2="166"/>
+          <line class="b2bp-dim" x1="370" y1="151" x2="370" y2="166"/>
+          <line class="b2bp-dim" x1="74" y1="160" x2="370" y2="160"/>
+          <text x="222" y="177" font-size="12" font-weight="700" fill="var(--muted)" text-anchor="middle">≈ 1,1 nm</text>
+        </g>
+
+        <!-- ============ G · C ============ -->
+        <polygon class="b2bp-ring" points="120.6,228 88.3,217.5 68.3,245 88.3,272.5 120.6,262"/>
+        <polygon class="b2bp-ring" points="150,211 179.4,228 179.4,262 150,279 120.6,262 120.6,228"/>
+        <text class="b2bp-letter" x="150" y="252">G</text>
+        <line class="b2bp-bond" x1="88.3" y1="272.5" x2="74" y2="291"/>
+        <circle cx="74" cy="293" r="4.5" fill="var(--muted)"/>
+        <text class="b2bp-sug" x="74" y="311">sucre</text>
+        <!-- G : O (accepteur) en haut, N–H au milieu, N–H en bas -->
+        <line class="b2bp-bond" x1="179.4" y1="228" x2="193" y2="219"/>
+        <text class="b2bp-at b2bp-acc" x="200" y="222">O</text>
+        <circle cx="179.4" cy="262" r="9" fill="#fff" stroke="var(--ink)" stroke-width="2"/>
+        <text class="b2bp-at b2bp-heavy" x="179.4" y="267" style="font-size:12px">N</text>
+        <line class="b2bp-bond" x1="188.4" y1="262" x2="199" y2="262"/>
+        <text class="b2bp-at b2bp-don" x="206" y="267">H</text>
+        <line class="b2bp-bond" x1="150" y1="279" x2="160" y2="293"/>
+        <text class="b2bp-at b2bp-heavy" x="166" y="305">N</text>
+        <line class="b2bp-bond" x1="173" y1="300" x2="181" y2="300"/>
+        <text class="b2bp-at b2bp-don" x="188" y="305">H</text>
+
+        <polygon class="b2bp-ring" points="324,211 353.4,228 353.4,262 324,279 294.6,262 294.6,228"/>
+        <text class="b2bp-letter" x="324" y="252">C</text>
+        <line class="b2bp-bond" x1="353.4" y1="262" x2="368" y2="285"/>
+        <circle cx="370" cy="289" r="4.5" fill="var(--muted)"/>
+        <text class="b2bp-sug" x="370" y="311">sucre</text>
+        <!-- C : N–H (donneur) en haut, N (accepteur) au milieu, O (accepteur) en bas -->
+        <line class="b2bp-bond" x1="294.6" y1="228" x2="283" y2="219"/>
+        <text class="b2bp-at b2bp-heavy" x="277" y="222">N</text>
+        <line class="b2bp-bond" x1="270" y1="217" x2="263" y2="217"/>
+        <text class="b2bp-at b2bp-don" x="256" y="222">H</text>
+        <circle cx="294.6" cy="262" r="9" fill="#fff" stroke="var(--accent)" stroke-width="2"/>
+        <text class="b2bp-at b2bp-acc" x="294.6" y="267" style="font-size:12px">N</text>
+        <line class="b2bp-bond" x1="324" y1="279" x2="315" y2="293"/>
+        <text class="b2bp-at b2bp-acc" x="310" y="305">O</text>
+
+        <g class="fragment" data-fragment-index="1">
+          <text x="236" y="196" font-size="13" font-weight="700" fill="var(--accent)" text-anchor="middle">3 liaisons hydrogène</text>
+          <line class="b2bp-hb" x1="207" y1="217" x2="250" y2="217"/>
+          <line class="b2bp-hb" x1="213" y1="262" x2="284" y2="262"/>
+          <line class="b2bp-hb" x1="195" y1="300" x2="303" y2="300"/>
+        </g>
+        <g class="fragment" data-fragment-index="2">
+          <line class="b2bp-dim" x1="74" y1="316" x2="74" y2="331"/>
+          <line class="b2bp-dim" x1="370" y1="316" x2="370" y2="331"/>
+          <line class="b2bp-dim" x1="74" y1="325" x2="370" y2="325"/>
+          <text x="222" y="342" font-size="12" font-weight="700" fill="var(--muted)" text-anchor="middle">≈ 1,1 nm</text>
+        </g>
+      </svg>
+    </div>
+
+    <div>
+      <p class="small" style="margin-top:.1em;font-size:.58em"><strong>Purines</strong> A, G : deux cycles.
+      <strong>Pyrimidines</strong> C, T : un cycle. Chaque paire associe une purine et une pyrimidine :
+      un H δ+ d'une base face à un O ou un N δ− de l'autre.</p>
+      <p class="small fragment" data-fragment-index="2" style="margin-top:.3em;font-size:.58em">Même largeur pour
+      les deux paires : le diamètre de l'hélice est constant.</p>
+      <p class="small fragment" data-fragment-index="3" style="margin-top:.3em;font-size:.58em">Chargaff (1950) :
+      %A = %T et %G = %C. Génome humain : 41 % de G + C.</p>
+    </div>
+  </div>
+
+  <div class="card fragment" data-fragment-index="4" style="margin-top:.25em;padding:5px 16px;display:grid;grid-template-columns:1.1fr auto 1.2fr;gap:18px;align-items:center">
+    <p class="small" style="margin:0">Un brin étant donné, que manque-t-il pour écrire l'autre ?</p>
+    <p class="b2bp-seq" style="margin:0">5'-ATGGTGCAT-3'<br>3'-TACCACGTA-5'</p>
+    <p class="small fragment" data-fragment-index="5" style="margin:0">Rien : lu de 5' vers 3', c'est
+    <strong>ATGCACCAT</strong>, le complément inverse.</p>
+  </div>
+
+  <p class="center fragment fade-up" data-fragment-index="5" style="margin-top:.3em">
+    <span class="pill ghost"><span class="tag">Traduction</span>&nbsp; Le second brin se déduit du premier : il n'ajoute aucun bit</span>
+  </p>
+
+</section>

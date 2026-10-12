@@ -1,0 +1,59 @@
+<section>
+  <style>
+    .vx-lbl{font-size:19px;fill:var(--muted)}
+    .vx-lbl-b{font-size:21px;font-weight:800;fill:var(--ink)}
+    table.tbl.vx-tbl td{padding:4px 8px;white-space:nowrap}
+    table.tbl.vx-tbl td:first-child{text-align:left;font-weight:700}
+  </style>
+
+  <span class="kicker">Les systèmes</span>
+  <h2>Les vaisseaux</h2>
+  <div class="barline"></div>
+  <p class="small" style="margin:0">Artères → artérioles → capillaires → veinules → veines.</p>
+
+  <div class="figframe" style="margin-top:.3em;padding:6px 10px">
+    <svg viewBox="0 0 1160 170" class="fig" style="width:100%;max-height:170px">
+      <!-- artère -->
+      <circle cx="90" cy="85" r="76" fill="var(--accent)" opacity=".22"/>
+      <circle cx="90" cy="85" r="76" fill="none" stroke="var(--accent)" stroke-width="3"/>
+      <circle cx="90" cy="85" r="36" fill="var(--accent)"/>
+      <circle cx="90" cy="85" r="37" fill="none" stroke="var(--brand2)" stroke-width="3"/>
+      <text class="vx-lbl-b" x="186" y="52">Artère</text>
+      <text class="vx-lbl" x="186" y="80">paroi épaisse :</text>
+      <text class="vx-lbl" x="186" y="104">muscle lisse,</text>
+      <text class="vx-lbl" x="186" y="128">fibres élastiques</text>
+
+      <!-- capillaire -->
+      <circle cx="486" cy="85" r="30" fill="#fff" stroke="var(--brand2)" stroke-width="3"/>
+      <ellipse cx="486" cy="85" rx="24" ry="24" fill="var(--accent)" opacity=".75"/>
+      <text class="vx-lbl-b" x="536" y="52">Capillaire</text>
+      <text class="vx-lbl" x="536" y="80">paroi = endothélium seul,</text>
+      <text class="vx-lbl" x="536" y="104">une cellule d'épaisseur ;</text>
+      <text class="vx-lbl" x="536" y="128">un globule rouge à la fois</text>
+
+      <!-- veine -->
+      <ellipse cx="876" cy="85" rx="72" ry="54" fill="var(--brand)" opacity=".2"/>
+      <ellipse cx="876" cy="85" rx="72" ry="54" fill="none" stroke="var(--brand)" stroke-width="3"/>
+      <ellipse cx="876" cy="85" rx="62" ry="44" fill="var(--brand)"/>
+      <ellipse cx="876" cy="85" rx="63" ry="45" fill="none" stroke="var(--brand2)" stroke-width="3"/>
+      <text class="vx-lbl-b" x="966" y="52">Veine</text>
+      <text class="vx-lbl" x="966" y="80">paroi mince, valvules ;</text>
+      <text class="vx-lbl" x="966" y="104">contient ≈ ⅔</text>
+      <text class="vx-lbl" x="966" y="128">du volume sanguin</text>
+    </svg>
+  </div>
+
+  <table class="tbl vx-tbl" style="margin-top:.3em;font-size:.4em">
+    <tr><th>Vaisseau</th><th>Diamètre</th><th>Paroi</th><th>Pression moyenne</th><th>Section cumulée</th></tr>
+    <tr><td>Aorte</td><td>≈ 25 mm</td><td>≈ 2 mm</td><td>≈ 100 mmHg</td><td>≈ 2,5 cm²</td></tr>
+    <tr><td>Artérioles</td><td>≈ 30 µm</td><td>≈ 20 µm, surtout du muscle lisse</td><td>85 → 35 mmHg</td><td>≈ 40 cm²</td></tr>
+    <tr><td style="color:var(--brand)">Capillaires</td><td>5 à 10 µm</td><td>&lt; 1 µm : endothélium seul</td><td>35 → 10 mmHg</td><td><strong>≈ 2 500 cm²</strong></td></tr>
+    <tr><td>Veinules</td><td>≈ 20 µm</td><td>≈ 2 µm</td><td>≈ 10 mmHg</td><td>≈ 250 cm²</td></tr>
+    <tr><td>Veines caves</td><td>≈ 30 mm</td><td>≈ 1,5 mm</td><td>≈ 0 à 5 mmHg</td><td>≈ 8 cm²</td></tr>
+  </table>
+
+  <div class="card" style="margin-top:.35em;padding:8px 16px">
+    <p class="tiny" style="margin:0;color:var(--ink)">Le même débit (≈ 5 L/min) traverse chaque niveau. Section cumulée des capillaires ≈ 1 000 × celle de l'aorte, donc vitesse ≈ 1 000 × plus faible : ≈ 0,3 mm/s contre ≈ 30 cm/s. Le sang reste 1 à 3 s dans un capillaire, le temps des échanges.</p>
+  </div>
+
+</section>
