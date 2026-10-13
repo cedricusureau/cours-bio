@@ -1,0 +1,59 @@
+<section>
+  <style>
+    .nvpop{opacity:0}
+    .fragment.visible .nvpop{animation:nvPop .45s ease forwards}
+    @keyframes nvPop{from{opacity:0}to{opacity:1}}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="nv-head" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink)"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Respiration cellulaire</span>
+  <h2>Deux transporteurs : le CoA porte du carbone, le NAD⁺ des électrons</h2>
+  <div class="barline"></div>
+
+  <div class="grid2" style="gap:14px;margin-top:.4em;align-items:stretch">
+
+    <div class="card" style="padding:12px 18px">
+      <p class="small" style="margin:0;color:var(--brand);font-weight:800">CoA (coenzyme A) : porte le carbone</p>
+      <p class="small" style="margin:.5em 0 0">L'<strong>acétyl-CoA</strong> est un fragment à 2 C (l'acétyle) fixé sur le CoA.</p>
+      <p class="small fragment" data-fragment-index="0" style="margin:.5em 0 0">Il entre dans le cycle de Krebs, qui en fait 2 CO₂.</p>
+      <p class="small fragment" data-fragment-index="1" style="margin:.5em 0 0">Le CoA est libéré et peut recevoir un nouveau fragment.</p>
+    </div>
+
+    <div class="card" style="padding:12px 18px">
+      <p class="small" style="margin:0;color:var(--brand);font-weight:800">NAD⁺ → NADH : porte les électrons</p>
+      <svg viewBox="0 0 560 190" class="fig" style="width:100%;height:150px;margin-top:.2em">
+        <rect x="10" y="40" width="170" height="110" rx="12" fill="#eef2ff" stroke="var(--brand)" stroke-width="2"/>
+        <text x="95" y="85" font-size="17" font-weight="700" fill="var(--ink)" text-anchor="middle">oxydation</text>
+        <text x="95" y="108" font-size="17" font-weight="700" fill="var(--ink)" text-anchor="middle">du glucose</text>
+        <text x="95" y="132" font-size="14" fill="var(--muted)" text-anchor="middle">glycolyse, Krebs</text>
+        <rect x="380" y="40" width="170" height="110" rx="12" fill="#eef2ff" stroke="var(--accent)" stroke-width="2"/>
+        <text x="465" y="85" font-size="17" font-weight="700" fill="var(--ink)" text-anchor="middle">chaîne</text>
+        <text x="465" y="108" font-size="17" font-weight="700" fill="var(--ink)" text-anchor="middle">respiratoire</text>
+        <g class="fragment" data-fragment-index="2">
+          <line class="nvpop" x1="190" y1="70" x2="370" y2="70" stroke="var(--ink)" stroke-width="3" marker-end="url(#nv-head)"/>
+          <text class="nvpop" x="280" y="56" font-size="17" font-weight="700" fill="var(--brand2)" text-anchor="middle">NADH · 2 e⁻</text>
+        </g>
+        <g class="fragment" data-fragment-index="3">
+          <line class="nvpop" x1="370" y1="125" x2="190" y2="125" stroke="var(--ink)" stroke-width="3" marker-end="url(#nv-head)"/>
+          <text class="nvpop" x="280" y="152" font-size="17" font-weight="700" fill="var(--muted)" text-anchor="middle">NAD⁺ · vide</text>
+        </g>
+      </svg>
+      <p class="small" style="margin:.2em 0 0">À chaque oxydation d'un carbone, le NAD⁺ reçoit 2 électrons et devient NADH. Il les dépose à la chaîne respiratoire et redevient NAD⁺.</p>
+    </div>
+  </div>
+
+  <p class="small" style="margin-top:.5em">Le <strong>FADH₂</strong> joue le même rôle que le NADH, avec un peu moins d'énergie par molécule.</p>
+
+  <p class="center beat" style="margin-top:.3em">
+    <span class="fragment fade-up" data-fragment-index="4">
+      <span class="pill ghost">Un même NAD⁺ fait la navette : il se charge dans la cascade, se vide à la chaîne respiratoire, et resert</span>
+    </span>
+  </p>
+
+</section>

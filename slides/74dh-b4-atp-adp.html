@@ -1,0 +1,63 @@
+<section>
+  <style>
+    .atpop{opacity:0}
+    .fragment.visible .atpop{animation:atPop .45s ease forwards}
+    @keyframes atPop{from{opacity:0}to{opacity:1}}
+    .atlbl{font-size:20px;font-weight:700;fill:var(--ink);text-anchor:middle}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="at-head" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="16" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink)"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Respiration cellulaire</span>
+  <h2>ATP ⇌ ADP + Pᵢ : le cycle de l'énergie de la cellule</h2>
+  <div class="barline"></div>
+
+  <div class="figframe" style="margin-top:.3em;padding:6px 10px">
+    <svg viewBox="0 0 1100 300" class="fig" style="width:100%;max-height:330px">
+      <!-- ADP + Pi (gauche) -->
+      <text class="atlbl" x="160" y="48">ADP + Pᵢ</text>
+      <rect x="30" y="110" width="130" height="64" rx="10" fill="#eef2ff" stroke="var(--brand)" stroke-width="2.5"/>
+      <text x="95" y="148" font-size="18" font-weight="700" fill="var(--ink)" text-anchor="middle">adénosine</text>
+      <circle cx="195" cy="142" r="22" fill="var(--accent)"/><text x="195" y="149" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">P</text>
+      <circle cx="245" cy="142" r="22" fill="var(--accent)"/><text x="245" y="149" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">P</text>
+      <circle cx="330" cy="142" r="22" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4,3"/><text x="330" y="149" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">Pᵢ</text>
+      <text x="220" y="204" font-size="15" fill="var(--muted)" text-anchor="middle">2 phosphates liés</text>
+      <text x="330" y="204" font-size="15" fill="var(--muted)" text-anchor="middle">libre</text>
+
+      <!-- ATP (droite) -->
+      <text class="atlbl" x="880" y="48">ATP</text>
+      <rect x="680" y="110" width="130" height="64" rx="10" fill="#eef2ff" stroke="var(--brand)" stroke-width="2.5"/>
+      <text x="745" y="148" font-size="18" font-weight="700" fill="var(--ink)" text-anchor="middle">adénosine</text>
+      <circle cx="845" cy="142" r="22" fill="var(--accent)"/><text x="845" y="149" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">P</text>
+      <circle cx="895" cy="142" r="22" fill="var(--accent)"/><text x="895" y="149" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">P</text>
+      <circle cx="945" cy="142" r="22" fill="var(--accent)" stroke="var(--ink)" stroke-width="3"/><text x="945" y="149" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">P</text>
+      <text x="895" y="204" font-size="15" fill="var(--muted)" text-anchor="middle">3 phosphates liés</text>
+
+      <g class="fragment" data-fragment-index="0">
+        <line class="atpop" x1="400" y1="112" x2="660" y2="112" stroke="var(--ink)" stroke-width="3.5" marker-end="url(#at-head)"/>
+        <text class="atpop" x="530" y="92" font-size="18" font-weight="700" fill="var(--brand)" text-anchor="middle">synthèse : absorbe de l'énergie</text>
+        <text class="atpop" x="530" y="138" font-size="16" fill="var(--muted)" text-anchor="middle">cascade du glucose, chaîne respiratoire</text>
+      </g>
+      <g class="fragment" data-fragment-index="1">
+        <line class="atpop" x1="660" y1="188" x2="400" y2="188" stroke="var(--ink)" stroke-width="3.5" marker-end="url(#at-head)"/>
+        <text class="atpop" x="530" y="170" font-size="16" fill="var(--muted)" text-anchor="middle">contraction, pompes, synthèses</text>
+        <text class="atpop" x="530" y="222" font-size="18" font-weight="700" fill="var(--accent)" text-anchor="middle">hydrolyse : libère de l'énergie</text>
+      </g>
+    </svg>
+  </div>
+
+  <p class="small" style="margin-top:.4em">Adénosine triphosphate : adénine, ribose et 3 phosphates — l'adénosine est aussi une base de l'ADN et de l'ARN.
+  Retirer le dernier phosphate libère ≈ 30 kJ·mol⁻¹ en conditions standard (50 à 60 dans la cellule).</p>
+
+  <div class="grid3 fragment" data-fragment-index="2" style="margin-top:.3em">
+    <div class="stat" style="padding:4px"><div class="n" style="font-size:1.45em">≈ 30</div><div class="l">ATP formés par glucose</div></div>
+    <div class="stat" style="padding:4px"><div class="n" style="font-size:1.45em">≈ 100 g</div><div class="l">d'ATP présents dans le corps</div></div>
+    <div class="stat" style="padding:4px"><div class="n" style="font-size:1.45em">≈ 50 kg</div><div class="l">d'ATP formés et consommés par jour</div></div>
+  </div>
+
+</section>

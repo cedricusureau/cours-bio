@@ -1,0 +1,88 @@
+<section>
+  <style>
+    .cspop{opacity:0}
+    .fragment.visible .cspop{animation:csPop .45s ease forwards}
+    @keyframes csPop{from{opacity:0}to{opacity:1}}
+    .cslbl{font-size:22px;font-weight:700;fill:var(--ink);text-anchor:middle}
+    .cssub{font-size:18px;fill:var(--muted);text-anchor:middle}
+    .csarr{font-size:17px;font-weight:700;fill:var(--accent);text-anchor:middle}
+    .csbad{font-size:18px;fill:var(--ink);text-anchor:middle}
+  </style>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <marker id="cs-head" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="16" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink)"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <span class="kicker">Respiration cellulaire</span>
+  <h2>Une cascade de réactions récupère l'énergie du glucose</h2>
+  <div class="barline"></div>
+  <p class="small muted" style="margin:.2em 0 0">Le glucose n'est pas oxydé d'un coup : chaque étape retire des carbones et charge des transporteurs d'électrons. Un point = un carbone.</p>
+
+  <div class="figframe" style="margin-top:.2em;padding:6px 10px">
+    <svg viewBox="0 0 1200 390" class="fig" style="width:100%;max-height:430px">
+      <!-- colonne 1 : glucose -->
+      <text class="cslbl" x="120" y="58">glucose</text>
+      <text class="cssub" x="120" y="82">6 C</text>
+      <circle cx="86" cy="116" r="13" fill="var(--brand)"/><circle cx="120" cy="116" r="13" fill="var(--brand)"/><circle cx="154" cy="116" r="13" fill="var(--brand)"/>
+      <circle cx="86" cy="150" r="13" fill="var(--brand)"/><circle cx="120" cy="150" r="13" fill="var(--brand)"/><circle cx="154" cy="150" r="13" fill="var(--brand)"/>
+
+      <!-- étape 1 : glycolyse -->
+      <g class="fragment" data-fragment-index="0">
+        <line class="cspop" x1="195" y1="133" x2="282" y2="133" stroke="var(--ink)" stroke-width="3" marker-end="url(#cs-head)"/>
+        <text class="cspop csarr" x="238" y="106">glycolyse</text>
+        <text class="cspop cslbl" x="400" y="58">2 pyruvate</text>
+        <text class="cspop cssub" x="400" y="82">2 × 3 C</text>
+        <g class="cspop">
+          <circle cx="311" cy="133" r="13" fill="var(--brand)"/><circle cx="345" cy="133" r="13" fill="var(--brand)"/><circle cx="379" cy="133" r="13" fill="var(--brand)"/>
+          <circle cx="421" cy="133" r="13" fill="var(--brand)"/><circle cx="455" cy="133" r="13" fill="var(--brand)"/><circle cx="489" cy="133" r="13" fill="var(--brand)"/>
+        </g>
+        <text class="cspop csbad" x="238" y="272"><tspan font-weight="700">+ 2 NADH</tspan></text>
+        <text class="cspop csbad" x="238" y="296">+ 2 ATP</text>
+      </g>
+
+      <!-- étape 2 : pyruvate -> acétyl-CoA -->
+      <g class="fragment" data-fragment-index="1">
+        <line class="cspop" x1="520" y1="133" x2="600" y2="133" stroke="var(--ink)" stroke-width="3" marker-end="url(#cs-head)"/>
+        <text class="cspop csarr" x="557" y="106">pyruvate → acétyl-CoA</text>
+        <text class="cspop cslbl" x="680" y="58">2 acétyl-CoA</text>
+        <text class="cspop cssub" x="680" y="82">2 × 2 C</text>
+        <g class="cspop">
+          <circle cx="640" cy="133" r="13" fill="var(--brand)"/><circle cx="674" cy="133" r="13" fill="var(--brand)"/>
+          <circle cx="720" cy="133" r="13" fill="var(--brand)"/><circle cx="754" cy="133" r="13" fill="var(--brand)"/>
+          <line x1="640" y1="152" x2="640" y2="182" stroke="var(--accent)" stroke-width="2.4" stroke-dasharray="3,3"/>
+          <line x1="720" y1="152" x2="720" y2="182" stroke="var(--accent)" stroke-width="2.4" stroke-dasharray="3,3"/>
+          <circle cx="640" cy="198" r="13" fill="var(--accent)"/><circle cx="720" cy="198" r="13" fill="var(--accent)"/>
+        </g>
+        <text class="cspop csarr" x="680" y="238">2 CO₂ libérés</text>
+        <text class="cspop csbad" x="557" y="272"><tspan font-weight="700">+ 2 NADH</tspan></text>
+        <text class="cspop csbad" x="557" y="296">+ 2 CO₂</text>
+      </g>
+
+      <!-- étape 3 : cycle de Krebs -->
+      <g class="fragment" data-fragment-index="2">
+        <line class="cspop" x1="790" y1="133" x2="890" y2="133" stroke="var(--ink)" stroke-width="3" marker-end="url(#cs-head)"/>
+        <text class="cspop csarr" x="840" y="106">cycle de Krebs</text>
+        <text class="cspop cslbl" x="1010" y="58">6 CO₂</text>
+        <text class="cspop cssub" x="1010" y="82">6 C sortis</text>
+        <g class="cspop">
+          <circle cx="976" cy="116" r="13" fill="var(--accent)"/><circle cx="1010" cy="116" r="13" fill="var(--accent)"/><circle cx="1044" cy="116" r="13" fill="var(--accent)"/>
+          <circle cx="976" cy="150" r="13" fill="var(--accent)"/><circle cx="1010" cy="150" r="13" fill="var(--accent)"/><circle cx="1044" cy="150" r="13" fill="var(--accent)"/>
+        </g>
+        <text class="cspop csbad" x="840" y="272"><tspan font-weight="700">+ 6 NADH, + 2 FADH₂</tspan></text>
+        <text class="cspop csbad" x="840" y="296">+ 2 ATP, + 4 CO₂</text>
+      </g>
+
+      <text x="14" y="284" font-size="16" fill="var(--muted)" font-style="italic">produits de l'étape</text>
+
+      <!-- bilan -->
+      <g class="fragment" data-fragment-index="3">
+        <rect class="cspop" x="60" y="318" width="1080" height="58" rx="12" fill="#eef2ff" stroke="var(--brand)" stroke-width="2"/>
+        <text class="cspop" x="600" y="353" font-size="20" font-weight="700" fill="var(--brand)" text-anchor="middle">10 NADH + 2 FADH₂ (24 électrons) → chaîne respiratoire → ATP : ≈ 30 par glucose</text>
+      </g>
+    </svg>
+  </div>
+
+</section>
